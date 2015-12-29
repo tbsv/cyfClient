@@ -1,0 +1,57 @@
+<ion-view class="family-view">
+  <ion-nav-buttons side="left">
+    <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
+  </ion-nav-buttons>
+  <ion-nav-buttons side="right">
+    <button class="button button-icon icon ion-person-add" ng-click="modal.show()"></button>
+  </ion-nav-buttons>
+  <ion-nav-title>
+    <span>Family</span>
+  </ion-nav-title>
+  <ion-content>
+    <h4 class="padding">Members</h4>
+    <div id="MemberList">
+      <ul class="list">
+        <li ng-repeat="member in members" class="item item-button-right">
+            <h2>{{member.firstName}} {{member.lastName}}</h2>
+            <p>{{member.type}}</p>
+            <button ng-click="removeMember($index)" class="button button-small button-icon icon ion-trash-b"></button>
+        </li>
+        <li class="item item-divider">
+          Members: {{members.length}}
+        </li>
+      </ul>
+    </div>
+  </ion-content>
+
+  <script id="modals/app/newFamilyMember.html" type="text/ng-template">
+    <ion-modal-view>
+      <ion-header-bar class="bar bar-header bar-positive">
+        <h1 class="title">New Family Member</h1>
+        <button class="button button-clear button-primary" ng-click="modal.hide()">Cancel</button>
+      </ion-header-bar>
+      <ion-content class="padding">
+        <div class="list">
+          <label class="item item-input">
+            <span class="input-label">First Name</span>
+            <input ng-model="newMember.firstName" type="text">
+          </label>
+          <label class="item item-input">
+            <span class="input-label">Last Name</span>
+            <input ng-model="newMember.lastName" type="text">
+          </label>
+          <label class="item item-input item-select">
+            Type
+            <select ng-model="newMember.type">
+              <option selected>Son</option>
+              <option>Daughter</option>
+              <option>Wife</option>
+            </select>
+          </label>
+          <button class="button button-full button-positive" ng-click="addMember(newMember)">Add</button>
+        </div>
+      </ion-content>
+    </ion-modal-view>
+  </script>
+
+</ion-view>
