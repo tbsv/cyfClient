@@ -1,0 +1,21 @@
+.login-view
+{
+	// Fix tabs animation on iOS
+	// Fix initial blink before angular loaded: http://stackoverflow.com/a/14076004/1116959
+	[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak
+	{
+	  display: none !important;
+	}
+
+	.login-container
+	{
+		margin-bottom: 0px;
+
+		.card-heding
+		{
+			padding: 0px;
+			height: $tabs-height;
+
+		}
+	}
+}

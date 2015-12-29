@@ -1,28 +1,80 @@
-angular.module('starter.controllers', [])
+angular.module('cyfclient.controllers', [])
 
-.controller('DashCtrl', function($scope) {})
+  // AUTHENTICATION
+  .controller('AuthCtrl', function($scope, $ionicConfig) {
 
-.controller('ChatsCtrl', function($scope, Chats) {
-  // With the new view caching in Ionic, Controllers are only called
-  // when they are recreated or on app start, instead of every page change.
-  // To listen for when this page is active (for example, to refresh data),
-  // listen for the $ionicView.enter event:
-  //
-  //$scope.$on('$ionicView.enter', function(e) {
-  //});
+  })
 
-  $scope.chats = Chats.all();
-  $scope.remove = function(chat) {
-    Chats.remove(chat);
-  };
-})
+  // APP
+  .controller('AppCtrl', function($scope, $ionicConfig) {
 
-.controller('ChatDetailCtrl', function($scope, $stateParams, Chats) {
-  $scope.chat = Chats.get($stateParams.chatId);
-})
+  })
 
-.controller('AccountCtrl', function($scope) {
-  $scope.settings = {
-    enableFriends: true
-  };
-});
+  // LOGIN
+  .controller('LoginCtrl', function($scope, $state) {
+    $scope.doLogIn = function(){
+      $state.go('app.overview');
+    };
+
+    $scope.user = {};
+
+    $scope.user.email = "user@cyf.com";
+    $scope.user.pin = "12345";
+
+  })
+
+  // SIGNUP
+  .controller('SignupCtrl', function($scope, $state) {
+    $scope.user = {};
+
+    $scope.user.email = "user@cyf.com";
+
+    $scope.doSignUp = function(){
+      $state.go('app.overview');
+    };
+  })
+
+  .controller('ForgotPasswordCtrl', function($scope, $state) {
+    $scope.recoverPassword = function(){
+      $state.go('app.overview');
+    };
+
+    $scope.user = {};
+  })
+
+  // OVERVIEW
+  .controller('OverviewCtrl', function($scope, $http) {
+
+  })
+
+  // TOURS
+  .controller('ToursCtrl', function($scope, $http) {
+
+  })
+
+  // ECO-SCORES
+  .controller('ScoresCtrl', function($scope, $http) {
+
+  })
+
+  // ALERTS
+  .controller('AlertsCtrl', function($scope, $http) {
+
+  })
+
+  // PROFILE
+  .controller('ProfileCtrl', function($scope, $http) {
+
+  })
+
+  // SETTINGS
+  .controller('SettingsCtrl', function($scope, $http) {
+
+  })
+
+  // INFO
+  .controller('InfoCtrl', function($scope, $http) {
+
+  })
+
+;

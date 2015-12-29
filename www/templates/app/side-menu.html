@@ -1,0 +1,58 @@
+<ion-side-menus enable-menu-with-back-views="false">
+  <ion-side-menu-content class="post-size-14px">
+    <ion-nav-bar class="bar app-top-bar">
+      <ion-nav-back-button>
+      </ion-nav-back-button>
+      <ion-nav-buttons side="left">
+        <button class="button button-icon button-clear ion-navicon" menu-toggle="left">
+        </button>
+      </ion-nav-buttons>
+    </ion-nav-bar>
+    <ion-nav-view name="menuContent"></ion-nav-view>
+  </ion-side-menu-content>
+
+  <ion-side-menu side="left" class="main-menu" expose-aside-when="large">
+    <ion-content>
+      <ion-list>
+        <ion-item class="heading-item item item-avatar" nav-clear menu-close ui-sref="app.profile">
+          <div class="user-image-container">
+            <pre-img ratio="_1_1" helper-class="rounded-image">
+              <img class="user-image" ng-src="img/tobi-square.jpg" spinner-on-load>
+            </pre-img>
+          </div>
+          <h2 class="greeting">Hallo Tobias</h2>
+          <p class="message">S-TV 123</p>
+        </ion-item>
+        <ion-item class="item-icon-left" nav-clear menu-close ui-sref="app.overview">
+          <i class="icon ion-home"></i>
+          <h2 class="menu-text">Overview</h2>
+        </ion-item>
+        <ion-item class="item-icon-left" nav-clear menu-close ui-sref="app.tours">
+          <i class="icon ion-android-car"></i>
+          <h2 class="menu-text">Tours</h2>
+        </ion-item>
+        <ion-item class="item-icon-left" nav-clear menu-close ui-sref="app.scores">
+          <i class="icon ion-stats-bars"></i>
+          <h2 class="menu-text">ECO-Scores</h2>
+        </ion-item>
+        <ion-item class="item-icon-left" nav-clear menu-close ui-sref="app.alerts">
+          <i class="icon ion-android-notifications-none"></i>
+          <h2 class="menu-text">Alerts</h2>
+          <span class="badge badge-assertive">2</span>
+        </ion-item>
+        <ion-item class="item-icon-left" nav-clear menu-close ui-sref="app.profile">
+          <i class="icon ion-person"></i>
+          <h2 class="menu-text">Profile</h2>
+        </ion-item>
+        <ion-item class="item-icon-left" nav-clear menu-close ui-sref="app.settings">
+          <i class="icon ion-gear-a"></i>
+          <h2 class="menu-text">Settings</h2>
+        </ion-item>
+        <ion-item class="item-icon-left" nav-clear menu-close ui-sref="app.info">
+          <i class="icon ion-information"></i>
+          <h2 class="menu-text">Info</h2>
+        </ion-item>
+      </ion-list>
+    </ion-content>
+  </ion-side-menu>
+</ion-side-menus>

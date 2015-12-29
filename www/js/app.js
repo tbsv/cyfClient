@@ -1,11 +1,14 @@
-// Ionic Starter App
+// Ionic cyfclient App
 
 // angular.module is a global place for creating, registering and retrieving Angular modules
-// 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
+// 'cyfclient' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
-// 'starter.services' is found in services.js
-// 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
+angular.module('cyfclient', [
+  'ionic',
+  'cyfclient.controllers',
+  'cyfclient.directives',
+  'cyfclient.services'
+])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -31,55 +34,124 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
   // Each state's controller can be found in controllers.js
   $stateProvider
 
-  // setup an abstract state for the tabs directive
-    .state('tab', {
-    url: '/tab',
-    abstract: true,
-    templateUrl: 'templates/tabs.html'
-  })
+  // AUTHENTICATION
+    .state('auth', {
+      url: "/auth",
+      templateUrl: "templates/auth/auth.html",
+      abstract: true,
+      controller: 'AuthCtrl'
+    })
 
-  // Each tab has its own nav history stack:
+    .state('auth.check', {
+      url: '/check',
+      templateUrl: "templates/auth/check.html"
+    })
 
-  .state('tab.dash', {
-    url: '/dash',
-    views: {
-      'tab-dash': {
-        templateUrl: 'templates/tab-dash.html',
-        controller: 'DashCtrl'
-      }
-    }
-  })
+    .state('auth.login', {
+      url: '/login',
+      templateUrl: "templates/auth/login.html",
+      controller: 'LoginCtrl'
+    })
 
-  .state('tab.chats', {
-      url: '/chats',
+    .state('auth.signup', {
+      url: '/signup',
+      templateUrl: "templates/auth/signup.html",
+      controller: 'SignupCtrl'
+    })
+
+    .state('auth.forgot-password', {
+      url: "/forgot-password",
+      templateUrl: "templates/auth/forgot-password.html",
+      controller: 'ForgotPasswordCtrl'
+    })
+
+    .state('app', {
+      url: "/app",
+      abstract: true,
+      templateUrl: "templates/app/side-menu.html",
+      controller: 'AppCtrl'
+    })
+
+    // OVERVIEW
+    .state('app.overview', {
+      url: "/overview",
       views: {
-        'tab-chats': {
-          templateUrl: 'templates/tab-chats.html',
-          controller: 'ChatsCtrl'
+        'menuContent': {
+          templateUrl: "templates/app/overview.html",
+          controller: 'OverviewCtrl'
         }
       }
     })
-    .state('tab.chat-detail', {
-      url: '/chats/:chatId',
+
+    // TOURS
+    .state('app.tours', {
+      url: "/tours",
       views: {
-        'tab-chats': {
-          templateUrl: 'templates/chat-detail.html',
-          controller: 'ChatDetailCtrl'
+        'menuContent': {
+          templateUrl: "templates/tours/tours.html",
+          controller: 'ToursCtrl'
         }
       }
     })
 
-  .state('tab.account', {
-    url: '/account',
-    views: {
-      'tab-account': {
-        templateUrl: 'templates/tab-account.html',
-        controller: 'AccountCtrl'
+    // ECO-SCORES
+    .state('app.scores', {
+      url: "/scores",
+      views: {
+        'menuContent': {
+          templateUrl: "templates/app/scores.html",
+          controller: 'ScoresCtrl'
+        }
       }
-    }
-  });
+    })
+
+    // ALERTS
+    .state('app.alerts', {
+      url: "/alerts",
+      views: {
+        'menuContent': {
+          templateUrl: "templates/app/alerts.html",
+          controller: 'AlertsCtrl'
+        }
+      }
+    })
+
+    // PROFILE
+    .state('app.profile', {
+      url: "/profile",
+      views: {
+        'menuContent': {
+          templateUrl: "templates/app/profile.html",
+          controller: 'ProfileCtrl'
+        }
+      }
+    })
+
+    // SETTINGS
+    .state('app.settings', {
+      url: "/settings",
+      views: {
+        'menuContent': {
+          templateUrl: "templates/app/settings.html",
+          controller: 'SettingsCtrl'
+        }
+      }
+    })
+
+    // INFO
+    .state('app.info', {
+      url: "/info",
+      views: {
+        'menuContent': {
+          templateUrl: "templates/app/info.html",
+          controller: 'InfoCtrl'
+        }
+      }
+    })
+
+  ;
 
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/tab/dash');
+  $urlRouterProvider.otherwise('/auth/check');
 
 });
