@@ -7,7 +7,8 @@ angular.module('cyfclient', [
   'ionic',
   'cyfclient.controllers',
   'cyfclient.directives',
-  'cyfclient.services'
+  'cyfclient.services',
+  'chart.js'
 ])
 
 .run(function($ionicPlatform) {

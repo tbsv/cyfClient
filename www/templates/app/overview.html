@@ -5,7 +5,14 @@
   <ion-nav-title>
     <span>Overview</span>
   </ion-nav-title>
-  <ion-content>
-
+  <ion-content ng-controller="OverviewCtrl">
+    <div class="card">
+      <div class="item item-divider">
+        Total distance
+      </div>
+      <div class="item item-text-wrap">
+        <canvas id="pie" class="chart chart-pie" chart-data="piedata" chart-labels="labels"></canvas>
+      </div>
+    </div>
   </ion-content>
 </ion-view>

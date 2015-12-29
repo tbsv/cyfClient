@@ -44,7 +44,10 @@ angular.module('cyfclient.controllers', [])
 
   // OVERVIEW
   .controller('OverviewCtrl', function($scope, $http) {
-
+    $scope.labels = ["Gordon", "Barney", "Lizzy"];
+    $scope.series = ['Series A', 'Series B'];
+    $scope.piedata = [325, 148, 56];
+    $scope.bardata = [325, 148, 56];
   })
 
   // TOURS
