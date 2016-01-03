@@ -95,6 +95,29 @@ angular.module('cyfclient', [
       }
     })
 
+    // TOUR
+    .state('app.tour', {
+      url: "/tours/:tourId",
+      views: {
+        'menuContent': {
+          templateUrl: "templates/tours/tour.html",
+          controller: 'TourCtrl'
+        }
+      },
+      resolve: {
+        tour_data: function(TourService, $ionicLoading, $stateParams) {
+          /*
+          $ionicLoading.show({
+            template: 'Loading post ...'
+          });
+          */
+
+          var tourId = $stateParams.tourId;
+          return TourService.getTour(tourId);
+        }
+      }
+    })
+
     // ECO-SCORES
     .state('app.scores', {
       url: "/scores",

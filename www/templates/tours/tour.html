@@ -1,0 +1,73 @@
+<ion-view class="tour-view">
+  <ion-nav-buttons side="left">
+    <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
+  </ion-nav-buttons>
+  <ion-nav-title>
+    <span>Tour Details</span>
+  </ion-nav-title>
+  <ion-content>
+    <div class="list card">
+      <div class="item">
+        <h2>{{tour.timestamp}}</h2>
+        <p>{{tour.user}}</p>
+      </div>
+      <div class="item item-body">
+        <div class="item item-icon-left">
+          <i class="icon ion-ios-location"></i>
+          Distance
+          <span class="item-note">
+            {{tour.mileage_start}} km
+          </span>
+        </div>
+        <div class="item item-icon-left">
+          <i class="icon ion-ios-clock"></i>
+          Duration
+          <span class="item-note">
+            {{tour.timestamp_end}} min
+          </span>
+        </div>
+        <div class="item item-icon-left">
+          <i class="icon ion-stats-bars"></i>
+          EcoScore
+          <span class="item-note">
+            {{tour.ecoscore}} %
+          </span>
+        </div>
+        <div class="item item-icon-left">
+          <i class="icon ion-thermometer"></i>
+          ESP
+          <span class="item-note">
+            {{tour.esp}}
+          </span>
+        </div>
+        <div class="item item-icon-left">
+          <i class="icon ion-flash-off"></i>
+          Kickdowns
+          <span class="item-note">
+            {{tour.kickdown}}
+          </span>
+        </div>
+        <div class="item item-icon-left">
+          <i class="icon ion-map"></i>
+          Geofence Alerts
+          <span class="badge badge-assertive">{{tour.geofence_alerts}}</span>
+        </div>
+        <div class="item item-icon-left">
+          <i class="icon ion-speedometer"></i>
+          Speedfence Alerts
+          <span class="badge badge-assertive">{{tour.speedfence_alerts}}</span>
+        </div>
+      </div>
+      <div class="item tabs tabs-secondary tabs-icon-left">
+        <a class="tab-item" href="#">
+          <i class="icon ion-map"></i>
+          Map
+        </a>
+        <a class="tab-item" href="#">
+          <i class="icon ion-person"></i>
+          Assign
+        </a>
+      </div>
+    </div>
+  </ion-content>
+</ion-view>

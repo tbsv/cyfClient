@@ -51,8 +51,30 @@ angular.module('cyfclient.controllers', [])
   })
 
   // TOURS
-  .controller('ToursCtrl', function($scope, $http) {
+  .controller('ToursCtrl', function($scope, $ionicLoading, TourService) {
 
+    $scope.tours = [];
+
+    $scope.doRefresh = function() {
+      $ionicLoading.show({
+        template: 'Loading tours...'
+      });
+
+      TourService.getTours()
+        .then(function(data){
+          $scope.tours = data;
+          $ionicLoading.hide();
+        });
+    };
+
+    $scope.doRefresh();
+
+  })
+
+  // TOUR
+  .controller('TourCtrl', function($scope, tour_data, $ionicLoading) {
+    $scope.tour = tour_data;
+    $ionicLoading.hide();
   })
 
   // ECO-SCORES
