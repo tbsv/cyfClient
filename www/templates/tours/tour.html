@@ -7,7 +7,8 @@
   </ion-nav-title>
   <ion-content>
     <div class="list card">
-      <div class="item">
+      <div class="item item-avatar">
+        <img src="img/tobi-square.jpg">
         <h2>{{tour.timestamp}}</h2>
         <p>{{tour.user}}</p>
       </div>
@@ -15,47 +16,47 @@
         <div class="item item-icon-left">
           <i class="icon ion-ios-location"></i>
           Distance
-          <span class="item-note">
-            {{tour.mileage_start}} km
+          <span class="badge badge-light">
+            {{tour.mileage_start}}
           </span>
         </div>
         <div class="item item-icon-left">
           <i class="icon ion-ios-clock"></i>
           Duration
-          <span class="item-note">
-            {{tour.timestamp_end}} min
+          <span class="badge badge-light">
+            {{tour.timestamp_end}}
           </span>
         </div>
         <div class="item item-icon-left">
           <i class="icon ion-stats-bars"></i>
           EcoScore
-          <span class="item-note">
-            {{tour.ecoscore}} %
+          <span class="badge badge-light">
+            {{tour.ecoscore}}
           </span>
         </div>
         <div class="item item-icon-left">
           <i class="icon ion-thermometer"></i>
           ESP
-          <span class="item-note">
+          <span class="badge badge-light">
             {{tour.esp}}
           </span>
         </div>
         <div class="item item-icon-left">
           <i class="icon ion-flash-off"></i>
           Kickdowns
-          <span class="item-note">
+          <span class="badge badge-light">
             {{tour.kickdown}}
           </span>
         </div>
         <div class="item item-icon-left">
           <i class="icon ion-map"></i>
           Geofence Alerts
-          <span class="badge badge-assertive">{{tour.geofence_alerts}}</span>
+          <span ng-class="tour.geofence_alerts >= 1 ? 'badge badge-assertive' : 'badge badge-stable'">{{tour.geofence_alerts}}</span>
         </div>
         <div class="item item-icon-left">
           <i class="icon ion-speedometer"></i>
           Speedfence Alerts
-          <span class="badge badge-assertive">{{tour.speedfence_alerts}}</span>
+          <span ng-class="tour.speedfence_alerts >= 1 ? 'badge badge-assertive' : 'badge badge-stable'">{{tour.speedfence_alerts}}</span>
         </div>
       </div>
       <div class="item tabs tabs-secondary tabs-icon-left">
