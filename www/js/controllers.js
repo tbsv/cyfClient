@@ -6,32 +6,67 @@ angular.module('cyfclient.controllers', [])
   })
 
   // APP
-  .controller('AppCtrl', function($scope, $ionicConfig) {
+  .controller('AppCtrl', function($scope, $state, $ionicPopup, AuthService, AUTH_EVENTS) {
+    $scope.$on(AUTH_EVENTS.notAuthenticated, function(event) {
+      AuthService.logout();
+      $state.go('app.check');
+      var alertPopup = $ionicPopup.alert({
+        title: 'Session Lost!',
+        template: 'Sorry, You have to login again.'
+      });
+    });
 
+    $scope.getInfo = function() {
+      $http.get(API_ENDPOINT.url + '/users/userinfo').then(function(result) {
+        $scope.userinfo = result.data.msg;
+      });
+    };
   })
 
   // LOGIN
-  .controller('LoginCtrl', function($scope, $state) {
-    $scope.doLogIn = function(){
-      $state.go('app.overview');
+  .controller('LoginCtrl', function($scope, AuthService, $ionicPopup, $state) {
+
+    $scope.user = {
+      name: '',
+      password: ''
     };
 
-    $scope.user = {};
-
-    $scope.user.email = "user@cyf.com";
-    $scope.user.pin = "12345";
+    $scope.doLogin = function() {
+      AuthService.login($scope.user).then(function(msg) {
+        $state.go('app.overview');
+      }, function(errMsg) {
+        var alertPopup = $ionicPopup.alert({
+          title: 'Login failed!',
+          template: errMsg
+        });
+      });
+    };
 
   })
 
   // SIGNUP
-  .controller('SignupCtrl', function($scope, $state) {
-    $scope.user = {};
+  .controller('SignupCtrl', function($scope, AuthService, $ionicPopup, $state) {
 
-    $scope.user.email = "user@cyf.com";
-
-    $scope.doSignUp = function(){
-      $state.go('app.overview');
+    $scope.user = {
+      name: '',
+      password: ''
     };
+
+    $scope.doSignup = function() {
+      AuthService.register($scope.user).then(function(msg) {
+        $state.go('auth.login');
+        var alertPopup = $ionicPopup.alert({
+          title: 'Signup success!',
+          template: msg
+        });
+      }, function(errMsg) {
+        var alertPopup = $ionicPopup.alert({
+          title: 'Signup failed!',
+          template: errMsg
+        });
+      });
+    };
+
   })
 
   .controller('ForgotPasswordCtrl', function($scope, $state) {
@@ -125,8 +160,23 @@ angular.module('cyfclient.controllers', [])
   })
 
   // SETTINGS
-  .controller('SettingsCtrl', function($scope, $http) {
+  .controller('SettingsCtrl', function($scope, AuthService, $ionicPopup, $state) {
+    $scope.logout = function() {
 
+        var confirmPopup = $ionicPopup.confirm({
+          title: 'Logout',
+          template: 'Are you sure you want to logout?'
+        });
+
+        confirmPopup.then(function(res) {
+          if(res) {
+            AuthService.logout();
+            $state.go('auth.check');
+          } else {
+
+          }
+        });
+    };
   })
 
   // INFO

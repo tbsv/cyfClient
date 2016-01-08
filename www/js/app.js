@@ -5,6 +5,7 @@
 // the 2nd parameter is an array of 'requires'
 angular.module('cyfclient', [
   'ionic',
+  'cyfclient.constants',
   'cyfclient.controllers',
   'cyfclient.directives',
   'cyfclient.services',
@@ -190,4 +191,20 @@ angular.module('cyfclient', [
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/auth/check');
 
-});
+})
+
+  /*
+  .run(function ($rootScope, $state, AuthService, AUTH_EVENTS) {
+    $rootScope.$on('$stateChangeStart', function (event,next, nextParams, fromState) {
+      if (!AuthService.isAuthenticated()) {
+        console.log(next.name);
+        if (next.name !== 'auth.login' && next.name !== 'auth.register') {
+          event.preventDefault();
+          $state.go('auth.check');
+        }
+      }
+    });
+  })
+  */
+
+;

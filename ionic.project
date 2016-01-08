@@ -9,5 +9,11 @@
     "www/**/*",
     "!www/lib/**/*"
   ],
-  "documentRoot": "www"
+  "documentRoot": "www",
+  "proxies": [
+      {
+        "path": "/api",
+        "proxyUrl": "http://127.0.0.1:3000"
+      }
+  ]
 }
