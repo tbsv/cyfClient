@@ -79,7 +79,15 @@ angular.module('cyfclient.controllers', [])
 
   // ECO-SCORES
   .controller('ScoresCtrl', function($scope, $http) {
-
+    $scope.chartData = {
+      labels: ["January", "February", "March", "April", "May"],
+      series: ['Foo', 'Baz', 'Bar'],
+      data: [
+        [65, 59, 63, 81, 56, 55, 68],
+        [76, 77, 74, 72, 80, 72, 73],
+        [42, 17, 28, 73, 50, 12, 68]
+      ]
+    };
   })
 
   // ALERTS

@@ -7,7 +7,8 @@ angular.module('cyfclient', [
   'ionic',
   'cyfclient.controllers',
   'cyfclient.directives',
-  'cyfclient.services'
+  'cyfclient.services',
+  'chart.js'
 ])
 
 .run(function($ionicPlatform) {
@@ -90,6 +91,29 @@ angular.module('cyfclient', [
         'menuContent': {
           templateUrl: "templates/tours/tours.html",
           controller: 'ToursCtrl'
+        }
+      }
+    })
+
+    // TOUR
+    .state('app.tour', {
+      url: "/tours/:tourId",
+      views: {
+        'menuContent': {
+          templateUrl: "templates/tours/tour.html",
+          controller: 'TourCtrl'
+        }
+      },
+      resolve: {
+        tour_data: function(TourService, $ionicLoading, $stateParams) {
+          /*
+          $ionicLoading.show({
+            template: 'Loading post ...'
+          });
+          */
+
+          var tourId = $stateParams.tourId;
+          return TourService.getTour(tourId);
         }
       }
     })

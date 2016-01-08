@@ -6,6 +6,7 @@
   },
   "dependencies": {
     "Chart.js": "~1.0.2",
-    "angular-chart.js": "~0.8.8"
+    "angular-chart.js": "~0.8.8",
+    "ionic-letteravatar": "ionic-letter-avatar#*"
   }
 }

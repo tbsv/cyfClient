@@ -5,9 +5,15 @@
   <ion-nav-title>
     <span>ECO-Scores</span>
   </ion-nav-title>
-  <ion-content>
-    <ul class="list">
-      <p class="padding">Lorem ipsum.</p>
-    </ul>
+  <ion-content class="padding">
+    <div class="card">
+      <div class="item item-divider">
+        ECO-Scores
+      </div>
+      <div class="item item-text-wrap">
+        <canvas id="line" class="chart chart-line" data="chartData.data" labels="chartData.labels" legend="true" series="chartData.series">
+        </canvas>
+      </div>
+    </div>
   </ion-content>
 </ion-view>

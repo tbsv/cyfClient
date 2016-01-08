@@ -44,17 +44,50 @@ angular.module('cyfclient.controllers', [])
 
   // OVERVIEW
   .controller('OverviewCtrl', function($scope, $http) {
-
+    $scope.labels = ["Gordon", "Barney", "Lizzy"];
+    $scope.series = ['Series A', 'Series B'];
+    $scope.piedata = [325, 148, 56];
+    $scope.bardata = [325, 148, 56];
   })
 
   // TOURS
-  .controller('ToursCtrl', function($scope, $http) {
+  .controller('ToursCtrl', function($scope, $ionicLoading, TourService) {
 
+    $scope.tours = [];
+
+    $scope.doRefresh = function() {
+      $ionicLoading.show({
+        template: 'Loading tours...'
+      });
+
+      TourService.getTours()
+        .then(function(data){
+          $scope.tours = data;
+          $ionicLoading.hide();
+        });
+    };
+
+    $scope.doRefresh();
+
+  })
+
+  // TOUR
+  .controller('TourCtrl', function($scope, tour_data, $ionicLoading) {
+    $scope.tour = tour_data;
+    $ionicLoading.hide();
   })
 
   // ECO-SCORES
   .controller('ScoresCtrl', function($scope, $http) {
-
+    $scope.chartData = {
+      labels: ["January", "February", "March", "April", "May"],
+      series: ['Foo', 'Baz', 'Bar'],
+      data: [
+        [65, 59, 63, 81, 56, 55, 68],
+        [76, 77, 74, 72, 80, 72, 73],
+        [42, 17, 28, 73, 50, 12, 68]
+      ]
+    };
   })
 
   // ALERTS

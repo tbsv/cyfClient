@@ -12,7 +12,8 @@
     <h4 class="padding">Members</h4>
     <div id="MemberList">
       <ul class="list">
-        <li ng-repeat="member in members" class="item item-button-right">
+        <li ng-repeat="member in members" class="item item-avatar item-button-right">
+            <ionic-letter-avatar data="{{member.firstName}}" shape="round"></ionic-letter-avatar>
             <h2>{{member.firstName}} {{member.lastName}}</h2>
             <p>{{member.type}}</p>
             <button ng-click="removeMember($index)" class="button button-small button-icon icon ion-trash-b"></button>

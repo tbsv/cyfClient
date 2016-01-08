@@ -8,7 +8,7 @@
   <ion-content>
     <div class="list">
       <a class="item item-avatar" ng-repeat="tour in tours | orderBy:'timestamp'" ui-sref="app.tour({tourId: tour.timestamp})">
-        <img src="img/tobi-square.jpg">
+        <ionic-letter-avatar data="{{tour.user}}" shape="round"></ionic-letter-avatar>
         <h2>{{tour.timestamp}}</h2>
           <p>
           <span class="icon ion-person"> {{tour.user}}</span>

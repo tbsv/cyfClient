@@ -8,7 +8,8 @@ angular.module('cyfclient', [
   'cyfclient.controllers',
   'cyfclient.directives',
   'cyfclient.services',
-  'chart.js'
+  'chart.js',
+  'ionic-letter-avatar'
 ])
 
 .run(function($ionicPlatform) {
