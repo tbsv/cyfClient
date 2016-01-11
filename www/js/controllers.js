@@ -6,7 +6,7 @@ angular.module('cyfclient.controllers', [])
   })
 
   // APP
-  .controller('AppCtrl', function($scope, $state, $ionicPopup, AuthService, AUTH_EVENTS) {
+  .controller('AppCtrl', function($scope, $state, $ionicPopup, AuthService, UserService, AUTH_EVENTS) {
     $scope.$on(AUTH_EVENTS.notAuthenticated, function(event) {
       AuthService.logout();
       $state.go('app.check');
@@ -16,11 +16,15 @@ angular.module('cyfclient.controllers', [])
       });
     });
 
-    $scope.getInfo = function() {
-      $http.get(API_ENDPOINT.url + '/users/userinfo').then(function(result) {
-        $scope.userinfo = result.data.msg;
-      });
-    };
+    $scope.userId = localStorage.getItem("userId");
+
+    UserService.userinfo($scope.userId).then(function(user) {
+      $scope.profile = user;
+      console.log($scope.profile);
+    }, function(errMsg) {
+
+    });
+
   })
 
   // LOGIN
@@ -33,6 +37,8 @@ angular.module('cyfclient.controllers', [])
 
     $scope.doLogin = function() {
       AuthService.login($scope.user).then(function(msg) {
+        // Save userId to local storage
+        localStorage.setItem("userId", $scope.user.name);
         $state.go('app.overview');
       }, function(errMsg) {
         var alertPopup = $ionicPopup.alert({
@@ -131,7 +137,30 @@ angular.module('cyfclient.controllers', [])
   })
 
   // PROFILE
-  .controller('ProfileCtrl', function($scope, $http) {
+  .controller('ProfileCtrl', function($scope, UserService) {
+    $scope.userId = localStorage.getItem("userId");
+
+    UserService.userinfo($scope.userId).then(function(user) {
+      $scope.profile = user;
+      console.log($scope.profile);
+    }, function(errMsg) {
+
+    });
+
+    /*
+    $scope.userinfo = function() {
+      $scope.userId = localStorage.getItem("userId");
+      console.log($scope.userId);
+
+      UserService.userinfo($scope.userId).then(function(user) {
+        $scope.profile = user;
+        console.log($scope.profile);
+      }, function(errMsg) {
+
+      });
+
+    };*/
+
 
   })
 

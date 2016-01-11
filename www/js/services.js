@@ -88,7 +88,7 @@ angular.module('cyfclient.services', [])
   })
 
 
-// TOUR SERVICE
+  // TOUR SERVICE
   .service('TourService', function($rootScope, $http, $q) {
 
     this.getTours = function() {
@@ -122,6 +122,28 @@ angular.module('cyfclient.services', [])
       return deferred.promise;
     };
 
+
+  })
+
+  // USER SERVICE
+  .service('UserService', function($http, $q, API_ENDPOINT) {
+
+    var userinfo = function(userId) {
+      return $q(function(resolve, reject) {
+        $http.get(API_ENDPOINT.url + '/users/' + userId).then(function(result) {
+          if (result.data) {
+            resolve(result.data);
+          } else {
+            reject(result.data.msg);
+          }
+
+        });
+      });
+    };
+
+    return {
+      userinfo: userinfo
+    };
 
   })
 

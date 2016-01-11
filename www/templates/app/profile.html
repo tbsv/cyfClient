@@ -9,13 +9,16 @@
     <span>Profile</span>
   </ion-nav-title>
   <ion-content>
-    <div class="list">
-      <a class="item item-thumbnail-left" href="#">
-        <img src="img/tobi-square.jpg">
-        <h2>Tobias</h2>
-        <p>S-TV 123</p>
-      </a>
+    <div class="list card">
+      <div class="item item-avatar">
+        <ionic-letter-avatar data="{{userId}}" shape="round"></ionic-letter-avatar>
+        <h2>{{profile._id}}</h2>
+        <p>{{profile.role}}</p>
+      </div>
+      <div class="item item-body">
+        <p>Lorem ipsum.</p>
+      </div>
     </div>
-    <p class="padding">Lorem ipsum.</p>
+
   </ion-content>
 </ion-view>
