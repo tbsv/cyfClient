@@ -122,6 +122,24 @@ angular.module('cyfclient.services', [])
       return deferred.promise;
     };
 
+  })
+
+  // VEHICLE SERVICE
+  .service('VehicleService', function($rootScope, $http, $q, API_ENDPOINT) {
+
+    this.getVehicles = function() {
+      var deferred = $q.defer();
+
+      $http.get(API_ENDPOINT.url + '/vehicles')
+        .success(function(data) {
+          deferred.resolve(data);
+        })
+        .error(function(data) {
+          deferred.reject(data);
+        });
+
+      return deferred.promise;
+    };
 
   })
 

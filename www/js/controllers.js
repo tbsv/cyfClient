@@ -155,39 +155,51 @@ angular.module('cyfclient.controllers', [])
   })
 
   // PROFILE
-  .controller('ProfileCtrl', function($scope, $ionicPopover, $ionicModal, UserService) {
+  .controller('ProfileCtrl', function($scope, $ionicPopover, $ionicModal, UserService, VehicleService) {
     $scope.userId = localStorage.getItem("userId");
 
     $scope.user = {
-      _id: $scope.userId,
-      name: {
-        first: '',
-        last: ''
-      }
+      _id: $scope.userId
     };
 
     UserService.userInfo($scope.userId).then(function(user) {
       $scope.profile = user;
+      $scope.currentVehicle = $scope.profile.vin;
     }, function(errMsg) {
       // error handling
     });
 
     $scope.doUpdate = function() {
       // fill empty userinfo with previous data for updating
-      if ($scope.user.name.first == '') {
+      if (!$scope.user.name.first) {
         $scope.user.name.first = $scope.profile.name.first;
-      } else if ($scope.user.name.last == '') {
+      } else if (!$scope.user.name.last) {
         $scope.user.name.last = $scope.profile.name.last;
       }
 
       UserService.updateUser($scope.user).then(function(user) {
         $scope.profile = user;
         $scope.modalProfile.hide();
-        $window.location.reload(true);
       }, function(errMsg) {
         // error handling
       });
 
+    };
+
+    $scope.doUpdateVehicle = function(vin) {
+      // fill empty vin with previous data for updating
+      if (!vin) {
+        $scope.user.vin = $scope.profile.vin;
+      } else {
+        $scope.user.vin = vin;
+      }
+
+      UserService.updateUser($scope.user).then(function(user) {
+        $scope.profile = user;
+        $scope.modalVehicle.hide();
+      }, function(errMsg) {
+        // error handling
+      });
     };
 
     $ionicPopover.fromTemplateUrl('popovers/app/profileMenu.html', {
@@ -200,6 +212,25 @@ angular.module('cyfclient.controllers', [])
       scope: $scope
     }).then(function(modal) {
       $scope.modalProfile = modal;
+    });
+
+    $ionicModal.fromTemplateUrl('modals/app/changeVehicle.html', {
+      scope: $scope
+    }).then(function(modal) {
+      $scope.modalVehicle = modal;
+
+      $scope.vehicles = [];
+
+      VehicleService.getVehicles().then(function(data){
+        $scope.vehicles = data;
+      }, function(errMsg) {
+        // error handling
+      });
+
+      $scope.updateVehicle = function(vin) {
+        $scope.newVehicle = vin;
+      };
+
     });
 
   })

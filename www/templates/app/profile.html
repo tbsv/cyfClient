@@ -63,7 +63,7 @@
           <a class="item" ng-click="modalProfile.show(); popover.hide()">
             Edit profile
           </a>
-          <a class="item" href="">
+          <a class="item" ng-click="modalVehicle.show(); popover.hide()">
             Change Vehicle
           </a>
         </div>
@@ -87,15 +87,22 @@
             <span class="input-label">Last name</span>
             <input ng-model="user.name.last" type="text" placeholder="{{profile.name.last}}">
           </label>
-          <!--<label class="item item-input">
-            <span class="input-label">First Name</span>
-            <input ng-model="user.name.first" type="text">
-          </label>
-          <label class="item item-input">
-            <span class="input-label">Last Name</span>
-            <input ng-model="user.name.last" type="text">
-          </label>-->
           <button class="button button-full button-positive" ng-click="doUpdate()">Update</button>
+        </div>
+      </ion-content>
+    </ion-modal-view>
+  </script>
+
+  <script id="modals/app/changeVehicle.html" type="text/ng-template">
+    <ion-modal-view>
+      <ion-header-bar class="bar bar-header bar-positive">
+        <h1 class="title">Change Vehicle</h1>
+        <button class="button button-clear button-primary" ng-click="modalVehicle.hide()">Cancel</button>
+      </ion-header-bar>
+      <ion-content class="padding">
+        <div class="list">
+          <ion-radio ng-repeat="vehicle in vehicles" ng-change="updateVehicle(vehicle.vin)" ng-value="vehicle.vin" ng-model="currentVehicle">{{vehicle.vin}}</ion-radio>
+          <button class="button button-full button-positive" ng-click="doUpdateVehicle(newVehicle)">Update</button>
         </div>
       </ion-content>
     </ion-modal-view>
