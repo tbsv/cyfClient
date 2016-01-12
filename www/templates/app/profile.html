@@ -3,7 +3,7 @@
     <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
   </ion-nav-buttons>
   <ion-nav-buttons side="right">
-    <button class="button button-icon icon ion-more"></button>
+    <button class="button button-icon icon ion-more" ng-click="popover.show($event)"></button>
   </ion-nav-buttons>
   <ion-nav-title>
     <span>Profile</span>
@@ -20,6 +20,18 @@
           Username
           <span class="badge badge-light">
             {{profile._id}}
+          </span>
+        </div>
+        <div class="item">
+          Full name
+          <span class="badge badge-light">
+            {{profile.name.first}} {{profile.name.last}}
+          </span>
+        </div>
+        <div class="item">
+          Role
+          <span class="badge badge-light">
+            {{profile.role}}
           </span>
         </div>
         <div class="item">
@@ -42,6 +54,51 @@
         </div>
       </div>
     </div>
-
   </ion-content>
+
+  <script id="popovers/app/profileMenu.html" type="text/ng-template">
+    <ion-popover-view style="height: 110px; width: 160px">
+      <ion-content>
+        <div class="list">
+          <a class="item" ng-click="modalProfile.show(); popover.hide()">
+            Edit profile
+          </a>
+          <a class="item" href="">
+            Change Vehicle
+          </a>
+        </div>
+      </ion-content>
+    </ion-popover-view>
+  </script>
+
+  <script id="modals/app/editProfile.html" type="text/ng-template">
+    <ion-modal-view>
+      <ion-header-bar class="bar bar-header bar-positive">
+        <h1 class="title">Edit profile</h1>
+        <button class="button button-clear button-primary" ng-click="modalProfile.hide()">Cancel</button>
+      </ion-header-bar>
+      <ion-content class="padding">
+        <div class="list">
+          <label class="item item-input item-stacked-label">
+            <span class="input-label">First name</span>
+            <input ng-model="user.name.first" type="text" placeholder="{{profile.name.first}}">
+          </label>
+          <label class="item item-input item-stacked-label">
+            <span class="input-label">Last name</span>
+            <input ng-model="user.name.last" type="text" placeholder="{{profile.name.last}}">
+          </label>
+          <!--<label class="item item-input">
+            <span class="input-label">First Name</span>
+            <input ng-model="user.name.first" type="text">
+          </label>
+          <label class="item item-input">
+            <span class="input-label">Last Name</span>
+            <input ng-model="user.name.last" type="text">
+          </label>-->
+          <button class="button button-full button-positive" ng-click="doUpdate()">Update</button>
+        </div>
+      </ion-content>
+    </ion-modal-view>
+  </script>
+
 </ion-view>

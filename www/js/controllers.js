@@ -16,23 +16,14 @@ angular.module('cyfclient.controllers', [])
       });
     });
 
-    $scope.userId = localStorage.getItem("userId");
-
-    UserService.userinfo($scope.userId).then(function(user) {
-      $scope.profile = user;
-    }, function(errMsg) {
-
-    });
-
   })
 
   // APP
   .controller('MenuCtrl', function($scope, UserService) {
     $scope.userId = localStorage.getItem("userId");
 
-    UserService.userinfo($scope.userId).then(function(user) {
+    UserService.userInfo($scope.userId).then(function(user) {
       $scope.profile = user;
-      console.log($scope.profile);
     }, function(errMsg) {
 
     });
@@ -164,30 +155,52 @@ angular.module('cyfclient.controllers', [])
   })
 
   // PROFILE
-  .controller('ProfileCtrl', function($scope, UserService) {
+  .controller('ProfileCtrl', function($scope, $ionicPopover, $ionicModal, UserService) {
     $scope.userId = localStorage.getItem("userId");
 
-    UserService.userinfo($scope.userId).then(function(user) {
-      $scope.profile = user;
-      console.log($scope.profile);
-    }, function(errMsg) {
+    $scope.user = {
+      _id: $scope.userId,
+      name: {
+        first: '',
+        last: ''
+      }
+    };
 
+    UserService.userInfo($scope.userId).then(function(user) {
+      $scope.profile = user;
+    }, function(errMsg) {
+      // error handling
     });
 
-    /*
-    $scope.userinfo = function() {
-      $scope.userId = localStorage.getItem("userId");
-      console.log($scope.userId);
+    $scope.doUpdate = function() {
+      // fill empty userinfo with previous data for updating
+      if ($scope.user.name.first == '') {
+        $scope.user.name.first = $scope.profile.name.first;
+      } else if ($scope.user.name.last == '') {
+        $scope.user.name.last = $scope.profile.name.last;
+      }
 
-      UserService.userinfo($scope.userId).then(function(user) {
+      UserService.updateUser($scope.user).then(function(user) {
         $scope.profile = user;
-        console.log($scope.profile);
+        $scope.modalProfile.hide();
+        $window.location.reload(true);
       }, function(errMsg) {
-
+        // error handling
       });
 
-    };*/
+    };
 
+    $ionicPopover.fromTemplateUrl('popovers/app/profileMenu.html', {
+      scope: $scope,
+    }).then(function(popover) {
+      $scope.popover = popover;
+    });
+
+    $ionicModal.fromTemplateUrl('modals/app/editProfile.html', {
+      scope: $scope
+    }).then(function(modal) {
+      $scope.modalProfile = modal;
+    });
 
   })
 

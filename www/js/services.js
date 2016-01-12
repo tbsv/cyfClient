@@ -128,7 +128,7 @@ angular.module('cyfclient.services', [])
   // USER SERVICE
   .service('UserService', function($http, $q, API_ENDPOINT) {
 
-    var userinfo = function(userId) {
+    var userInfo = function(userId) {
       return $q(function(resolve, reject) {
         $http.get(API_ENDPOINT.url + '/users/' + userId).then(function(result) {
           if (result.data) {
@@ -141,8 +141,22 @@ angular.module('cyfclient.services', [])
       });
     };
 
+    var updateUser = function(user) {
+      return $q(function(resolve, reject) {
+        $http.put(API_ENDPOINT.url + '/users/update/' + user._id, user).then(function(result) {
+          if (result.data) {
+            resolve(result.data);
+          } else {
+            reject(result.data.msg);
+          }
+
+        });
+      });
+    };
+
     return {
-      userinfo: userinfo
+      userInfo: userInfo,
+      updateUser: updateUser
     };
 
   })
