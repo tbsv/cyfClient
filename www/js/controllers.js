@@ -20,6 +20,18 @@ angular.module('cyfclient.controllers', [])
 
     UserService.userinfo($scope.userId).then(function(user) {
       $scope.profile = user;
+    }, function(errMsg) {
+
+    });
+
+  })
+
+  // APP
+  .controller('MenuCtrl', function($scope, UserService) {
+    $scope.userId = localStorage.getItem("userId");
+
+    UserService.userinfo($scope.userId).then(function(user) {
+      $scope.profile = user;
       console.log($scope.profile);
     }, function(errMsg) {
 
@@ -55,10 +67,25 @@ angular.module('cyfclient.controllers', [])
 
     $scope.user = {
       name: '',
-      password: ''
+      password: '',
+      firstname: '',
+      lastname: '',
+      role: ''
+    };
+
+    $scope.master = false;
+
+    $scope.checked = function (userRole) {
+      if (userRole) {
+        $scope.master = true;
+      }
     };
 
     $scope.doSignup = function() {
+      if ($scope.master) {
+        $scope.user.role = "master";
+      } else {
+      }
       AuthService.register($scope.user).then(function(msg) {
         $state.go('auth.login');
         var alertPopup = $ionicPopup.alert({

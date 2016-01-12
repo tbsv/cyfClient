@@ -72,7 +72,7 @@ angular.module('cyfclient', [
       url: "/app",
       abstract: true,
       templateUrl: "templates/app/side-menu.html",
-      controller: 'AppCtrl'
+      controller: 'MenuCtrl'
     })
 
     // OVERVIEW

@@ -12,11 +12,34 @@
     <div class="list card">
       <div class="item item-avatar">
         <ionic-letter-avatar data="{{userId}}" shape="round"></ionic-letter-avatar>
-        <h2>{{profile._id}}</h2>
+        <h2>{{profile.name.first}} {{profile.name.last}}</h2>
         <p>{{profile.role}}</p>
       </div>
       <div class="item item-body">
-        <p>Lorem ipsum.</p>
+        <div class="item">
+          Username
+          <span class="badge badge-light">
+            {{profile._id}}
+          </span>
+        </div>
+        <div class="item">
+          Vehicle
+          <span class="badge badge-light">
+            {{profile.vin}}
+          </span>
+        </div>
+        <div class="item">
+          Geofence
+          <span class="badge badge-light">
+            {{profile.geofence}}
+          </span>
+        </div>
+        <div class="item">
+          Speedfence
+          <span class="badge badge-light">
+            {{profile.speedfence}}
+          </span>
+        </div>
       </div>
     </div>
 
