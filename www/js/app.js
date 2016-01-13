@@ -113,13 +113,7 @@ angular.module('cyfclient', [
         }
       },
       resolve: {
-        tour_data: function(TourService, $ionicLoading, $stateParams) {
-          /*
-          $ionicLoading.show({
-            template: 'Loading post ...'
-          });
-          */
-
+        tour_data: function(TourService, $stateParams) {
           var tourId = $stateParams.tourId;
           return TourService.getTour(tourId);
         }
@@ -164,8 +158,31 @@ angular.module('cyfclient', [
       url: "/family",
       views: {
         'menuContent': {
-          templateUrl: "templates/app/family.html",
+          templateUrl: "templates/family/family.html",
           controller: 'FamilyCtrl'
+        }
+      }
+    })
+
+    // FAMILY MEMBER
+    .state('app.familyMember', {
+      url: "/family/:memberId",
+      views: {
+        'menuContent': {
+          templateUrl: "templates/family/familyMember.html",
+          controller: 'FamilyMemberCtrl'
+        }
+      },
+      resolve: {
+        member_data: function(UserService, $stateParams) {
+          var memberId = $stateParams.memberId;
+          var member = '';
+          UserService.userInfo(memberId).then(function(user) {
+            member = user;
+          }, function(errMsg) {
+            // error handling
+          });
+          return member;
         }
       }
     })

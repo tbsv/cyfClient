@@ -1,0 +1,53 @@
+<ion-view class="family-view">
+  <ion-nav-buttons side="left">
+    <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
+  </ion-nav-buttons>
+  <ion-nav-buttons side="right">
+    <button class="button button-icon icon ion-person-add" ng-click="modalMember.show()" ng-hide="profile.role != 'master'"></button>
+  </ion-nav-buttons>
+  <ion-nav-title>
+    <span>Family</span>
+  </ion-nav-title>
+  <ion-content>
+    <h4 class="padding">Members</h4>
+    <div class="list">
+      <a class="item item-avatar" ng-repeat="member in members" ui-sref="app.familyMember({memberId: member._id})">
+        <ionic-letter-avatar data="{{member.name.first}}" shape="round"></ionic-letter-avatar>
+        <h2>{{member.name.first}} {{member.name.last}}</h2>
+        <p>{{member.role}}</p>
+      </a>
+      <div class="item item-divider">
+        Members: {{members.length}}
+      </div>
+    </div>
+  </ion-content>
+
+  <script id="modals/app/newFamilyMember.html" type="text/ng-template">
+    <ion-modal-view>
+      <ion-header-bar class="bar bar-header bar-positive">
+        <h1 class="title">New Family Member</h1>
+        <button class="button button-clear button-primary" ng-click="modalMember.hide()">Cancel</button>
+      </ion-header-bar>
+      <ion-content class="padding">
+        <form name="member_form" class="" novalidate>
+          <div class="list">
+            <label class="item item-input item-stacked-label">
+              <span class="input-label">Username</span>
+              <input type="text" name="user_name" ng-model="user.name" required>
+            </label>
+            <label class="item item-input item-stacked-label">
+              <span class="input-label">First name</span>
+              <input type="text" name="first_name" ng-model="user.firstname" required>
+            </label>
+            <label class="item item-input item-stacked-label">
+              <span class="input-label">Last name</span>
+              <input type="text" name="last_name" ng-model="user.lastname" required>
+            </label>
+            <button class="button button-full button-positive" ng-click="doCreateMember()" ng-disabled="member_form.$invalid">Add {{user.firstname}}</button>
+          </div>
+        </form>
+      </ion-content>
+    </ion-modal-view>
+  </script>
+
+</ion-view>

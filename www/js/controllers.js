@@ -289,27 +289,97 @@ angular.module('cyfclient.controllers', [])
   })
 
   // FAMILY
-  .controller('FamilyCtrl', function($scope, $ionicModal) {
-    $scope.members = [
-      { firstName: 'Gordon', lastName: 'Freeman', type: 'Son' },
-      { firstName: 'Barney', lastName: 'Harbour', type: 'Son' },
-      { firstName: 'Lizzy', lastName: 'Lighthouse', type: 'Daughter' }
-    ];
+  .controller('FamilyCtrl', function($scope, AuthService, MemberService, UserService, $ionicModal, $ionicPopup) {
+    $scope.userId = localStorage.getItem("userId");
+
+    $scope.user = {
+      name: '',
+      password: '',
+      firstname: '',
+      lastname: '',
+      role: '',
+      vin: ''
+    };
+
+    $scope.members = [];
+
+    UserService.userInfo($scope.userId).then(function(user) {
+      $scope.vin = user.vin;
+
+      MemberService.getMembers($scope.vin).then(function(data) {
+        $scope.members = data;
+
+      }, function(errMsg) {
+        // error handling
+      });
+
+    }, function(errMsg) {
+
+    });
+
+
+    $scope.doCreateMember = function() {
+
+      $scope.user.password = "family";
+      $scope.user.role = "child";
+      $scope.user.vin = $scope.vin;
+
+      AuthService.registerMember($scope.user).then(function(msg) {
+        var alertPopup = $ionicPopup.alert({
+          title: 'Signup success!',
+          template: msg
+        });
+        $scope.modalMember.hide();
+      }, function(errMsg) {
+        var alertPopup = $ionicPopup.alert({
+          title: 'Signup failed!',
+          template: errMsg
+        });
+      });
+    };
 
     $ionicModal.fromTemplateUrl('modals/app/newFamilyMember.html', {
       scope: $scope
     }).then(function(modal) {
-      $scope.modal = modal;
+      $scope.modalMember = modal;
     });
 
-    $scope.addMember = function(u) {
-      $scope.members.push({ firstName: u.firstName, lastName: u.lastName, type: u.type });
-      $scope.modal.hide();
-    };
+  })
 
-    $scope.removeMember = function (index) {
-      $scope.members.splice(index, 1);
-    };
+  // FAMILY MEMBER
+  .controller('FamilyMemberCtrl', function($scope, $stateParams, UserService, $ionicModal, $ionicPopover) {
+    $scope.memberId = $stateParams.memberId;
+
+    UserService.userInfo($scope.memberId).then(function(user) {
+      $scope.profile = user;
+    }, function(errMsg) {
+      // error handling
+    });
+
+    $ionicPopover.fromTemplateUrl('popovers/family/memberMenu.html', {
+      scope: $scope,
+    }).then(function(popover) {
+      $scope.popover = popover;
+    });
+
+    $ionicModal.fromTemplateUrl('modals/family/editMember.html', {
+      scope: $scope
+    }).then(function(modal) {
+      $scope.modalMember = modal;
+    });
+
+    $ionicModal.fromTemplateUrl('modals/family/setGeofence.html', {
+      scope: $scope
+    }).then(function(modal) {
+      $scope.modalGeofence = modal;
+    });
+
+    $ionicModal.fromTemplateUrl('modals/family/setSpeedfence.html', {
+      scope: $scope
+    }).then(function(modal) {
+      $scope.modalSpeedfence = modal;
+    });
+
   })
 
   // SETTINGS

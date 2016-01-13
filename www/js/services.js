@@ -45,6 +45,18 @@ angular.module('cyfclient.services', [])
       });
     };
 
+    var registerMember = function(user) {
+      return $q(function(resolve, reject) {
+        $http.post(API_ENDPOINT.url + '/users/family', user).then(function(result) {
+          if (result.data.success) {
+            resolve(result.data.msg);
+          } else {
+            reject(result.data.msg);
+          }
+        });
+      });
+    };
+
     var login = function(user) {
       return $q(function(resolve, reject) {
         $http.post(API_ENDPOINT.url + '/users/auth', user).then(function(result) {
@@ -67,6 +79,7 @@ angular.module('cyfclient.services', [])
     return {
       login: login,
       register: register,
+      registerMember: registerMember,
       logout: logout,
       isAuthenticated: function() {return isAuthenticated;},
     };
@@ -175,6 +188,25 @@ angular.module('cyfclient.services', [])
     return {
       userInfo: userInfo,
       updateUser: updateUser
+    };
+
+  })
+
+  // MEMBER SERVICE
+  .service('MemberService', function($rootScope, $http, $q, API_ENDPOINT) {
+
+    this.getMembers = function(vehicleId) {
+      var deferred = $q.defer();
+
+      $http.get(API_ENDPOINT.url + '/users/family/' + vehicleId)
+        .success(function(data) {
+          deferred.resolve(data);
+        })
+        .error(function(data) {
+          deferred.reject(data);
+        });
+
+      return deferred.promise;
     };
 
   })

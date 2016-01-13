@@ -1,4 +1,4 @@
-<ion-view class="profile-view">
+<ion-view class="member-view">
   <ion-nav-buttons side="left">
     <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
   </ion-nav-buttons>
@@ -11,7 +11,7 @@
   <ion-content>
     <div class="list card">
       <div class="item item-avatar">
-        <ionic-letter-avatar data="{{userId}}" shape="round"></ionic-letter-avatar>
+        <ionic-letter-avatar data="{{avatar}}" shape="round"></ionic-letter-avatar>
         <h2>{{profile.name.first}} {{profile.name.last}}</h2>
         <p>{{profile.role}}</p>
       </div>
@@ -56,26 +56,29 @@
     </div>
   </ion-content>
 
-  <script id="popovers/app/profileMenu.html" type="text/ng-template">
-    <ion-popover-view style="height: 110px; width: 160px">
+  <script id="popovers/family/memberMenu.html" type="text/ng-template">
+    <ion-popover-view style="height: 160px; width: 160px">
       <ion-content>
         <div class="list">
-          <a class="item" ng-click="modalProfile.show(); popover.hide()">
-            Edit profile
+          <a class="item" ng-click="modalMember.show(); popover.hide()">
+            Edit member
           </a>
-          <!--<a class="item" ng-click="modalVehicle.show(); popover.hide()">
-            Change Vehicle
-          </a>-->
+          <a class="item" ng-click="modalGeofence.show(); popover.hide()">
+            Set Geofence
+          </a>
+          <a class="item" ng-click="modalSpeedfence.show(); popover.hide()">
+            Set Speedfence
+          </a>
         </div>
       </ion-content>
     </ion-popover-view>
   </script>
 
-  <script id="modals/app/editProfile.html" type="text/ng-template">
+  <script id="modals/family/editMember.html" type="text/ng-template">
     <ion-modal-view>
       <ion-header-bar class="bar bar-header bar-positive">
-        <h1 class="title">Edit profile</h1>
-        <button class="button button-clear button-primary" ng-click="modalProfile.hide()">Cancel</button>
+        <h1 class="title">Edit member</h1>
+        <button class="button button-clear button-primary" ng-click="modalMember.hide()">Cancel</button>
       </ion-header-bar>
       <ion-content class="padding">
         <div class="list">
@@ -93,17 +96,26 @@
     </ion-modal-view>
   </script>
 
-  <script id="modals/app/changeVehicle.html" type="text/ng-template">
+  <script id="modals/family/setGeofence.html" type="text/ng-template">
     <ion-modal-view>
       <ion-header-bar class="bar bar-header bar-positive">
-        <h1 class="title">Change Vehicle</h1>
-        <button class="button button-clear button-primary" ng-click="modalVehicle.hide()">Cancel</button>
+        <h1 class="title">Set Geofence</h1>
+        <button class="button button-clear button-primary" ng-click="modalGeofence.hide()">Cancel</button>
       </ion-header-bar>
       <ion-content class="padding">
-        <div class="list">
-          <ion-radio ng-repeat="vehicle in vehicles" ng-change="updateVehicle(vehicle.vin)" ng-value="vehicle.vin" ng-model="currentVehicle">{{vehicle.vin}}</ion-radio>
-          <button class="button button-full button-positive" ng-click="doUpdateVehicle(newVehicle)">Update</button>
-        </div>
+        <p>Lorem ipsum</p>
+      </ion-content>
+    </ion-modal-view>
+  </script>
+
+  <script id="modals/family/setSpeedfence.html" type="text/ng-template">
+    <ion-modal-view>
+      <ion-header-bar class="bar bar-header bar-positive">
+        <h1 class="title">Set Speedfence</h1>
+        <button class="button button-clear button-primary" ng-click="modalSpeedfence.hide()">Cancel</button>
+      </ion-header-bar>
+      <ion-content class="padding">
+        <p>Lorem ipsum</p>
       </ion-content>
     </ion-modal-view>
   </script>
