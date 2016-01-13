@@ -308,7 +308,6 @@ angular.module('cyfclient.controllers', [])
 
       MemberService.getMembers($scope.vin).then(function(data) {
         $scope.members = data;
-
       }, function(errMsg) {
         // error handling
       });
@@ -350,11 +349,32 @@ angular.module('cyfclient.controllers', [])
   .controller('FamilyMemberCtrl', function($scope, $stateParams, UserService, $ionicModal, $ionicPopover) {
     $scope.memberId = $stateParams.memberId;
 
+    $scope.user = {
+      _id: $scope.memberId
+    };
+
     UserService.userInfo($scope.memberId).then(function(user) {
       $scope.profile = user;
     }, function(errMsg) {
       // error handling
     });
+
+    $scope.doUpdate = function() {
+      // fill empty memberinfo with previous data for updating
+      if (!$scope.user.name.first) {
+        $scope.user.name.first = $scope.profile.name.first;
+      } else if (!$scope.user.name.last) {
+        $scope.user.name.last = $scope.profile.name.last;
+      }
+
+      UserService.updateUser($scope.user).then(function(user) {
+        $scope.profile = user;
+        $scope.modalMember.hide();
+      }, function(errMsg) {
+        // error handling
+      });
+
+    };
 
     $ionicPopover.fromTemplateUrl('popovers/family/memberMenu.html', {
       scope: $scope,
