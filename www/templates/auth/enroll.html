@@ -1,0 +1,42 @@
+<ion-view class="enroll-view auth-view" cache-view="false">
+  <ion-content scroll="false">
+    <div class="row">
+      <div class="col col-center">
+        <div class="card enroll-container">
+          <form name="enroll_form" class="" novalidate ng-cloak>
+            <div class="item item-body">
+              <label class="item item-input">
+                <input type="text" placeholder="VIN (e.g. WDF11223344556677)" name="user_vin" ng-model="user.vin" required>
+              </label>
+            </div>
+            <div class="item item-body bottom-content">
+              <button type="submit" class="button button-positive button-block" ng-click="doEnroll()">
+                Enroll
+              </button>
+            </div>
+          </form>
+        </div>
+        <div class="alternative-actions">
+          <a class="enroll button button-small button-clear button-light" ng-click="modalEnroll.show()">
+            Show List
+          </a>
+        </div>
+      </div>
+    </div>
+  </ion-content>
+
+  <script id="modals/auth/enrollVehicle.html" type="text/ng-template">
+    <ion-modal-view>
+      <ion-header-bar class="bar bar-header bar-positive">
+        <h1 class="title">Available Vehicles</h1>
+        <button class="button button-clear button-primary" ng-click="modalEnroll.hide()">Cancel</button>
+      </ion-header-bar>
+      <ion-content class="padding">
+        <div class="list">
+          <ion-radio ng-repeat="vehicle in vehicles" ng-change="updateVehicle(vehicle.vin)" ng-model="user.vin" ng-click="updateVehicle(vehicle.vin)">{{vehicle.vin}}</ion-radio>
+        </div>
+      </ion-content>
+    </ion-modal-view>
+  </script>
+
+</ion-view>

@@ -31,7 +31,7 @@ angular.module('cyfclient.controllers', [])
   })
 
   // LOGIN
-  .controller('LoginCtrl', function($scope, AuthService, $ionicPopup, $state) {
+  .controller('LoginCtrl', function($scope, AuthService, UserService, $ionicPopup, $state) {
 
     $scope.user = {
       name: '',
@@ -42,7 +42,18 @@ angular.module('cyfclient.controllers', [])
       AuthService.login($scope.user).then(function(msg) {
         // Save userId to local storage
         localStorage.setItem("userId", $scope.user.name);
-        $state.go('app.overview');
+
+        UserService.userInfo($scope.user.name).then(function(user) {
+          if (!user.vin) {
+            $state.go('auth.enroll');
+          } else {
+            $state.go('app.overview');
+          }
+
+        }, function(errMsg) {
+          // error handling
+        });
+
       }, function(errMsg) {
         var alertPopup = $ionicPopup.alert({
           title: 'Login failed!',
@@ -64,13 +75,15 @@ angular.module('cyfclient.controllers', [])
       role: ''
     };
 
-    $scope.master = false;
+    $scope.master = true;
 
+    /*
     $scope.checked = function (userRole) {
       if (userRole) {
         $scope.master = true;
       }
     };
+    */
 
     $scope.doSignup = function() {
       if ($scope.master) {
@@ -93,12 +106,52 @@ angular.module('cyfclient.controllers', [])
 
   })
 
+  // FORGOT PASSWORD
   .controller('ForgotPasswordCtrl', function($scope, $state) {
     $scope.recoverPassword = function(){
       $state.go('app.overview');
     };
 
     $scope.user = {};
+  })
+
+  // ENROLL VEHICLE
+  .controller('EnrollCtrl', function($scope, $state, UserService, VehicleService, $ionicModal) {
+    $scope.userId = localStorage.getItem("userId");
+
+    $scope.user = {
+      _id: $scope.userId,
+      vin: ''
+    };
+
+    $scope.doEnroll = function() {
+      UserService.updateUser($scope.user).then(function(user) {
+        $state.go('app.overview');
+      }, function(errMsg) {
+        // error handling
+      });
+    };
+
+    $ionicModal.fromTemplateUrl('modals/auth/enrollVehicle.html', {
+      scope: $scope
+    }).then(function(modal) {
+      $scope.modalEnroll = modal;
+
+      $scope.vehicles = [];
+
+      VehicleService.getVehicles().then(function(data){
+        $scope.vehicles = data;
+      }, function(errMsg) {
+        // error handling
+      });
+
+      $scope.updateVehicle = function(vin) {
+        $scope.user.vin = vin;
+        $scope.modalEnroll.hide();
+      };
+
+    });
+
   })
 
   // OVERVIEW
@@ -260,7 +313,7 @@ angular.module('cyfclient.controllers', [])
   })
 
   // SETTINGS
-  .controller('SettingsCtrl', function($scope, AuthService, $ionicPopup, $state) {
+  .controller('SettingsCtrl', function($scope, AuthService, $ionicPopup, $ionicHistory, $state) {
     $scope.logout = function() {
 
         var confirmPopup = $ionicPopup.confirm({
@@ -271,7 +324,9 @@ angular.module('cyfclient.controllers', [])
         confirmPopup.then(function(res) {
           if(res) {
             AuthService.logout();
-            $state.go('auth.check');
+            $ionicHistory.clearCache().then(function(){
+              $state.go('auth.check');
+            })
           } else {
 
           }

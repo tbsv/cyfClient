@@ -68,6 +68,12 @@ angular.module('cyfclient', [
       controller: 'ForgotPasswordCtrl'
     })
 
+    .state('auth.enroll', {
+      url: '/enroll',
+      templateUrl: "templates/auth/enroll.html",
+      controller: 'EnrollCtrl'
+    })
+
     .state('app', {
       url: "/app",
       abstract: true,
