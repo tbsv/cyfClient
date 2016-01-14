@@ -100,10 +100,34 @@
     <ion-modal-view>
       <ion-header-bar class="bar bar-header bar-positive">
         <h1 class="title">Set Geofence</h1>
+        <button class="button button-icon icon ion-pinpoint" ng-click="createNew()"></button>
         <button class="button button-clear button-primary" ng-click="modalGeofence.hide()">Cancel</button>
       </ion-header-bar>
       <ion-content class="padding">
-        <p>Lorem ipsum</p>
+        <div class="list">
+          <!--<div class="item item-toggle">
+            Positive/Negative
+            <label class="toggle toggle-positive">
+              <input type="checkbox">
+              <div class="track">
+                <div class="handle"></div>
+              </div>
+            </label>
+          </div>-->
+          <div class="item">
+            Radius
+            <span class="badge badge-light">{{paths.circle.radius}} m</span>
+          </div>
+          <div class="item range range-positive">
+            <i class="icon ion-ios-circle-outline"></i>
+            <input type="range" name="speedfence" min="30" max="5000" ng-model="paths.circle.radius" ng-change="updateSpeedfence(paths.circle.radius)">
+            <i class="icon ion-ios-circle-filled"></i>
+          </div>
+          <div class="item">
+            <leaflet resizeable markers="markers" paths="paths" center="center" height="500px" width="100%"></leaflet>
+          </div>
+          <button class="button button-block button-positive" ng-click="doSetGeofence()">Save</button>
+        </div>
       </ion-content>
     </ion-modal-view>
   </script>
@@ -129,7 +153,7 @@
             <input type="range" name="speedfence" min="50" max="320" ng-model="newSpeedfence" ng-change="updateSpeedfence(newSpeedfence)">
             <i class="icon ion-ios-speedometer"></i>
           </div>
-          <button class="button button-block button-positive" ng-click="doSetSpeedfence()">Set</button>
+          <button class="button button-block button-positive" ng-click="doSetSpeedfence()">Save</button>
         </div>
       </ion-content>
     </ion-modal-view>
