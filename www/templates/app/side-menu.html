@@ -16,9 +16,10 @@
       <ion-list>
         <ion-item class="heading-item item item-avatar" nav-clear menu-close ui-sref="app.profile">
           <div class="user-image-container">
-            <pre-img ratio="_1_1" helper-class="rounded-image">
+            <!--<pre-img ratio="_1_1" helper-class="rounded-image">
               <img class="user-image" ng-src="img/tobi-square.jpg" spinner-on-load>
-            </pre-img>
+            </pre-img>-->
+            <ionic-letter-avatar class="user-image" data="{{avatar}}" shape="round"></ionic-letter-avatar>
           </div>
           <h2 class="greeting">Hallo {{profile.name.first}}</h2>
           <p class="message">{{profile.vin}}</p>

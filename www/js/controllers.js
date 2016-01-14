@@ -19,8 +19,9 @@ angular.module('cyfclient.controllers', [])
   })
 
   // APP
-  .controller('MenuCtrl', function($scope, UserService) {
+  .controller('MenuCtrl', function($rootScope, $scope, UserService) {
     $scope.userId = localStorage.getItem("userId");
+    $scope.avatar = localStorage.getItem("firstName");
 
     UserService.userInfo($scope.userId).then(function(user) {
       $scope.profile = user;
@@ -40,10 +41,11 @@ angular.module('cyfclient.controllers', [])
 
     $scope.doLogin = function() {
       AuthService.login($scope.user).then(function(msg) {
-        // Save userId to local storage
+        // Save userId and firstName to local storage
         localStorage.setItem("userId", $scope.user.name);
 
         UserService.userInfo($scope.user.name).then(function(user) {
+          localStorage.setItem("firstName", user.name.first);
           if (!user.vin) {
             $state.go('auth.enroll');
           } else {
@@ -231,6 +233,7 @@ angular.module('cyfclient.controllers', [])
       }
 
       UserService.updateUser($scope.user).then(function(user) {
+        localStorage.setItem("firstName", user.name.first);
         $scope.profile = user;
         $scope.modalProfile.hide();
       }, function(errMsg) {
@@ -359,17 +362,13 @@ angular.module('cyfclient.controllers', [])
       // error handling
     });
 
-    $scope.doUpdate = function() {
-      // fill empty memberinfo with previous data for updating
-      if (!$scope.user.name.first) {
-        $scope.user.name.first = $scope.profile.name.first;
-      } else if (!$scope.user.name.last) {
-        $scope.user.name.last = $scope.profile.name.last;
-      }
+    $scope.doSetSpeedfence = function() {
+
+      //$scope.user.speedfence = $scope.newSpeedfence;
 
       UserService.updateUser($scope.user).then(function(user) {
         $scope.profile = user;
-        $scope.modalMember.hide();
+        $scope.modalSpeedfence.hide();
       }, function(errMsg) {
         // error handling
       });
@@ -398,6 +397,11 @@ angular.module('cyfclient.controllers', [])
       scope: $scope
     }).then(function(modal) {
       $scope.modalSpeedfence = modal;
+
+      $scope.updateSpeedfence = function(sf) {
+        $scope.user.speedfence = sf;
+      };
+
     });
 
   })

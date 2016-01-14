@@ -49,7 +49,7 @@
         <div class="item" ng-hide="profile.role == 'master'">
           Speedfence
           <span class="badge badge-light">
-            {{profile.speedfence}}
+            {{profile.speedfence}} km/h
           </span>
         </div>
       </div>
@@ -63,10 +63,10 @@
           <a class="item" ng-click="modalMember.show(); popover.hide()">
             Edit member
           </a>
-          <a class="item" ng-click="modalGeofence.show(); popover.hide()">
+          <a class="item" ng-click="modalGeofence.show(); popover.hide()" ng-hide="profile.role == 'master'">
             Set Geofence
           </a>
-          <a class="item" ng-click="modalSpeedfence.show(); popover.hide()">
+          <a class="item" ng-click="modalSpeedfence.show(); popover.hide()" ng-hide="profile.role == 'master'">
             Set Speedfence
           </a>
         </div>
@@ -90,7 +90,7 @@
             <span class="input-label">Last name</span>
             <input ng-model="user.name.last" type="text" placeholder="{{profile.name.last}}">
           </label>
-          <button class="button button-full button-positive" ng-click="doUpdate()">Update</button>
+          <button class="button button-block button-positive" ng-click="doUpdate()">Update</button>
         </div>
       </ion-content>
     </ion-modal-view>
@@ -115,7 +115,22 @@
         <button class="button button-clear button-primary" ng-click="modalSpeedfence.hide()">Cancel</button>
       </ion-header-bar>
       <ion-content class="padding">
-        <p>Lorem ipsum</p>
+        <div class="list">
+          <div class="item">
+            Current Speedfence
+            <span class="badge badge-light">{{profile.speedfence}} km/h</span>
+          </div>
+          <div class="item">
+            New Speedfence
+            <span class="badge badge-light">{{newSpeedfence}} km/h</span>
+          </div>
+          <div class="item range range-positive">
+            <i class="icon ion-ios-speedometer-outline"></i>
+            <input type="range" name="speedfence" min="50" max="320" ng-model="newSpeedfence" ng-change="updateSpeedfence(newSpeedfence)">
+            <i class="icon ion-ios-speedometer"></i>
+          </div>
+          <button class="button button-block button-positive" ng-click="doSetSpeedfence()">Set</button>
+        </div>
       </ion-content>
     </ion-modal-view>
   </script>
