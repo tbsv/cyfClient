@@ -141,7 +141,7 @@ angular.module('cyfclient.controllers', [])
 
       $scope.vehicles = [];
 
-      VehicleService.getVehicles().then(function(data){
+      VehicleService.getVehiclesOfReadiConnect().then(function(data){
         $scope.vehicles = data;
       }, function(errMsg) {
         // error handling
@@ -356,6 +356,16 @@ angular.module('cyfclient.controllers', [])
       _id: $scope.memberId
     };
 
+    $scope.geolocation = {};
+
+    /*
+    $scope.geofence = {
+      latitude: $scope.profile.geofence.latitude,
+      longitude: $scope.profile.geofence.longitude,
+      radius: $scope.profile.geofence.radius
+    };
+    */
+
     $scope.geofence = {
       latitude: 48.764409799999996,
       longitude: 9.164410499999999,
@@ -370,7 +380,6 @@ angular.module('cyfclient.controllers', [])
     $scope.markers = {
       marker: {
         draggable: true,
-        message: 'Location',
         lat: $scope.geofence.latitude,
         lng: $scope.geofence.longitude,
         icon: {}
@@ -385,13 +394,24 @@ angular.module('cyfclient.controllers', [])
       }
     };
 
+    $scope.geofence = function () {
+
+    };
+
     UserService.userInfo($scope.memberId).then(function(user) {
       $scope.profile = user;
+
+      $scope.geofence = {
+        latitude: user.geofence.latitude,
+        longitude: user.geofence.longitude,
+        radius: user.geofence.radius
+      };
+
     }, function(errMsg) {
       // error handling
     });
 
-    $scope.createNew = function () {
+    $scope.getLocation = function () {
       $ionicLoading.show({
         template: 'Searching current location...'
       });
@@ -399,27 +419,39 @@ angular.module('cyfclient.controllers', [])
         .then(function (position) {
           $ionicLoading.hide();
 
-          $rootScope.geolocation = {
+          $rootScope.geofence = {
             latitude: position.coords.latitude,
             longitude: position.coords.longitude
           };
 
           console.log(position);
 
-          /*
-          GeofenceService.createdGeofenceDraft = {
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude,
-            radius: 1000
-          };
-           */
-
         }, function (reason) {
           $ionicLoading.show({
             template: 'Cannot obtain current location',
-            duration: 1500
+            duration: 1000
           });
         });
+    };
+
+    $scope.doSetGeofence = function() {
+      $scope.newGeofence = {
+        latitude: $scope.markers.marker.lat,
+        longitude: $scope.markers.marker.lng,
+        radius: parseInt($scope.paths.circle.radius)
+      };
+
+      $scope.user.geofence = $scope.newGeofence;
+
+      console.log($scope.user);
+
+      UserService.updateUser($scope.user).then(function(user) {
+        $scope.profile = user;
+        $scope.modalGeofence.hide();
+      }, function(errMsg) {
+        // error handling
+      });
+
     };
 
     $scope.doSetSpeedfence = function() {
@@ -448,13 +480,6 @@ angular.module('cyfclient.controllers', [])
       scope: $scope
     }).then(function(modal) {
       $scope.modalGeofence = modal;
-
-      $scope.geofence = {
-        latitude: $rootScope.geolocation.latitude,
-        longitude: $rootScope.geolocation.longitude,
-        radius: 1000
-      };
-
     });
 
     $ionicModal.fromTemplateUrl('modals/family/setSpeedfence.html', {

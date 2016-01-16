@@ -43,7 +43,8 @@
         <div class="item" ng-hide="profile.role == 'master'">
           Geofence
           <span class="badge badge-light">
-            {{profile.geofence}}
+            <div><i class="icon ion-ios-location"> {{profile.geofence.latitude | limitTo:5}} lat / {{profile.geofence.longitude | limitTo:5}} lng </i><br /></div>
+            <div><i class="icon ion-ios-circle-filled"> {{profile.geofence.radius}}m</i></div>
           </span>
         </div>
         <div class="item" ng-hide="profile.role == 'master'">
@@ -100,7 +101,7 @@
     <ion-modal-view>
       <ion-header-bar class="bar bar-header bar-positive">
         <h1 class="title">Set Geofence</h1>
-        <button class="button button-icon icon ion-pinpoint" ng-click="createNew()"></button>
+        <button class="button button-icon icon ion-pinpoint" ng-click="getLocation()"></button>
         <button class="button button-clear button-primary" ng-click="modalGeofence.hide()">Cancel</button>
       </ion-header-bar>
       <ion-content class="padding">
@@ -120,7 +121,7 @@
           </div>
           <div class="item range range-positive">
             <i class="icon ion-ios-circle-outline"></i>
-            <input type="range" name="speedfence" min="30" max="5000" ng-model="paths.circle.radius" ng-change="updateSpeedfence(paths.circle.radius)">
+            <input type="range" name="volume" min="30" max="5000" ng-model="paths.circle.radius">
             <i class="icon ion-ios-circle-filled"></i>
           </div>
           <div class="item">
