@@ -154,6 +154,20 @@ angular.module('cyfclient.services', [])
       return deferred.promise;
     };
 
+    this.getVehiclesOfReadiConnect = function() {
+      var deferred = $q.defer();
+
+      $http.get(API_ENDPOINT.url + '/vehicles/readi')
+        .success(function(data) {
+          deferred.resolve(data);
+        })
+        .error(function(data) {
+          deferred.reject(data);
+        });
+
+      return deferred.promise;
+    };
+
   })
 
   // USER SERVICE
