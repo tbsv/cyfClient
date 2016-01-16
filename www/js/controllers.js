@@ -118,7 +118,7 @@ angular.module('cyfclient.controllers', [])
   })
 
   // ENROLL VEHICLE
-  .controller('EnrollCtrl', function($scope, $state, UserService, VehicleService, $ionicModal) {
+  .controller('EnrollCtrl', function($scope, $state, UserService, VehicleService, $ionicModal, $ionicPopup) {
     $scope.userId = localStorage.getItem("userId");
 
     $scope.user = {
@@ -127,10 +127,25 @@ angular.module('cyfclient.controllers', [])
     };
 
     $scope.doEnroll = function() {
-      UserService.updateUser($scope.user).then(function(user) {
-        $state.go('app.overview');
+
+      VehicleService.checkVin($scope.user.vin).then(function(msg){
+
+        var alertPopup = $ionicPopup.alert({
+          title: 'VIN valid!',
+          template: msg
+        });
+
+        UserService.updateUser($scope.user).then(function(user) {
+          $state.go('app.overview');
+        }, function(errMsg) {
+          // error handling
+        });
+
       }, function(errMsg) {
-        // error handling
+        var alertPopup = $ionicPopup.alert({
+          title: 'VIN invalid!',
+          template: errMsg
+        });
       });
     };
 
