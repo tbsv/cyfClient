@@ -392,14 +392,19 @@ angular.module('cyfclient.controllers', [])
       lng: $scope.geofence.longitude,
       zoom: 13
     };
+
     $scope.markers = {
       marker: {
         draggable: true,
+        focus: true,
+        message: "You are here!",
         lat: $scope.geofence.latitude,
         lng: $scope.geofence.longitude,
         icon: {}
       }
     };
+
+
     $scope.paths = {
       circle: {
         type: 'circle',
@@ -407,10 +412,6 @@ angular.module('cyfclient.controllers', [])
         latlngs: $scope.markers.marker,
         clickable: false
       }
-    };
-
-    $scope.geofence = function () {
-
     };
 
     UserService.userInfo($scope.memberId).then(function(user) {
@@ -426,6 +427,24 @@ angular.module('cyfclient.controllers', [])
       // error handling
     });
 
+    $scope.doUpdateMember = function() {
+      // fill empty userinfo with previous data for updating
+      if (!$scope.user.name.first) {
+        $scope.user.name.first = $scope.profile.name.first;
+      } else if (!$scope.user.name.last) {
+        $scope.user.name.last = $scope.profile.name.last;
+      }
+
+      UserService.updateUser($scope.user).then(function(user) {
+        localStorage.setItem("firstName", user.name.first);
+        $scope.profile = user;
+        $scope.modalMember.hide();
+      }, function(errMsg) {
+        // error handling
+      });
+
+    };
+
     $scope.getLocation = function () {
       $ionicLoading.show({
         template: 'Searching current location...'
@@ -434,12 +453,12 @@ angular.module('cyfclient.controllers', [])
         .then(function (position) {
           $ionicLoading.hide();
 
-          $rootScope.geofence = {
+          $scope.geolocation = {
             latitude: position.coords.latitude,
             longitude: position.coords.longitude
           };
 
-          console.log(position);
+          $scope.geofence = $scope.geolocation;
 
         }, function (reason) {
           $ionicLoading.show({
