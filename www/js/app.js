@@ -175,15 +175,8 @@ angular.module('cyfclient', [
         }
       },
       resolve: {
-        member_data: function(UserService, $stateParams) {
-          var memberId = $stateParams.memberId;
-          var member = '';
-          UserService.userInfo(memberId).then(function(user) {
-            member = user;
-          }, function(errMsg) {
-            // error handling
-          });
-          return member;
+        geofence_data: function (UserService, $stateParams) {
+          return UserService.userInfo($stateParams.memberId);
         }
       }
     })

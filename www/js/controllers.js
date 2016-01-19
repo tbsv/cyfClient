@@ -364,65 +364,26 @@ angular.module('cyfclient.controllers', [])
   })
 
   // FAMILY MEMBER
-  .controller('FamilyMemberCtrl', function($rootScope, $scope, $state, $stateParams, UserService, GeoLocationService, GeofenceService, $ionicLoading, $ionicModal, $ionicPopover) {
+  .controller('FamilyMemberCtrl', function($rootScope, $scope, $state, $stateParams, geofence_data, UserService, GeoLocationService, GeofenceService, $ionicLoading, $ionicModal, $ionicPopover) {
     $scope.memberId = $stateParams.memberId;
 
     $scope.user = {
       _id: $scope.memberId
     };
 
-    $scope.geolocation = {};
+    $scope.geofence = {};
 
-    /*
-    $scope.geofence = {
-      latitude: $scope.profile.geofence.latitude,
-      longitude: $scope.profile.geofence.longitude,
-      radius: $scope.profile.geofence.radius
-    };
-    */
-
-    $scope.geofence = {
-      latitude: 48.764409799999996,
-      longitude: 9.164410499999999,
-      radius: 1000
-    };
-
-    $scope.center = {
-      lat: $scope.geofence.latitude,
-      lng: $scope.geofence.longitude,
-      zoom: 13
-    };
-
-    $scope.markers = {
-      marker: {
-        draggable: true,
-        focus: true,
-        message: "You are here!",
-        lat: $scope.geofence.latitude,
-        lng: $scope.geofence.longitude,
-        icon: {}
-      }
-    };
-
-
-    $scope.paths = {
-      circle: {
-        type: 'circle',
-        radius: $scope.geofence.radius,
-        latlngs: $scope.markers.marker,
-        clickable: false
-      }
-    };
+    // set default geofence if empty
+    if (geofence_data.geofence === null) {
+      $scope.geofence.latitude = 48.764409799999996;
+      $scope.geofence.longitude = 9.164410499999999;
+      $scope.geofence.radius = 1000;
+    } else {
+      $scope.geofence = geofence_data.geofence;
+    }
 
     UserService.userInfo($scope.memberId).then(function(user) {
       $scope.profile = user;
-
-      $scope.geofence = {
-        latitude: user.geofence.latitude,
-        longitude: user.geofence.longitude,
-        radius: user.geofence.radius
-      };
-
     }, function(errMsg) {
       // error handling
     });
@@ -453,12 +414,28 @@ angular.module('cyfclient.controllers', [])
         .then(function (position) {
           $ionicLoading.hide();
 
-          $scope.geolocation = {
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude
+          // define new center with geolocation
+          $scope.map.center.lat  = position.coords.latitude;
+          $scope.map.center.lng = position.coords.longitude;
+          $scope.map.center.zoom = 15;
+
+          // define new marker with geolocation
+          $scope.map.markers.mainMarker = {
+            lat:position.coords.latitude,
+            lng:position.coords.longitude,
+            focus: true,
+            draggable: true
           };
 
-          $scope.geofence = $scope.geolocation;
+          // define new path with geolocation
+          $scope.paths = {
+            circle: {
+              type: 'circle',
+              radius: 500,
+              latlngs: $scope.map.markers.mainMarker,
+              clickable: false
+            }
+          };
 
         }, function (reason) {
           $ionicLoading.show({
@@ -470,14 +447,12 @@ angular.module('cyfclient.controllers', [])
 
     $scope.doSetGeofence = function() {
       $scope.newGeofence = {
-        latitude: $scope.markers.marker.lat,
-        longitude: $scope.markers.marker.lng,
+        latitude: $scope.map.markers.mainMarker.lat,
+        longitude: $scope.map.markers.mainMarker.lng,
         radius: parseInt($scope.paths.circle.radius)
       };
 
       $scope.user.geofence = $scope.newGeofence;
-
-      console.log($scope.user);
 
       UserService.updateUser($scope.user).then(function(user) {
         $scope.profile = user;
@@ -497,6 +472,46 @@ angular.module('cyfclient.controllers', [])
       });
 
     };
+
+    $scope.$on("$stateChangeSuccess", function() {
+
+      var mainMarker = {
+        lat: parseFloat($scope.geofence.latitude),
+        lng: parseFloat($scope.geofence.longitude),
+        focus: true,
+        draggable: true};
+
+      $scope.map = {
+        center: {
+          lat : parseFloat($scope.geofence.latitude),
+          lng : parseFloat($scope.geofence.longitude),
+          zoom : 12},
+        markers: {
+          mainMarker: angular.copy(mainMarker)}
+      };
+
+      $scope.paths = {
+        circle: {
+          type: 'circle',
+          radius: parseInt($scope.geofence.latitude),
+          latlngs: mainMarker,
+          clickable: false
+        }
+      };
+
+    });
+
+    // Update path when user drags marker
+    $scope.$on('leafletDirectiveMarker.dragend', function(e, args) {
+      $scope.paths = {
+        circle: {
+          type: 'circle',
+          radius: $scope.paths.circle.radius,
+          latlngs: args.leafletEvent.target._latlng,
+          clickable: false
+        }
+      };
+    });
 
     $ionicPopover.fromTemplateUrl('popovers/family/memberMenu.html', {
       scope: $scope,
