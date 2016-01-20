@@ -433,6 +433,10 @@ angular.module('cyfclient.controllers', [])
               type: 'circle',
               radius: 500,
               latlngs: $scope.map.markers.mainMarker,
+              color: '#0c60ee',
+              weight: 4,
+              fillColor: '#387ef5',
+              fillOpacity: 0.3,
               clickable: false
             }
           };
@@ -495,6 +499,10 @@ angular.module('cyfclient.controllers', [])
           type: 'circle',
           radius: parseInt($scope.geofence.latitude),
           latlngs: mainMarker,
+          color: '#0c60ee',
+          weight: 4,
+          fillColor: '#387ef5',
+          fillOpacity: 0.3,
           clickable: false
         }
       };
@@ -508,6 +516,10 @@ angular.module('cyfclient.controllers', [])
           type: 'circle',
           radius: $scope.paths.circle.radius,
           latlngs: args.leafletEvent.target._latlng,
+          color: '#0c60ee',
+          weight: 4,
+          fillColor: '#387ef5',
+          fillOpacity: 0.3,
           clickable: false
         }
       };
