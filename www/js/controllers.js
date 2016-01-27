@@ -191,20 +191,24 @@ angular.module('cyfclient.controllers', [])
   })
 
   // TOURS
-  .controller('ToursCtrl', function($scope, $ionicLoading, TourService) {
-
-    $scope.tours = [];
+  .controller('ToursCtrl', function($scope, $ionicLoading, TourService, UserService) {
+    $scope.userId = localStorage.getItem("userId");
 
     $scope.doRefresh = function() {
       $ionicLoading.show({
         template: 'Loading tours...'
       });
 
-      TourService.getTours()
-        .then(function(data){
-          $scope.tours = data;
-          $ionicLoading.hide();
-        });
+      UserService.userInfo($scope.userId).then(function(user) {
+        TourService.getTours(user.vin)
+          .then(function(data){
+            $scope.tours = data;
+            $ionicLoading.hide();
+          });
+      }, function(errMsg) {
+
+      });
+
     };
 
     $scope.doRefresh();

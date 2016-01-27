@@ -102,12 +102,13 @@ angular.module('cyfclient.services', [])
 
 
   // TOUR SERVICE
-  .service('TourService', function($rootScope, $http, $q) {
+  .service('TourService', function($rootScope, $http, $q, API_ENDPOINT) {
 
-    this.getTours = function() {
+    this.getTours = function(vehicleId) {
+
       var deferred = $q.defer();
 
-      $http.get('tours-sample.json')
+      $http.get(API_ENDPOINT.url + '/tours/family/' + vehicleId)
         .success(function(data) {
           deferred.resolve(data);
         })
@@ -116,17 +117,29 @@ angular.module('cyfclient.services', [])
         });
 
       return deferred.promise;
+
     };
 
     this.getTour = function(tourId) {
       var deferred = $q.defer();
 
-      $http.get('tours-sample.json')
+      $http.get(API_ENDPOINT.url + '/tours/' + tourId)
         .success(function(data) {
-          var tours = data;
-          tours.forEach(function(tour) {
-            if (tour.timestamp === tourId) deferred.resolve(tour)
-          });
+          deferred.resolve(data)
+        })
+        .error(function(data) {
+          deferred.reject(data);
+        });
+
+      return deferred.promise;
+    };
+
+    this.updateTour = function(tour) {
+      var deferred = $q.defer();
+
+      $http.put(API_ENDPOINT.url + '/tours/update/' + tour._id, tour)
+        .success(function(data) {
+          deferred.resolve(data);
         })
         .error(function(data) {
           deferred.reject(data);
@@ -171,6 +184,18 @@ angular.module('cyfclient.services', [])
     this.checkVin = function(vin) {
       return $q(function(resolve, reject) {
         $http.get(API_ENDPOINT.url + '/vehicles/readi/' + vin).then(function(result) {
+          if (result.data.success) {
+            resolve(result.data.msg);
+          } else {
+            reject(result.data.msg);
+          }
+        });
+      });
+    };
+
+    this.createVehicle = function(vehicle) {
+      return $q(function(resolve, reject) {
+        $http.post(API_ENDPOINT.url + '/vehicles', vehicle).then(function(result) {
           if (result.data.success) {
             resolve(result.data.msg);
           } else {
