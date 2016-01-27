@@ -7,15 +7,14 @@
   </ion-nav-title>
   <ion-content>
     <div class="list">
-      <a class="item item-avatar" ng-repeat="tour in tours | orderBy:'timestamp'" ui-sref="app.tour({tourId: tour.timestamp})">
-        <ionic-letter-avatar data="{{tour.user}}" shape="round"></ionic-letter-avatar>
-        <h2>{{tour.timestamp}}</h2>
-          <p>
-          <span class="icon ion-person"> {{tour.user}}</span>
-          <span class="icon ion-ios-location"> {{tour.mileage_start}} km</span>
-          <span class="icon ion-ios-clock"> {{tour.timestamp_end}} min</span>
-          <span class="icon ion-stats-bars"> {{tour.ecoscore}} %</span>
-          </p>
+      <a class="item item-avatar" ng-repeat="tour in tours | orderBy:'route.timestampStart'" ui-sref="app.tour({tourId: tour._id})">
+        <ionic-letter-avatar data="{{tour.userId}}" shape="round"></ionic-letter-avatar>
+        <h2>{{tour.route.timestampStart | date:"dd.MM.yyyy HH:mm"}}</h2>
+          <div class="row">
+          <span class="icon ion-person" style="width: 80px"> {{tour.userId}}</span>
+          <span class="icon ion-ios-location" style="width: 80px"> {{tour.route.routeDistance}} km</span>
+          <span class="icon ion-ios-clock" style="width: 80px"> {{tour.route.routeDuration | secondsToHHmmss}}</span>
+          </div>
       </a>
     </div>
   </ion-content>

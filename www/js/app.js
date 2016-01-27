@@ -210,6 +210,12 @@ angular.module('cyfclient', [
 
 })
 
+  .filter('secondsToHHmmss', function($filter) {
+    return function(seconds) {
+      return $filter('date')(new Date(0, 0, 0).setSeconds(seconds), 'HH:mm:ss');
+    };
+  })
+
   /*
   .run(function ($rootScope, $state, AuthService, AUTH_EVENTS) {
     $rootScope.$on('$stateChangeStart', function (event,next, nextParams, fromState) {
