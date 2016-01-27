@@ -128,11 +128,22 @@ angular.module('cyfclient.controllers', [])
 
     $scope.doEnroll = function() {
 
-      VehicleService.checkVin($scope.user.vin).then(function(msg){
+      $scope.vehicle = {
+        vin: $scope.user.vin,
+        userId: $scope.user._id
+      }
+
+      VehicleService.checkVin($scope.vehicle.vin).then(function(msg){
 
         var alertPopup = $ionicPopup.alert({
           title: 'VIN valid!',
           template: msg
+        });
+
+        VehicleService.createVehicle($scope.vehicle).then(function(msg) {
+          console.log(msg);
+        }, function(errMsg) {
+          // error handling
         });
 
         UserService.updateUser($scope.user).then(function(user) {
@@ -201,9 +212,161 @@ angular.module('cyfclient.controllers', [])
   })
 
   // TOUR
-  .controller('TourCtrl', function($scope, tour_data, $ionicLoading) {
+  .controller('TourCtrl', function($scope, tour_data, MemberService, TourService, UserService, $ionicLoading, $ionicModal, $ionicPopover) {
+    $scope.userId = localStorage.getItem("userId");
+    $scope.assignee = '';
+
+    $scope.geofenceAlerts = '';
+
     $scope.tour = tour_data;
     $ionicLoading.hide();
+
+    $scope.route = [];
+
+    $scope.checkGeofenceAlerts = function() {
+      if ($scope.tour.geofenceAlerts) {
+        $scope.geofenceAlerts = 1;
+      } else {
+        $scope.geofenceAlerts = 0;
+      }
+    };
+
+    for (var i = 0; i < $scope.tour.route.drivenRoute.gpsLatitude.length; i++) {
+      $scope.route.push({lat: parseFloat($scope.tour.route.drivenRoute.gpsLatitude[i]), lng: parseFloat($scope.tour.route.drivenRoute.gpsLongitude[i])});
+    }
+
+    $scope.getFamilyMembers = function() {
+      UserService.userInfo($scope.userId).then(function(user) {
+        $scope.vin = user.vin;
+
+        MemberService.getMembers($scope.vin).then(function(data) {
+          $scope.members = data;
+        }, function(errMsg) {
+          // error handling
+        });
+
+      }, function(errMsg) {
+
+      });
+    };
+
+    $scope.doAssign = function() {
+      $scope.tour.userId = $scope.assignee;
+
+      TourService.updateTour($scope.tour).then(function(tour) {
+        $scope.tour = tour;
+        $scope.modalAssign.hide();
+      }, function(errMsg) {
+        // error handling
+      });
+
+    };
+
+    $scope.$on("$stateChangeSuccess", function() {
+
+      var startMarker = {
+        lat: parseFloat($scope.tour.route.drivenRoute.gpsLatitude[0]),
+        lng: parseFloat($scope.tour.route.drivenRoute.gpsLongitude[0]),
+        focus: true,
+        draggable: false};
+
+      var endMarker = {
+        lat: parseFloat($scope.tour.route.drivenRoute.gpsLatitude[$scope.tour.route.drivenRoute.gpsLatitude.length-1]),
+        lng: parseFloat($scope.tour.route.drivenRoute.gpsLongitude[$scope.tour.route.drivenRoute.gpsLongitude.length-1]),
+        focus: true,
+        draggable: false};
+
+      $scope.map = {
+        center: {
+          lat : parseFloat($scope.tour.route.drivenRoute.gpsLatitude[0]),
+          lng : parseFloat($scope.tour.route.drivenRoute.gpsLongitude[0]),
+          zoom : 14},
+        markers: {
+          startMarker: angular.copy(startMarker),
+          endMarker: angular.copy(endMarker)}
+      };
+
+      $scope.paths = {
+        route: {
+          latlngs: [],
+          color: '#0c60ee',
+          weight: 10,
+          clickable: false
+        }
+      };
+
+      for (var i = 0; i < $scope.route.length; i++) {
+        $scope.paths.route.latlngs.push($scope.route[i]);
+      }
+
+    });
+
+    $ionicModal.fromTemplateUrl('modals/tour/showMap.html', {
+      scope: $scope
+    }).then(function(modal) {
+      $scope.modalMap = modal;
+    });
+
+    $ionicModal.fromTemplateUrl('modals/tour/showSpeed.html', {
+      scope: $scope
+    }).then(function(modal) {
+      $scope.modalSpeed = modal;
+
+      var speedData = new Array();
+      var speedLabel = new Array();
+      var speedFence = new Array();
+
+      for (var i = 0; i < $scope.tour.route.speed.length; i++) {
+        speedData.push(parseInt($scope.tour.route.speed[i]));
+        speedFence.push(parseInt(100));
+        speedLabel.push('');
+      }
+
+      $scope.chartData = {
+        labels: speedLabel,
+        series: ['Speedfence', 'Speed'],
+        data: [
+          speedFence,
+          speedData
+        ],
+        options: {
+          pointDot : false,
+          scaleShowHorizontalLines: true,
+          scaleShowVerticalLines: false,
+          scaleShowLabels: true,
+          responsive: true
+        },
+        colours: [
+          {
+            fillColor: 'rgba(255, 255, 255, 0.0)',
+            strokeColor: 'rgba(255, 76, 76, 0.5)',
+          },
+          {
+            fillColor: 'rgba(56, 126, 245, 0.7)',
+            strokeColor: 'rgba(12, 96, 238, 0.9)',
+          }
+        ]
+      };
+
+    });
+
+    $ionicModal.fromTemplateUrl('modals/tour/assignTour.html', {
+      scope: $scope
+    }).then(function(modal) {
+      $scope.modalAssign = modal;
+
+      $scope.updateAssignee = function(id) {
+        $scope.assignee = id;
+      };
+
+    });
+
+    $ionicPopover.fromTemplateUrl('popovers/tour/showEcoScore.html', {
+      scope: $scope,
+    }).then(function(popover) {
+      $scope.popoverScore = popover;
+    });
+
   })
 
   // ECO-SCORES
