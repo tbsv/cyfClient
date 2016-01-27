@@ -191,7 +191,7 @@ angular.module('cyfclient.controllers', [])
   })
 
   // TOURS
-  .controller('ToursCtrl', function($scope, $ionicLoading, TourService, UserService) {
+  .controller('ToursCtrl', function($scope, $filter, $ionicLoading, TourService, UserService) {
     $scope.userId = localStorage.getItem("userId");
 
     $scope.doRefresh = function() {
@@ -203,8 +203,25 @@ angular.module('cyfclient.controllers', [])
         TourService.getTours(user.vin)
           .then(function(data){
             $scope.tours = data;
+
+            $scope.dates = {};
+            var date;
+
+            for(var i = 0; i < $scope.tours.length; i++) {
+              date = $filter('date')($scope.tours[i].route.timestampStart, "dd.MM.yyyy");
+
+              if(!$scope.dates[date]) {
+                $scope.dates[date] = [];
+              }
+
+              $scope.dates[date].push($scope.tours[i]);
+            }
+
+          })
+          .then(function(data){
             $ionicLoading.hide();
-          });
+            $scope.$broadcast('scroll.refreshComplete');
+        });
       }, function(errMsg) {
 
       });
@@ -374,16 +391,34 @@ angular.module('cyfclient.controllers', [])
   })
 
   // ECO-SCORES
-  .controller('ScoresCtrl', function($scope, $http) {
+  .controller('ScoresCtrl', function($scope) {
+
     $scope.chartData = {
-      labels: ["January", "February", "March", "April", "May"],
-      series: ['Foo', 'Baz', 'Bar'],
+      labels: ['November', 'Dezember', 'Januar'],
+      series: ['Tobias', 'Felix'],
       data: [
-        [65, 59, 63, 81, 56, 55, 68],
-        [76, 77, 74, 72, 80, 72, 73],
-        [42, 17, 28, 73, 50, 12, 68]
+        [92, 87, 90],
+        [85, 86, 72]
+      ],
+      options: {
+        pointDot : false,
+        scaleShowHorizontalLines: true,
+        scaleShowVerticalLines: false,
+        scaleShowLabels: true,
+        responsive: true
+      },
+      colours: [
+        {
+          fillColor: 'rgba(56, 126, 245, 0.7)',
+          strokeColor: 'rgba(12, 96, 238, 0.9)',
+        },
+        {
+          fillColor: 'rgba(56, 126, 245, 0.7)',
+          strokeColor: 'rgba(12, 96, 238, 0.9)',
+        }
       ]
     };
+
   })
 
   // ALERTS
