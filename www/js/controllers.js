@@ -53,7 +53,7 @@ angular.module('cyfclient.controllers', [])
           }
 
         }, function(errMsg) {
-          // error handling
+          console.log(errMsg);
         });
 
       }, function(errMsg) {
@@ -191,7 +191,7 @@ angular.module('cyfclient.controllers', [])
   })
 
   // TOURS
-  .controller('ToursCtrl', function($scope, $filter, $ionicLoading, TourService, UserService) {
+  .controller('ToursCtrl', function($scope, $filter, $ionicFilterBar, $ionicLoading, TourService, UserService) {
     $scope.userId = localStorage.getItem("userId");
 
     $scope.doRefresh = function() {
@@ -204,6 +204,8 @@ angular.module('cyfclient.controllers', [])
           .then(function(data){
             $scope.tours = data;
 
+            /*
+
             $scope.dates = {};
             var date;
 
@@ -215,7 +217,19 @@ angular.module('cyfclient.controllers', [])
               }
 
               $scope.dates[date].push($scope.tours[i]);
+
             }
+            */
+
+            $scope.showFilterBar = function () {
+              filterBarInstance = $ionicFilterBar.show({
+                items: $scope.tours,
+                update: function (filteredItems) {
+                  $scope.tours = filteredItems;
+                },
+                filterProperties: ['userId']
+              });
+            };
 
           })
           .then(function(data){
@@ -339,7 +353,7 @@ angular.module('cyfclient.controllers', [])
 
       for (var i = 0; i < $scope.tour.route.speed.length; i++) {
         speedData.push(parseInt($scope.tour.route.speed[i]));
-        speedFence.push(parseInt(100));
+        speedFence.push(parseInt(50));
         speedLabel.push('');
       }
 

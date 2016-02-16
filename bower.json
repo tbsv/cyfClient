@@ -8,6 +8,7 @@
     "Chart.js": "~1.0.2",
     "angular-chart.js": "~0.8.8",
     "ionic-letteravatar": "ionic-letter-avatar#*",
-    "leaflet": "~0.7.7"
+    "leaflet": "~0.7.7",
+    "ionic-filter-bar": "~1.1.1"
   }
 }
