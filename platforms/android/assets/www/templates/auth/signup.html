@@ -6,14 +6,21 @@
           <form name="signup_form" class="" novalidate>
             <div class="item item-body">
               <label class="item item-input">
-                <input type="email" placeholder="Email" name="user_email" ng-model="user.email" required>
+                <input type="text" placeholder="Username" name="user_name" ng-model="user.name" required>
+              </label>
+              <label class="item item-input">
+                <input type="text" placeholder="First name" name="first_name" ng-model="user.firstname" required>
+              </label>
+              <label class="item item-input">
+                <input type="text" placeholder="Last name" name="last_name" ng-model="user.lastname" required>
               </label>
               <label class="item item-input" show-hide-container>
                 <input type="password" placeholder="Password" name="user_password" ng-model="user.password" required show-hide-input>
               </label>
+              <!--<ion-toggle ng-init="userRole=false" ng-model="userRole" ng-change="checked(userRole)" toggle-class="toggle-positive">Master User</ion-toggle>-->
             </div>
             <div class="item item-body bottom-content">
-              <button type="submit" class="button button-assertive button-block" ng-click="doSignUp()" ng-disabled="signup_form.$invalid">
+              <button type="submit" class="button button-assertive button-block" ng-click="doSignup()" ng-disabled="signup_form.$invalid">
                 Sign Up
               </button>
             </div>

@@ -4,25 +4,27 @@
       <div class="col col-center">
         <div class="card login-container">
           <form name="login_form" class="" novalidate ng-cloak>
-            <div class="list">
+            <div class="item item-body">
               <label class="item item-input">
-                <input type="email" placeholder="Email" name="user_email" ng-model="user.email" required>
+                <input type="text" placeholder="Username" name="user_name" ng-model="user.name" required>
               </label>
               <label class="item item-input" show-hide-container>
                 <input type="password" placeholder="Password" name="user_password" ng-model="user.password" required show-hide-input>
               </label>
             </div>
             <div class="item item-body bottom-content">
-              <button type="submit" class="button button-positive button-block" ng-click="doLogIn()">
+              <button type="submit" class="button button-positive button-block" ng-click="doLogin()">
                 Log In
               </button>
             </div>
           </form>
         </div>
         <div class="alternative-actions">
+          <!--
           <a class="forgot-password button button-small button-clear button-light" ui-sref="auth.forgot-password">
-            Forgot Password?
+            //Forgot Password?
           </a>
+          -->
           <a class="sign-up button button-small button-clear button-light" ui-sref="auth.signup">
             Sign Up
           </a>

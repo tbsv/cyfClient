@@ -9320,20 +9320,20 @@ ion-side-menu ion-item.item:last-child {
   border-bottom: none; }
 
 ion-side-menu .heading-item .item-content {
-  height: 120px;
-  padding-top: 45px;
-  padding-left: 115px;
+  height: 100px;
+  padding-top: 20px;
+  padding-left: 80px;
   background-color: #272c30;
   padding-bottom: 0px; }
 
 ion-side-menu .heading-item .user-image-container {
-  width: 90px;
+  width: 60px;
   position: absolute;
-  top: 16px;
+  top: 20px;
   left: 12px; }
   ion-side-menu .heading-item .user-image-container .user-image {
     border-radius: 50%;
-    padding: 8px;
+    padding: 6px;
     border: 1px solid #999999;
     width: 100%; }
 
@@ -9343,3 +9343,16 @@ ion-side-menu .heading-item .greeting {
 
 ion-side-menu .heading-item .message {
   color: #999999; }
+
+.member-view .ion-popover-view.fit {
+  height: 100px; }
+
+.member-view .ion-popover-view.fit ion-content {
+  position: relative; }
+
+.member-view .platform-android ion-popover-view.fit {
+  margin-top: 10px; }
+
+.member-view .platform-ios ion-popover-view.fit {
+  padding-top: 10px;
+  padding-bottom: 10px; }

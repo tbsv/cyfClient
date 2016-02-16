@@ -6,13 +6,15 @@
     <span>Alerts</span>
   </ion-nav-title>
   <ion-content>
-    <ul class="list">
-      <div class="item item-divider">Geofence</div>
-      <p class="padding">Lorem ipsum.</p>
-
-      <div class="item item-divider">Speedfence</div>
-      <p class="padding">Lorem ipsum.</p>
-
-    </ul>
+    <div class="list">
+      <a class="item item-avatar" ng-repeat="alert in alerts" ui-sref="app.tour({tourId: alert.tourId})">
+        <ionic-letter-avatar data="{{alert.type}}" shape="round"></ionic-letter-avatar>
+        <h2>{{alert.userId}} violated the {{alert.type}}</h2>
+        <div class="row">
+          <span class="icon ion-ios-calendar-outline" style="width: 80px"> {{alert.timestamp | date:"dd.MM.yyyy HH:mm"}}</span>
+        </div>
+      </a>
+      <div ng-repeat-end></div>
+    </div>
   </ion-content>
 </ion-view>

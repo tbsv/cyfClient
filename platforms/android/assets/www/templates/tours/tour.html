@@ -8,67 +8,149 @@
   <ion-content>
     <div class="list card">
       <div class="item item-avatar">
-        <img src="img/tobi-square.jpg">
-        <h2>{{tour.timestamp}}</h2>
-        <p>{{tour.user}}</p>
+        <ionic-letter-avatar data="{{tour.userId}}" shape="round"></ionic-letter-avatar>
+        <h2>{{tour.route.timestampStart | date:"dd.MM.yyyy HH:mm"}}</h2>
+        <p>{{tour.userId}}</p>
       </div>
       <div class="item item-body">
         <div class="item item-icon-left">
           <i class="icon ion-ios-location"></i>
           Distance
           <span class="badge badge-light">
-            {{tour.mileage_start}}
+            {{tour.route.routeDistance}} km
           </span>
         </div>
         <div class="item item-icon-left">
           <i class="icon ion-ios-clock"></i>
           Duration
           <span class="badge badge-light">
-            {{tour.timestamp_end}}
+            {{tour.route.routeDuration | secondsToHHmmss}}
           </span>
         </div>
-        <div class="item item-icon-left">
+        <div class="item item-icon-left" ng-click="popoverScore.show($event)">
           <i class="icon ion-stats-bars"></i>
           EcoScore
           <span class="badge badge-light">
-            {{tour.ecoscore}}
-          </span>
-        </div>
-        <div class="item item-icon-left">
-          <i class="icon ion-thermometer"></i>
-          ESP
-          <span class="badge badge-light">
-            {{tour.esp}}
+            {{tour.ecoScoreTotal}} %
           </span>
         </div>
         <div class="item item-icon-left">
           <i class="icon ion-flash-off"></i>
           Kickdowns
           <span class="badge badge-light">
-            {{tour.kickdown}}
+            {{tour.kickdowns}}
           </span>
+        </div>
+        <div class="item item-icon-left">
+          <i class="icon ion-ios-close"></i>
+          Full Breakings
+          <span class="badge badge-light">
+            {{tour.fullBreakings}}
+          </span>
+        </div>
+        <div class="item item-icon-left">
+          <i class="icon ion-thermometer"></i>
+          ESP Alerts
+          <span ng-class="tour.espAlerts >= 1 ? 'badge badge-assertive' : 'badge badge-stable'">{{tour.espAlerts}}</span>
         </div>
         <div class="item item-icon-left">
           <i class="icon ion-map"></i>
           Geofence Alerts
-          <span ng-class="tour.geofence_alerts >= 1 ? 'badge badge-assertive' : 'badge badge-stable'">{{tour.geofence_alerts}}</span>
+          <span ng-class="tour.geofenceAlerts == true ? 'badge badge-assertive' : 'badge badge-stable'">{{tour.geofenceAlerts == true ? '1' : '0'}}</span>
         </div>
         <div class="item item-icon-left">
           <i class="icon ion-speedometer"></i>
           Speedfence Alerts
-          <span ng-class="tour.speedfence_alerts >= 1 ? 'badge badge-assertive' : 'badge badge-stable'">{{tour.speedfence_alerts}}</span>
+          <span ng-class="tour.speedfenceAlerts >= 1 ? 'badge badge-assertive' : 'badge badge-stable'">{{tour.speedfenceAlerts}}</span>
         </div>
       </div>
       <div class="item tabs tabs-secondary tabs-icon-left">
-        <a class="tab-item" href="#">
+        <a class="tab-item" ng-click="modalMap.show()">
           <i class="icon ion-map"></i>
           Map
         </a>
-        <a class="tab-item" href="#">
+        <a class="tab-item" ng-click="modalSpeed.show()">
+          <i class="icon ion-ios-speedometer-outline"></i>
+          Speed
+        </a>
+        <a class="tab-item" ng-click="modalAssign.show(); getFamilyMembers()">
           <i class="icon ion-person"></i>
           Assign
         </a>
       </div>
     </div>
   </ion-content>
+
+  <script id="modals/tour/showMap.html" type="text/ng-template">
+    <ion-modal-view>
+      <ion-header-bar class="bar bar-header bar-positive">
+        <h1 class="title">Route</h1>
+        <button class="button button-clear button-primary" ng-click="modalMap.hide()">Back</button>
+      </ion-header-bar>
+      <ion-content class="padding">
+        <div class="list">
+          <div class="item" data-tap-disabled="true">
+            <leaflet resizeable defaults="map.defaults" markers="map.markers" paths="paths" center="map.center" height="500px" width="100%"></leaflet>
+          </div>
+        </div>
+      </ion-content>
+    </ion-modal-view>
+  </script>
+
+  <script id="modals/tour/showSpeed.html" type="text/ng-template">
+    <ion-modal-view>
+      <ion-header-bar class="bar bar-header bar-positive">
+        <h1 class="title">Speed over time</h1>
+        <button class="button button-clear button-primary" ng-click="modalSpeed.hide()">Cancel</button>
+      </ion-header-bar>
+      <ion-content class="padding">
+        <div class="card">
+
+          <div class="item item-text-wrap">
+            <canvas
+              id="line" class="chart chart-line" chart-data="chartData.data" chart-labels="chartData.labels" chart-series="chartData.series" chart-options="chartData.options" chart-colours="chartData.colours" chart-legend="true">
+            </canvas>
+          </div>
+
+        </div>
+      </ion-content>
+    </ion-modal-view>
+  </script>
+
+  <script id="modals/tour/assignTour.html" type="text/ng-template">
+    <ion-modal-view>
+      <ion-header-bar class="bar bar-header bar-positive">
+        <h1 class="title">Assign tour</h1>
+        <button class="button button-clear button-primary" ng-click="modalAssign.hide()">Cancel</button>
+      </ion-header-bar>
+      <ion-content class="padding">
+        <div class="list">
+          <ion-radio ng-repeat="member in members" ng-model="assignee" ng-click="updateAssignee(member._id)">{{member.name.first}} {{member.name.last}}</ion-radio>
+          <button class="button button-block button-positive" ng-click="doAssign()">Assign</button>
+        </div>
+      </ion-content>
+    </ion-modal-view>
+  </script>
+
+  <script id="popovers/tour/showEcoScore.html" type="text/ng-template">
+    <ion-popover-view style="height: 210px; width: 220px">
+      <ion-content>
+        <div class="list">
+          <div class="item">Total
+            <span class="badge badge-light">{{tour.ecoScoreTotal}} %</span>
+          </div>
+          <div class="item">Free wheeling
+            <span class="badge badge-light">{{tour.ecoScoreDetails.freeWheeling}}</span>
+          </div>
+          <div class="item">Constancy
+            <span class="badge badge-light">{{tour.ecoScoreDetails.constancy}}</span>
+          </div>
+          <div class="item">Acceleration
+            <span class="badge badge-light">{{tour.ecoScoreDetails.acceleration}}</span>
+          </div>
+        </div>
+      </ion-content>
+    </ion-popover-view>
+  </script>
+
 </ion-view>

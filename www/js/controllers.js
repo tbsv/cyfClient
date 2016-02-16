@@ -436,7 +436,14 @@ angular.module('cyfclient.controllers', [])
   })
 
   // ALERTS
-  .controller('AlertsCtrl', function($scope, $http) {
+  .controller('AlertsCtrl', function($scope, AlertService) {
+
+    AlertService.getAlerts().then(function(data){
+        $scope.alerts = data;
+
+    }, function(errMsg) {
+      // error handling
+    });
 
   })
 

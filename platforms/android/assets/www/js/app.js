@@ -5,10 +5,13 @@
 // the 2nd parameter is an array of 'requires'
 angular.module('cyfclient', [
   'ionic',
+  'cyfclient.constants',
   'cyfclient.controllers',
   'cyfclient.directives',
   'cyfclient.services',
-  'chart.js'
+  'chart.js',
+  'ionic-letter-avatar',
+  'leaflet-directive'
 ])
 
 .run(function($ionicPlatform) {
@@ -66,11 +69,17 @@ angular.module('cyfclient', [
       controller: 'ForgotPasswordCtrl'
     })
 
+    .state('auth.enroll', {
+      url: '/enroll',
+      templateUrl: "templates/auth/enroll.html",
+      controller: 'EnrollCtrl'
+    })
+
     .state('app', {
       url: "/app",
       abstract: true,
       templateUrl: "templates/app/side-menu.html",
-      controller: 'AppCtrl'
+      controller: 'MenuCtrl'
     })
 
     // OVERVIEW
@@ -105,13 +114,7 @@ angular.module('cyfclient', [
         }
       },
       resolve: {
-        tour_data: function(TourService, $ionicLoading, $stateParams) {
-          /*
-          $ionicLoading.show({
-            template: 'Loading post ...'
-          });
-          */
-
+        tour_data: function(TourService, $stateParams) {
           var tourId = $stateParams.tourId;
           return TourService.getTour(tourId);
         }
@@ -156,8 +159,24 @@ angular.module('cyfclient', [
       url: "/family",
       views: {
         'menuContent': {
-          templateUrl: "templates/app/family.html",
+          templateUrl: "templates/family/family.html",
           controller: 'FamilyCtrl'
+        }
+      }
+    })
+
+    // FAMILY MEMBER
+    .state('app.familyMember', {
+      url: "/family/:memberId",
+      views: {
+        'menuContent': {
+          templateUrl: "templates/family/familyMember.html",
+          controller: 'FamilyMemberCtrl'
+        }
+      },
+      resolve: {
+        geofence_data: function (UserService, $stateParams) {
+          return UserService.userInfo($stateParams.memberId);
         }
       }
     })
@@ -189,4 +208,26 @@ angular.module('cyfclient', [
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/auth/check');
 
-});
+})
+
+  .filter('secondsToHHmmss', function($filter) {
+    return function(seconds) {
+      return $filter('date')(new Date(0, 0, 0).setSeconds(seconds), 'HH:mm:ss');
+    };
+  })
+
+  /*
+  .run(function ($rootScope, $state, AuthService, AUTH_EVENTS) {
+    $rootScope.$on('$stateChangeStart', function (event,next, nextParams, fromState) {
+      if (!AuthService.isAuthenticated()) {
+        console.log(next.name);
+        if (next.name !== 'auth.login' && next.name !== 'auth.register') {
+          event.preventDefault();
+          $state.go('auth.check');
+        }
+      }
+    });
+  })
+  */
+
+;

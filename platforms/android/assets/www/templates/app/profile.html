@@ -3,19 +3,109 @@
     <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
   </ion-nav-buttons>
   <ion-nav-buttons side="right">
-    <button class="button button-icon icon ion-more"></button>
+    <button class="button button-icon icon ion-more" ng-click="popover.show($event)"></button>
   </ion-nav-buttons>
   <ion-nav-title>
     <span>Profile</span>
   </ion-nav-title>
   <ion-content>
-    <div class="list">
-      <a class="item item-thumbnail-left" href="#">
-        <img src="img/tobi-square.jpg">
-        <h2>Tobias</h2>
-        <p>S-TV 123</p>
-      </a>
+    <div class="list card">
+      <div class="item item-avatar">
+        <ionic-letter-avatar data="{{userId}}" shape="round"></ionic-letter-avatar>
+        <h2>{{profile.name.first}} {{profile.name.last}}</h2>
+        <p>{{profile.role}}</p>
+      </div>
+      <div class="item item-body">
+        <div class="item">
+          Username
+          <span class="badge badge-light">
+            {{profile._id}}
+          </span>
+        </div>
+        <div class="item">
+          Full name
+          <span class="badge badge-light">
+            {{profile.name.first}} {{profile.name.last}}
+          </span>
+        </div>
+        <div class="item">
+          Role
+          <span class="badge badge-light">
+            {{profile.role}}
+          </span>
+        </div>
+        <div class="item">
+          Vehicle
+          <span class="badge badge-light">
+            {{profile.vin}}
+          </span>
+        </div>
+        <div class="item" ng-hide="profile.role == 'master'">
+          Geofence
+          <span class="badge badge-light">
+            {{profile.geofence}}
+          </span>
+        </div>
+        <div class="item" ng-hide="profile.role == 'master'">
+          Speedfence
+          <span class="badge badge-light">
+            {{profile.speedfence}}
+          </span>
+        </div>
+      </div>
     </div>
-    <p class="padding">Lorem ipsum.</p>
   </ion-content>
+
+  <script id="popovers/app/profileMenu.html" type="text/ng-template">
+    <ion-popover-view style="height: 110px; width: 160px">
+      <ion-content>
+        <div class="list">
+          <a class="item" ng-click="modalProfile.show(); popover.hide()">
+            Edit profile
+          </a>
+          <!--<a class="item" ng-click="modalVehicle.show(); popover.hide()">
+            Change Vehicle
+          </a>-->
+        </div>
+      </ion-content>
+    </ion-popover-view>
+  </script>
+
+  <script id="modals/app/editProfile.html" type="text/ng-template">
+    <ion-modal-view>
+      <ion-header-bar class="bar bar-header bar-positive">
+        <h1 class="title">Edit profile</h1>
+        <button class="button button-clear button-primary" ng-click="modalProfile.hide()">Cancel</button>
+      </ion-header-bar>
+      <ion-content class="padding">
+        <div class="list">
+          <label class="item item-input item-stacked-label">
+            <span class="input-label">First name</span>
+            <input ng-model="user.name.first" type="text" placeholder="{{profile.name.first}}">
+          </label>
+          <label class="item item-input item-stacked-label">
+            <span class="input-label">Last name</span>
+            <input ng-model="user.name.last" type="text" placeholder="{{profile.name.last}}">
+          </label>
+          <button class="button button-full button-positive" ng-click="doUpdate()">Update</button>
+        </div>
+      </ion-content>
+    </ion-modal-view>
+  </script>
+
+  <script id="modals/app/changeVehicle.html" type="text/ng-template">
+    <ion-modal-view>
+      <ion-header-bar class="bar bar-header bar-positive">
+        <h1 class="title">Change Vehicle</h1>
+        <button class="button button-clear button-primary" ng-click="modalVehicle.hide()">Cancel</button>
+      </ion-header-bar>
+      <ion-content class="padding">
+        <div class="list">
+          <ion-radio ng-repeat="vehicle in vehicles" ng-change="updateVehicle(vehicle.vin)" ng-value="vehicle.vin" ng-model="currentVehicle">{{vehicle.vin}}</ion-radio>
+          <button class="button button-full button-positive" ng-click="doUpdateVehicle(newVehicle)">Update</button>
+        </div>
+      </ion-content>
+    </ion-modal-view>
+  </script>
+
 </ion-view>
