@@ -10,15 +10,16 @@ Client application for the ConnectYourFamily project based on AngularJS and Ioni
 * Gulp
 * Sass
 
-## Configuration
+## Configuration (set environment)
 
 ```bash
-$ ionic setup sass
+$ gulp replace --env localdev || production
 ```
 
-## Run
+
+## Serve
 
 ```bash
-$ ionic start
+$ ionic serve
 ```
 
