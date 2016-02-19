@@ -809,10 +809,10 @@ angular.module('cyfclient.controllers', [])
   })
 
   // INFO
-  .controller('InfoCtrl', function($scope) {
+  .controller('InfoCtrl', function($scope, API_ENDPOINT) {
     $scope.toursCounter = localStorage.getItem("toursCounter");
     $scope.familyCounter = localStorage.getItem("familyCounter");
-    //$scope.serverUrl = SERVER_URL.url;
+    $scope.serverUrl = API_ENDPOINT.url;
   })
 
 ;

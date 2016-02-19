@@ -12,7 +12,7 @@ angular.module('cyfclient.constants', [])
   })
 
   .constant('API_ENDPOINT', {
-    url: 'api'
+    url: 'http://localhost:3000'
   })
 
 ;
