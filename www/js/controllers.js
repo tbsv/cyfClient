@@ -204,6 +204,9 @@ angular.module('cyfclient.controllers', [])
           .then(function(data){
             $scope.tours = data;
 
+            // Save number of total tours to local storage
+            localStorage.setItem("toursCounter", data.length);
+
             /*
 
             $scope.dates = {};
@@ -549,6 +552,10 @@ angular.module('cyfclient.controllers', [])
 
       MemberService.getMembers($scope.vin).then(function(data) {
         $scope.members = data;
+
+        // Save number of family members to local storage
+        localStorage.setItem("familyCounter", data.length);
+
       }, function(errMsg) {
         // error handling
       });
@@ -802,8 +809,10 @@ angular.module('cyfclient.controllers', [])
   })
 
   // INFO
-  .controller('InfoCtrl', function($scope, $http) {
-
+  .controller('InfoCtrl', function($scope) {
+    $scope.toursCounter = localStorage.getItem("toursCounter");
+    $scope.familyCounter = localStorage.getItem("familyCounter");
+    //$scope.serverUrl = SERVER_URL.url;
   })
 
 ;
