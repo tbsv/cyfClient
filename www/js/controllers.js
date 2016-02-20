@@ -32,13 +32,15 @@ angular.module('cyfclient.controllers', [])
   })
 
   // LOGIN
-  .controller('LoginCtrl', function($scope, AuthService, UserService, $ionicPopup, $state) {
+  .controller('LoginCtrl', function($scope, AuthService, UserService, $ionicPopup, $state, API_ENDPOINT) {
 
     $scope.user = {
       name: '',
       password: ''
     };
 
+    $scope.serverEndpoint = API_ENDPOINT.url;
+    
     $scope.doLogin = function() {
       AuthService.login($scope.user).then(function(msg) {
         // Save userId and firstName to local storage
