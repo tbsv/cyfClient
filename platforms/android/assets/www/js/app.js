@@ -11,7 +11,8 @@ angular.module('cyfclient', [
   'cyfclient.services',
   'chart.js',
   'ionic-letter-avatar',
-  'leaflet-directive'
+  'leaflet-directive',
+  'jett.ionic.filter.bar'
 ])
 
 .run(function($ionicPlatform) {

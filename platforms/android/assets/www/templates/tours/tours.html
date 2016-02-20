@@ -2,6 +2,9 @@
   <ion-nav-buttons side="left">
     <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
   </ion-nav-buttons>
+  <ion-nav-buttons side="right">
+    <button menu-toggle="right" class="button button-icon ion-android-search" ng-click="showFilterBar()"></button>
+  </ion-nav-buttons>
   <ion-nav-title>
     <span>Tours</span>
   </ion-nav-title>
@@ -10,11 +13,11 @@
       on-refresh="doRefresh()">
     </ion-refresher>
     <div class="list">
-      <div class="item item-divider"
+      <!--<div class="item item-divider"
            ng-repeat-start="(date, tours) in dates">
-        {{date | date:"dd.MM.yyyy"}}
-      </div>
-      <a class="item item-avatar" ng-repeat="tour in tours | orderBy:'route.timestampStart'" ui-sref="app.tour({tourId: tour._id})">
+        {{date | date:"dd.MM.yyyy"}} <span class="badge badge-dark">{{tours.length}}</span>
+      </div>-->
+      <a class="item item-avatar" ng-repeat="tour in tours | orderBy:'-route.timestampStart'" ui-sref="app.tour({tourId: tour._id})">
         <ionic-letter-avatar data="{{tour.userId}}" shape="round"></ionic-letter-avatar>
         <h2>{{tour.route.timestampStart | date:"dd.MM.yyyy HH:mm"}}</h2>
           <div class="row">

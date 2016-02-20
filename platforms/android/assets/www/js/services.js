@@ -411,4 +411,46 @@ angular.module('cyfclient.services', [])
     return geofenceService;
   })
 
+  // ALERT SERVICE
+  .service('AlertService', function($rootScope, $http, $q, API_ENDPOINT) {
+
+    this.getAlerts = function() {
+
+      var data = [
+        {
+          "type" : "Geofence",
+          "userId" : "tvetter",
+          "timestamp" : "2015-12-17-131526",
+          "tourId" : "56c34404eec21c8736871ab4"
+        },
+        {
+          "type" : "Geofence",
+          "userId" : "tvetter",
+          "timestamp" : "2015-12-17-131526",
+          "tourId" : "56c34404eec21c8736871ab4"
+        },
+        {
+          "type" : "Speedfence",
+          "userId" : "tvetter",
+          "timestamp" : "2015-12-17-131526",
+          "tourId" : "56c34404eec21c8736871ab4"
+        },
+        {
+          "type" : "Geofence",
+          "userId" : "tvetter",
+          "timestamp" : "2015-12-17-131526",
+          "tourId" : "56c34404eec21c8736871ab4"
+        }
+      ];
+
+      var deferred = $q.defer();
+      deferred.resolve(data);
+
+
+      return deferred.promise;
+
+    };
+
+  })
+
 ;

@@ -5,7 +5,7 @@
         Monitor your family car and challenge the eco scores.
     </description>
   <author email="tobias.vetter@student.reutlingen-university.de" href="http://ionicframework.com/">
-      Ronald Henger & Tobias Vetter
+      Ronald Henger, Tobias Vetter
     </author>
   <content src="index.html"/>
   <access origin="*"/>

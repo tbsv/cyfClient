@@ -32,12 +32,14 @@ angular.module('cyfclient.controllers', [])
   })
 
   // LOGIN
-  .controller('LoginCtrl', function($scope, AuthService, UserService, $ionicPopup, $state) {
+  .controller('LoginCtrl', function($scope, AuthService, UserService, $ionicPopup, $state, API_ENDPOINT) {
 
     $scope.user = {
       name: '',
       password: ''
     };
+
+    $scope.serverEndpoint = API_ENDPOINT.url;
 
     $scope.doLogin = function() {
       AuthService.login($scope.user).then(function(msg) {
@@ -53,7 +55,7 @@ angular.module('cyfclient.controllers', [])
           }
 
         }, function(errMsg) {
-          // error handling
+          console.log(errMsg);
         });
 
       }, function(errMsg) {
@@ -191,7 +193,7 @@ angular.module('cyfclient.controllers', [])
   })
 
   // TOURS
-  .controller('ToursCtrl', function($scope, $filter, $ionicLoading, TourService, UserService) {
+  .controller('ToursCtrl', function($scope, $filter, $ionicFilterBar, $ionicLoading, TourService, UserService) {
     $scope.userId = localStorage.getItem("userId");
 
     $scope.doRefresh = function() {
@@ -204,6 +206,11 @@ angular.module('cyfclient.controllers', [])
           .then(function(data){
             $scope.tours = data;
 
+            // Save number of total tours to local storage
+            localStorage.setItem("toursCounter", data.length);
+
+            /*
+
             $scope.dates = {};
             var date;
 
@@ -215,7 +222,19 @@ angular.module('cyfclient.controllers', [])
               }
 
               $scope.dates[date].push($scope.tours[i]);
+
             }
+            */
+
+            $scope.showFilterBar = function () {
+              filterBarInstance = $ionicFilterBar.show({
+                items: $scope.tours,
+                update: function (filteredItems) {
+                  $scope.tours = filteredItems;
+                },
+                filterProperties: ['userId']
+              });
+            };
 
           })
           .then(function(data){
@@ -339,7 +358,7 @@ angular.module('cyfclient.controllers', [])
 
       for (var i = 0; i < $scope.tour.route.speed.length; i++) {
         speedData.push(parseInt($scope.tour.route.speed[i]));
-        speedFence.push(parseInt(100));
+        speedFence.push(parseInt(50));
         speedLabel.push('');
       }
 
@@ -422,7 +441,14 @@ angular.module('cyfclient.controllers', [])
   })
 
   // ALERTS
-  .controller('AlertsCtrl', function($scope, $http) {
+  .controller('AlertsCtrl', function($scope, AlertService) {
+
+    AlertService.getAlerts().then(function(data){
+        $scope.alerts = data;
+
+    }, function(errMsg) {
+      // error handling
+    });
 
   })
 
@@ -528,6 +554,10 @@ angular.module('cyfclient.controllers', [])
 
       MemberService.getMembers($scope.vin).then(function(data) {
         $scope.members = data;
+
+        // Save number of family members to local storage
+        localStorage.setItem("familyCounter", data.length);
+
       }, function(errMsg) {
         // error handling
       });
@@ -781,8 +811,10 @@ angular.module('cyfclient.controllers', [])
   })
 
   // INFO
-  .controller('InfoCtrl', function($scope, $http) {
-
+  .controller('InfoCtrl', function($scope, API_ENDPOINT) {
+    $scope.toursCounter = localStorage.getItem("toursCounter");
+    $scope.familyCounter = localStorage.getItem("familyCounter");
+    $scope.serverUrl = API_ENDPOINT.url;
   })
 
 ;
