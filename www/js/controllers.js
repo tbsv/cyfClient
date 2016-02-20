@@ -40,7 +40,7 @@ angular.module('cyfclient.controllers', [])
     };
 
     $scope.serverEndpoint = API_ENDPOINT.url;
-    
+
     $scope.doLogin = function() {
       AuthService.login($scope.user).then(function(msg) {
         // Save userId and firstName to local storage

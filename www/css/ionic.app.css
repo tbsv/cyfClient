@@ -9208,6 +9208,11 @@ ion-spinner.spinner-on-load {
 
 .auth-outer {
   background-color: transparent !important;
+  background: url(../img/bg-img.jpg) no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
   /*
   .scroll-content{
     background: url(../img/bg-img.jpg) no-repeat center center fixed;
