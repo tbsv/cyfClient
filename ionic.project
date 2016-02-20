@@ -1,6 +1,6 @@
 {
   "name": "cyfClient",
-  "app_id": "",
+  "app_id": "***REMOVED***",
   "gulpStartupTasks": [
     "sass",
     "watch"
@@ -11,9 +11,9 @@
   ],
   "documentRoot": "www",
   "proxies": [
-      {
-        "path": "/api",
-        "proxyUrl": "http://localhost:3000"
-      }
+    {
+      "path": "/api",
+      "proxyUrl": "http://localhost:3000"
+    }
   ]
 }
