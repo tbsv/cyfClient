@@ -32,10 +32,32 @@
       <div class="item item-divider">
         Copyright
       </div>
-      <div class="item">
-        <p>© 2016 Daimler AG</p>
-        <p>Authors: Ronald Henger & Tobias Vetter</p>
+      <div class="item item-button-right">
+        <p>© 2016 Daimler AG<br />
+        Authors: Ronald Henger & Tobias Vetter</p>
       </div>
     </div>
+    <div class="padding">
+      <button class="button button-block button-light" ng-click="modalTerms.show()">
+        Terms of use
+      </button>
+    </div>
   </ion-content>
+
+  <script id="modals/info/terms.html" type="text/ng-template">
+    <ion-modal-view>
+      <ion-header-bar class="bar bar-header bar-positive">
+        <h1 class="title">Terms of use</h1>
+        <button class="button button-clear button-primary" ng-click="modalTerms.hide()">Close</button>
+      </ion-header-bar>
+      <ion-content class="padding">
+        <h4>connect your family</h4>
+        <p>Thanks for using our services. The services are provided by Daimler, Media University Stuttgart and University Reutlingen.</p>
+        <p>By using our services, you are agreeing to these terms. Please read them carefully.</p>
+        <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</p>
+        <p>Last modified: February 20, 2016</p>
+      </ion-content>
+    </ion-modal-view>
+  </script>
+
 </ion-view>

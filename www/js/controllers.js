@@ -811,10 +811,17 @@ angular.module('cyfclient.controllers', [])
   })
 
   // INFO
-  .controller('InfoCtrl', function($scope, API_ENDPOINT) {
+  .controller('InfoCtrl', function($scope, $ionicModal, API_ENDPOINT) {
     $scope.toursCounter = localStorage.getItem("toursCounter");
     $scope.familyCounter = localStorage.getItem("familyCounter");
     $scope.serverUrl = API_ENDPOINT.url;
+
+    $ionicModal.fromTemplateUrl('modals/info/terms.html', {
+      scope: $scope
+    }).then(function(modal) {
+      $scope.modalTerms = modal;
+    });
+
   })
 
 ;
