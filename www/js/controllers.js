@@ -304,15 +304,31 @@ angular.module('cyfclient.controllers', [])
 
     $scope.$on("$stateChangeSuccess", function() {
 
+      var route_icons = {
+        default_icon: {},
+        start_icon: {
+          iconUrl: 'img/map-start.png',
+          iconSize:     [38, 38], // size of the icon
+          iconAnchor:   [19, 38], // point of the icon which will correspond to marker's location
+        },
+        end_icon: {
+          iconUrl: 'img/map-end.png',
+          iconSize:     [38, 38], // size of the icon
+          iconAnchor:   [19, 38], // point of the icon which will correspond to marker's location
+        }
+      };
+
       var startMarker = {
         lat: parseFloat($scope.tour.route.drivenRoute.gpsLatitude[0]),
         lng: parseFloat($scope.tour.route.drivenRoute.gpsLongitude[0]),
+        icon: route_icons.start_icon,
         focus: true,
         draggable: false};
 
       var endMarker = {
         lat: parseFloat($scope.tour.route.drivenRoute.gpsLatitude[$scope.tour.route.drivenRoute.gpsLatitude.length-1]),
         lng: parseFloat($scope.tour.route.drivenRoute.gpsLongitude[$scope.tour.route.drivenRoute.gpsLongitude.length-1]),
+        icon: route_icons.end_icon,
         focus: true,
         draggable: false};
 
@@ -711,9 +727,19 @@ angular.module('cyfclient.controllers', [])
 
     $scope.$on("$stateChangeSuccess", function() {
 
+      var map_icons = {
+        default_icon: {},
+        location_icon: {
+          iconUrl: 'img/map-location.png',
+          iconSize:     [38, 38], // size of the icon
+          iconAnchor:   [19, 38], // point of the icon which will correspond to marker's location
+        }
+      };
+
       var mainMarker = {
         lat: parseFloat($scope.geofence.latitude),
         lng: parseFloat($scope.geofence.longitude),
+        icon: map_icons.location_icon,
         focus: true,
         draggable: true};
 
