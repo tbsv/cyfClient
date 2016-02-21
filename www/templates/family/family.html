@@ -10,16 +10,14 @@
   </ion-nav-title>
   <ion-content>
     <h4 class="padding">Members</h4>
-    <div class="list">
-      <a class="item item-avatar" ng-repeat="member in members" ui-sref="app.familyMember({memberId: member._id})">
+    <ion-list>
+      <ion-item class="item item-avatar" ng-repeat="member in members" ui-sref="app.familyMember({memberId: member._id})">
         <ionic-letter-avatar data="{{member.name.first}}" shape="round"></ionic-letter-avatar>
         <h2>{{member.name.first}} {{member.name.last}}</h2>
         <p>{{member.role}}</p>
-      </a>
-      <div class="item item-divider">
-        Members: {{members.length}}
-      </div>
-    </div>
+        <ion-option-button class="button button-assertive button-large ion-ios-close-outline" ng-click="deleteMember()" ng-hide="member.role == 'master'"></ion-option-button>
+      </ion-item>
+    </ion-list>
   </ion-content>
 
   <script id="modals/app/newFamilyMember.html" type="text/ng-template">

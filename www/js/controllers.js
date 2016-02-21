@@ -603,6 +603,13 @@ angular.module('cyfclient.controllers', [])
       });
     };
 
+    $scope.deleteMember = function() {
+      var alertPopup = $ionicPopup.alert({
+        title: 'Sorry!',
+        template: 'Not implemented yet.'
+      });
+    };
+
     $ionicModal.fromTemplateUrl('modals/app/newFamilyMember.html', {
       scope: $scope
     }).then(function(modal) {
