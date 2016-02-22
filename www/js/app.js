@@ -94,6 +94,28 @@ angular.module('cyfclient', [
       }
     })
 
+    // OVERVIEW WEEKLY
+    .state('app.overview.weekly', {
+      url: "/overview/weekly.html",
+      views: {
+        'weekly-tab': {
+          templateUrl: "templates/overview/weekly.html",
+          controller: 'OverviewWeeklyCtrl'
+        }
+      }
+    })
+
+    // OVERVIEW MONTHLY
+    .state('app.overview.monthly', {
+      url: "/overview/monthly.html",
+      views: {
+        'monthly-tab': {
+          templateUrl: "templates/overview/monthly.html",
+          controller: 'OverviewMonthlyCtrl'
+        }
+      }
+    })
+
     // TOURS
     .state('app.tours', {
       url: "/tours",

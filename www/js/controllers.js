@@ -185,11 +185,27 @@ angular.module('cyfclient.controllers', [])
   })
 
   // OVERVIEW
-  .controller('OverviewCtrl', function($scope, $http) {
+  .controller('OverviewCtrl', function($scope) {
     $scope.labels = ["Gordon", "Barney", "Lizzy"];
     $scope.series = ['Series A', 'Series B'];
     $scope.piedata = [325, 148, 56];
     $scope.bardata = [325, 148, 56];
+  })
+
+  // OVERVIEW WEEKLY
+  .controller('OverviewWeeklyCtrl', function($scope) {
+    $scope.labels = ["Gordon", "Barney", "Lizzy"];
+    $scope.series = ['Series A', 'Series B'];
+    $scope.piedata = [120, 60, 256];
+    $scope.bardata = [120, 60, 256];
+  })
+
+  // OVERVIEW MONTHLY
+  .controller('OverviewMonthlyCtrl', function($scope) {
+    $scope.labels = ["Gordon", "Barney", "Lizzy"];
+    $scope.series = ['Series A', 'Series B'];
+    $scope.piedata = [180, 24, 340];
+    $scope.bardata = [180, 24, 340];
   })
 
   // TOURS

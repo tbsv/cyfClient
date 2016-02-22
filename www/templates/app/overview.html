@@ -5,14 +5,150 @@
   <ion-nav-title>
     <span>Overview</span>
   </ion-nav-title>
-  <ion-content ng-controller="OverviewCtrl">
+  <ion-content class="has-tabs-top" ng-controller="OverviewCtrl">
     <div class="card">
       <div class="item item-divider">
-        Total distance
+        Driven Kilometers
+        <span class="item-note">daily</span>
       </div>
       <div class="item item-text-wrap">
         <canvas id="pie" class="chart chart-pie" chart-data="piedata" chart-labels="labels"></canvas>
       </div>
     </div>
+    <div class="card">
+      <div class="item item-divider">
+        Fuel Consumption
+        <span class="item-note">daily</span>
+      </div>
+      <div class="item item-text-wrap">
+        <canvas id="pie" class="chart chart-pie" chart-data="piedata" chart-labels="labels"></canvas>
+      </div>
+    </div>
+    <div class="card">
+      <div class="item item-divider">
+        ECO-Scores
+        <span class="item-note">daily</span>
+      </div>
+      <div class="item item-text-wrap">
+        <ion-list>
+          <ion-item>
+            Tobias
+            <span class="badge badge-balanced">95%</span>
+          </ion-item>
+          <ion-item>
+            Ronald
+            <span class="badge badge-light">85%</span>
+          </ion-item>
+          <ion-item>
+            Anne
+            <span class="badge badge-light">82%</span>
+          </ion-item>
+        </ion-list>
+      </div>
+    </div>
   </ion-content>
+  <ion-tabs class="tabs-striped tabs-top tabs-icon-left">
+    <ion-tab title="Daily" icon="ion-ios-calendar-outline" ui-sref="app.overview">
+    </ion-tab>
+    <ion-tab title="Weekly" icon="ion-ios-calendar-outline" ui-sref="app.overview.weekly">
+      <ion-nav-view name="weekly-tab"></ion-nav-view>
+    </ion-tab>
+    <ion-tab title="Monthly" icon="ion-ios-calendar-outline" ui-sref="app.overview.monthly">
+      <ion-nav-view name="monthly-tab"></ion-nav-view>
+    </ion-tab>
+  </ion-tabs>
 </ion-view>
+
+<script id="templates/overview/weekly.html" type="text/ng-template">
+  <ion-view title="Overview">
+    <ion-content>
+      <div class="card">
+        <div class="item item-divider">
+          Driven Kilometers
+          <span class="item-note">weekly</span>
+        </div>
+        <div class="item item-text-wrap">
+          <canvas id="pie" class="chart chart-pie" chart-data="piedata" chart-labels="labels"></canvas>
+        </div>
+      </div>
+      <div class="card">
+        <div class="item item-divider">
+          Fuel Consumption
+          <span class="item-note">weekly</span>
+        </div>
+        <div class="item item-text-wrap">
+          <canvas id="pie" class="chart chart-pie" chart-data="piedata" chart-labels="labels"></canvas>
+        </div>
+      </div>
+      <div class="card">
+        <div class="item item-divider">
+          ECO-Scores
+          <span class="item-note">weekly</span>
+        </div>
+        <div class="item item-text-wrap">
+          <ion-list>
+            <ion-item>
+              Tobias
+              <span class="badge badge-balanced">98%</span>
+            </ion-item>
+            <ion-item>
+              Ronald
+              <span class="badge badge-energized">90%</span>
+            </ion-item>
+            <ion-item>
+              Anne
+              <span class="badge badge-light">86%</span>
+            </ion-item>
+          </ion-list>
+        </div>
+      </div>
+    </ion-content>
+  </ion-view>
+</script>
+
+<script id="templates/overview/monthly.html" type="text/ng-template">
+  <ion-view title="Overview">
+    <ion-content>
+      <div class="card">
+        <div class="item item-divider">
+          Driven Kilometers
+          <span class="item-note">monthly</span>
+        </div>
+        <div class="item item-text-wrap">
+          <canvas id="pie" class="chart chart-pie" chart-data="piedata" chart-labels="labels"></canvas>
+        </div>
+      </div>
+      <div class="card">
+        <div class="item item-divider">
+          Fuel Consumption
+          <span class="item-note">monthly</span>
+        </div>
+        <div class="item item-text-wrap">
+          <canvas id="pie" class="chart chart-pie" chart-data="piedata" chart-labels="labels"></canvas>
+        </div>
+      </div>
+      <div class="card">
+        <div class="item item-divider">
+          ECO-Scores
+          <span class="item-note">monthly</span>
+        </div>
+        <div class="item item-text-wrap">
+          <ion-list>
+            <ion-item>
+              Tobias
+              <span class="badge badge-balanced">98%</span>
+            </ion-item>
+            <ion-item>
+              Ronald
+              <span class="badge badge-energized">94%</span>
+            </ion-item>
+            <ion-item>
+              Anne
+              <span class="badge badge-light">86%</span>
+            </ion-item>
+          </ion-list>
+        </div>
+      </div>
+    </ion-content>
+  </ion-view>
+</script>
