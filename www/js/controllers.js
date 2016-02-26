@@ -193,19 +193,33 @@ angular.module('cyfclient.controllers', [])
   })
 
   // OVERVIEW WEEKLY
-  .controller('OverviewWeeklyCtrl', function($scope) {
+  .controller('OverviewWeeklyCtrl', function($scope, $location, $ionicNavBarDelegate) {
     $scope.labels = ["Gordon", "Barney", "Lizzy"];
     $scope.series = ['Series A', 'Series B'];
     $scope.piedata = [120, 60, 256];
     $scope.bardata = [120, 60, 256];
+
+    var path = $location.path();
+    if (path.indexOf('weekly') != -1)
+      $ionicNavBarDelegate.showBackButton(false);
+    else
+      $ionicNavBarDelegate.showBackButton(true);
+
   })
 
   // OVERVIEW MONTHLY
-  .controller('OverviewMonthlyCtrl', function($scope) {
+  .controller('OverviewMonthlyCtrl', function($scope, $location, $ionicNavBarDelegate) {
     $scope.labels = ["Gordon", "Barney", "Lizzy"];
     $scope.series = ['Series A', 'Series B'];
     $scope.piedata = [180, 24, 340];
     $scope.bardata = [180, 24, 340];
+
+    var path = $location.path();
+    if (path.indexOf('monthly') != -1)
+      $ionicNavBarDelegate.showBackButton(false);
+    else
+      $ionicNavBarDelegate.showBackButton(true);
+
   })
 
   // TOURS
@@ -470,6 +484,24 @@ angular.module('cyfclient.controllers', [])
       ]
     };
 
+  })
+
+  // ECO-SCORES WEEKLY
+  .controller('ScoresWeeklyCtrl', function($scope, $location, $ionicNavBarDelegate) {
+    var path = $location.path();
+    if (path.indexOf('weekly') != -1)
+      $ionicNavBarDelegate.showBackButton(false);
+    else
+      $ionicNavBarDelegate.showBackButton(true);
+  })
+
+  // ECO-SCORES MONTHLY
+  .controller('ScoresMonthlyCtrl', function($scope, $location, $ionicNavBarDelegate) {
+    var path = $location.path();
+    if (path.indexOf('monthly') != -1)
+      $ionicNavBarDelegate.showBackButton(false);
+    else
+      $ionicNavBarDelegate.showBackButton(true);
   })
 
   // ALERTS

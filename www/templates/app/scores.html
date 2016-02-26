@@ -5,16 +5,125 @@
   <ion-nav-title>
     <span>ECO-Scores</span>
   </ion-nav-title>
-  <ion-content class="padding">
+  <ion-content class="has-tabs-top" ng-controller="ScoresCtrl">
     <div class="card">
       <div class="item item-divider">
         ECO-Scores
+        <span class="item-note">daily</span>
       </div>
       <div class="item item-text-wrap">
-        <canvas
-          id="line" class="chart chart-bar" chart-data="chartData.data" chart-labels="chartData.labels" chart-series="chartData.series" chart-options="chartData.options" chart-colours="chartData.colours" chart-legend="true">
-        </canvas>
+        <ion-list>
+          <ion-item>
+            Tobias
+            <span class="badge badge-balanced">95%</span>
+          </ion-item>
+          <ion-item>
+            Ronald
+            <span class="badge badge-light">85%</span>
+          </ion-item>
+          <ion-item>
+            Anne
+            <span class="badge badge-light">82%</span>
+          </ion-item>
+        </ion-list>
       </div>
     </div>
   </ion-content>
+  <div class="tabs tabs-striped tabs-top tabs-icon-top tabs-light">
+    <a nav-transition="none" nav-clear class="tab-item disable-user-behavior active" title="Daily" nav-clear ui-sref="app.scores">
+      <i class="icon ion-ios-calendar-outline"></i>Daily
+    </a>
+    <a nav-transition="none" nav-clear class="tab-item disable-user-behavior" title="Weekly" ui-sref="app.scores-weekly">
+      <i class="icon ion-ios-calendar-outline"></i>Weekly
+    </a>
+    <a nav-transition="none" nav-clear class="tab-item disable-user-behavior" title="Monthly" ui-sref="app.scores-monthly">
+      <i class="icon ion-ios-calendar-outline"></i>Monthly
+    </a>
+  </div>
 </ion-view>
+
+<script id="templates/app/scores-weekly.html" type="text/ng-template">
+  <ion-view title="ECO-Scores">
+    <ion-nav-buttons side="left">
+      <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
+    </ion-nav-buttons>
+    <ion-content class="has-tabs-top">
+      <div class="card">
+        <div class="item item-divider">
+          ECO-Scores
+          <span class="item-note">weekly</span>
+        </div>
+        <div class="item item-text-wrap">
+          <ion-list>
+            <ion-item>
+              Tobias
+              <span class="badge badge-balanced">98%</span>
+            </ion-item>
+            <ion-item>
+              Ronald
+              <span class="badge badge-energized">90%</span>
+            </ion-item>
+            <ion-item>
+              Anne
+              <span class="badge badge-light">86%</span>
+            </ion-item>
+          </ion-list>
+        </div>
+      </div>
+    </ion-content>
+    <div class="tabs tabs-striped tabs-top tabs-icon-top tabs-light">
+      <a nav-transition="none" nav-clear class="tab-item disable-user-behavior" title="Daily" nav-clear ui-sref="app.scores">
+        <i class="icon ion-ios-calendar-outline"></i>Daily
+      </a>
+      <a nav-transition="none" nav-clear class="tab-item disable-user-behavior active" title="Weekly" ui-sref="app.scores-weekly">
+        <i class="icon ion-ios-calendar-outline"></i>Weekly
+      </a>
+      <a nav-transition="none" nav-clear class="tab-item disable-user-behavior" title="Monthly" ui-sref="app.scores-monthly">
+        <i class="icon ion-ios-calendar-outline"></i>Monthly
+      </a>
+    </div>
+  </ion-view>
+</script>
+
+<script id="templates/app/scores-monthly.html" type="text/ng-template">
+  <ion-view title="ECO-Scores">
+    <ion-nav-buttons side="left">
+      <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
+    </ion-nav-buttons>
+    <ion-content class="has-tabs-top">
+      <div class="card">
+        <div class="item item-divider">
+          ECO-Scores
+          <span class="item-note">monthly</span>
+        </div>
+        <div class="item item-text-wrap">
+          <ion-list>
+            <ion-item>
+              Tobias
+              <span class="badge badge-balanced">98%</span>
+            </ion-item>
+            <ion-item>
+              Ronald
+              <span class="badge badge-energized">94%</span>
+            </ion-item>
+            <ion-item>
+              Anne
+              <span class="badge badge-light">86%</span>
+            </ion-item>
+          </ion-list>
+        </div>
+      </div>
+    </ion-content>
+    <div class="tabs tabs-striped tabs-top tabs-icon-top tabs-light">
+      <a nav-transition="none" nav-clear class="tab-item disable-user-behavior" title="Daily" nav-clear ui-sref="app.scores">
+        <i class="icon ion-ios-calendar-outline"></i>Daily
+      </a>
+      <a nav-transition="none" nav-clear class="tab-item disable-user-behavior" title="Weekly" ui-sref="app.scores-weekly">
+        <i class="icon ion-ios-calendar-outline"></i>Weekly
+      </a>
+      <a nav-transition="none" nav-clear class="tab-item disable-user-behavior active" title="Monthly" ui-sref="app.scores-monthly">
+        <i class="icon ion-ios-calendar-outline"></i>Monthly
+      </a>
+    </div>
+  </ion-view>
+</script>

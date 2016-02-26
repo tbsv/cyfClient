@@ -47,21 +47,25 @@
       </div>
     </div>
   </ion-content>
-  <ion-tabs class="tabs-striped tabs-top tabs-icon-left">
-    <ion-tab title="Daily" icon="ion-ios-calendar-outline" ui-sref="app.overview">
-    </ion-tab>
-    <ion-tab title="Weekly" icon="ion-ios-calendar-outline" ui-sref="app.overview.weekly">
-      <ion-nav-view name="weekly-tab"></ion-nav-view>
-    </ion-tab>
-    <ion-tab title="Monthly" icon="ion-ios-calendar-outline" ui-sref="app.overview.monthly">
-      <ion-nav-view name="monthly-tab"></ion-nav-view>
-    </ion-tab>
-  </ion-tabs>
+  <div class="tabs tabs-striped tabs-top tabs-icon-top tabs-light">
+    <a nav-transition="none" nav-clear class="tab-item disable-user-behavior active" title="Daily" nav-clear ui-sref="app.overview">
+      <i class="icon ion-ios-calendar-outline"></i>Daily
+    </a>
+    <a nav-transition="none" nav-clear class="tab-item disable-user-behavior" title="Weekly" ui-sref="app.overview-weekly">
+      <i class="icon ion-ios-calendar-outline"></i>Weekly
+    </a>
+    <a nav-transition="none" nav-clear class="tab-item disable-user-behavior" title="Monthly" ui-sref="app.overview-monthly">
+      <i class="icon ion-ios-calendar-outline"></i>Monthly
+    </a>
+  </div>
 </ion-view>
 
-<script id="templates/overview/weekly.html" type="text/ng-template">
+<script id="templates/app/overview-weekly.html" type="text/ng-template">
   <ion-view title="Overview">
-    <ion-content>
+    <ion-nav-buttons side="left">
+      <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
+    </ion-nav-buttons>
+    <ion-content class="has-tabs-top">
       <div class="card">
         <div class="item item-divider">
           Driven Kilometers
@@ -103,12 +107,26 @@
         </div>
       </div>
     </ion-content>
+    <div class="tabs tabs-striped tabs-top tabs-icon-top tabs-light">
+      <a nav-transition="none" nav-clear class="tab-item disable-user-behavior" title="Daily" nav-clear ui-sref="app.overview">
+        <i class="icon ion-ios-calendar-outline"></i>Daily
+      </a>
+      <a nav-transition="none" nav-clear class="tab-item disable-user-behavior active" title="Weekly" ui-sref="app.overview-weekly">
+        <i class="icon ion-ios-calendar-outline"></i>Weekly
+      </a>
+      <a nav-transition="none" nav-clear class="tab-item disable-user-behavior" title="Monthly" ui-sref="app.overview-monthly">
+        <i class="icon ion-ios-calendar-outline"></i>Monthly
+      </a>
+    </div>
   </ion-view>
 </script>
 
-<script id="templates/overview/monthly.html" type="text/ng-template">
+<script id="templates/app/overview-monthly.html" type="text/ng-template">
   <ion-view title="Overview">
-    <ion-content>
+    <ion-nav-buttons side="left">
+      <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
+    </ion-nav-buttons>
+    <ion-content class="has-tabs-top">
       <div class="card">
         <div class="item item-divider">
           Driven Kilometers
@@ -150,5 +168,16 @@
         </div>
       </div>
     </ion-content>
+    <div class="tabs tabs-striped tabs-top tabs-icon-top tabs-light">
+      <a nav-transition="none" nav-clear class="tab-item disable-user-behavior" title="Daily" nav-clear ui-sref="app.overview">
+        <i class="icon ion-ios-calendar-outline"></i>Daily
+      </a>
+      <a nav-transition="none" nav-clear class="tab-item disable-user-behavior" title="Weekly" ui-sref="app.overview-weekly">
+        <i class="icon ion-ios-calendar-outline"></i>Weekly
+      </a>
+      <a nav-transition="none" nav-clear class="tab-item disable-user-behavior active" title="Monthly" ui-sref="app.overview-monthly">
+        <i class="icon ion-ios-calendar-outline"></i>Monthly
+      </a>
+    </div>
   </ion-view>
 </script>
