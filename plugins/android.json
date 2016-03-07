@@ -24,6 +24,9 @@
         },
         "ionic-plugin-keyboard": {
             "PACKAGE_NAME": "com.ionicframework.starter"
+        },
+        "onesignal-cordova-plugin": {
+            "PACKAGE_NAME": "com.daimler.cyf"
         }
     },
     "dependent_plugins": {}

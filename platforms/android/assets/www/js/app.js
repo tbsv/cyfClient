@@ -94,6 +94,28 @@ angular.module('cyfclient', [
       }
     })
 
+    // OVERVIEW WEEKLY
+    .state('app.overview-weekly', {
+      url: "/overview-weekly",
+      views: {
+        'menuContent': {
+          templateUrl: "templates/app/overview-weekly.html",
+          controller: 'OverviewWeeklyCtrl'
+        }
+      }
+    })
+
+    // OVERVIEW MONTHLY
+    .state('app.overview-monthly', {
+      url: "/overview-monthly",
+      views: {
+        'menuContent': {
+          templateUrl: "templates/app/overview-monthly.html",
+          controller: 'OverviewMonthlyCtrl'
+        }
+      }
+    })
+
     // TOURS
     .state('app.tours', {
       url: "/tours",
@@ -129,6 +151,28 @@ angular.module('cyfclient', [
         'menuContent': {
           templateUrl: "templates/app/scores.html",
           controller: 'ScoresCtrl'
+        }
+      }
+    })
+
+    // ECO-SCORES WEEKLY
+    .state('app.scores-weekly', {
+      url: "/scores-weekly",
+      views: {
+        'menuContent': {
+          templateUrl: "templates/app/scores-weekly.html",
+          controller: 'ScoresWeeklyCtrl'
+        }
+      }
+    })
+
+    // ECO-SCORES MONTHLY
+    .state('app.scores-monthly', {
+      url: "/scores-monthly",
+      views: {
+        'menuContent': {
+          templateUrl: "templates/app/scores-monthly.html",
+          controller: 'ScoresMonthlyCtrl'
         }
       }
     })
@@ -218,6 +262,7 @@ angular.module('cyfclient', [
   })
 
   /*
+  // Check Authentication Status
   .run(function ($rootScope, $state, AuthService, AUTH_EVENTS) {
     $rootScope.$on('$stateChangeStart', function (event,next, nextParams, fromState) {
       if (!AuthService.isAuthenticated()) {
@@ -230,5 +275,24 @@ angular.module('cyfclient', [
     });
   })
   */
+
+  // Register device for Push Notifications
+  .run(function($ionicPlatform) {
+    $ionicPlatform.ready(function() {
+      // Enable to debug issues.
+      // window.plugins.OneSignal.setLogLevel({logLevel: 4, visualLevel: 4});
+
+      var notificationOpenedCallback = function(jsonData) {
+        alert("Notification received:\n" + JSON.stringify(jsonData));
+        console.log('didReceiveRemoteNotificationCallBack: ' + JSON.stringify(jsonData));
+      };
+
+      // Update with your OneSignal AppId and googleProjectNumber before running.
+      window.plugins.OneSignal.init("634f161c-9936-462f-89a9-9b8a389a7cdf",
+        {googleProjectNumber: "801991499844"},
+        notificationOpenedCallback);
+    });
+  })
+
 
 ;

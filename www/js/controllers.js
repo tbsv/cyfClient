@@ -226,6 +226,8 @@ angular.module('cyfclient.controllers', [])
   .controller('ToursCtrl', function($scope, $filter, $ionicFilterBar, $ionicLoading, TourService, UserService) {
     $scope.userId = localStorage.getItem("userId");
 
+    $scope.limit = 10;
+
     $scope.doRefresh = function() {
       $ionicLoading.show({
         template: 'Loading tours...'
@@ -278,6 +280,20 @@ angular.module('cyfclient.controllers', [])
     };
 
     $scope.doRefresh();
+
+    $scope.moreDataCanBeLoaded = function(){
+      if ($scope.limit > localStorage.getItem("toursCounter")) {
+        return false;
+      } else {
+        return true;
+      }
+    };
+
+    $scope.loadMoreData = function() {
+      $scope.limit = $scope.limit+5;
+      $scope.$broadcast('scroll.infiniteScrollComplete');
+
+    };
 
   })
 
@@ -458,6 +474,14 @@ angular.module('cyfclient.controllers', [])
   // ECO-SCORES
   .controller('ScoresCtrl', function($scope) {
 
+    $scope.labels = ["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"];
+    $scope.series = ['Gordon', 'Barney'];
+    $scope.data = [
+      [87, 85, 80, 81, 76, 88, 85],
+      [76, 77, 86, 84, 83, 80, 77]
+    ];
+
+    /*
     $scope.chartData = {
       labels: ['November', 'Dezember', 'Januar'],
       series: ['Tobias', 'Felix'],
@@ -483,6 +507,7 @@ angular.module('cyfclient.controllers', [])
         }
       ]
     };
+    */
 
   })
 
@@ -493,6 +518,14 @@ angular.module('cyfclient.controllers', [])
       $ionicNavBarDelegate.showBackButton(false);
     else
       $ionicNavBarDelegate.showBackButton(true);
+
+    $scope.labels = ["KW 1", "KW 2", "KW 3", "KW 4", "KW 5"];
+    $scope.series = ['Gordon', 'Barney'];
+    $scope.data = [
+      [85, 86, 84, 81, 82],
+      [76, 77, 86, 84, 80]
+    ];
+
   })
 
   // ECO-SCORES MONTHLY
@@ -502,6 +535,14 @@ angular.module('cyfclient.controllers', [])
       $ionicNavBarDelegate.showBackButton(false);
     else
       $ionicNavBarDelegate.showBackButton(true);
+
+    $scope.labels = ["Aug", "Sep", "Okt", "Nov", "Dec", "Jan", "Feb"];
+    $scope.series = ['Gordon', 'Barney'];
+    $scope.data = [
+      [86, 85, 83, 82, 76, 83, 85],
+      [80, 78, 84, 84, 83, 80, 77]
+    ];
+
   })
 
   // ALERTS

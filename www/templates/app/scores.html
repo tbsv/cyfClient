@@ -8,7 +8,16 @@
   <ion-content class="has-tabs-top" ng-controller="ScoresCtrl">
     <div class="card">
       <div class="item item-divider">
-        ECO-Scores
+        Trend
+        <span class="item-note">daily</span>
+      </div>
+      <div class="item item-text-wrap">
+        <canvas id="line" class="chart chart-line" chart-data="data" chart-legend="false" chart-series="series" chart-labels="labels"></canvas>
+      </div>
+    </div>
+    <div class="card">
+      <div class="item item-divider">
+        Ranking
         <span class="item-note">daily</span>
       </div>
       <div class="item item-text-wrap">
@@ -50,7 +59,16 @@
     <ion-content class="has-tabs-top">
       <div class="card">
         <div class="item item-divider">
-          ECO-Scores
+          Trend
+          <span class="item-note">weekly</span>
+        </div>
+        <div class="item item-text-wrap">
+          <canvas id="line" class="chart chart-line" chart-data="data" chart-legend="false" chart-series="series" chart-labels="labels"></canvas>
+        </div>
+      </div>
+      <div class="card">
+        <div class="item item-divider">
+          Ranking
           <span class="item-note">weekly</span>
         </div>
         <div class="item item-text-wrap">
@@ -93,7 +111,16 @@
     <ion-content class="has-tabs-top">
       <div class="card">
         <div class="item item-divider">
-          ECO-Scores
+          Trend
+          <span class="item-note">monthly</span>
+        </div>
+        <div class="item item-text-wrap">
+          <canvas id="line" class="chart chart-line" chart-data="data" chart-legend="false" chart-series="series" chart-labels="labels"></canvas>
+        </div>
+      </div>
+      <div class="card">
+        <div class="item item-divider">
+          Ranking
           <span class="item-note">monthly</span>
         </div>
         <div class="item item-text-wrap">

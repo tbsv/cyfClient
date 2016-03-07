@@ -185,16 +185,48 @@ angular.module('cyfclient.controllers', [])
   })
 
   // OVERVIEW
-  .controller('OverviewCtrl', function($scope, $http) {
+  .controller('OverviewCtrl', function($scope) {
     $scope.labels = ["Gordon", "Barney", "Lizzy"];
     $scope.series = ['Series A', 'Series B'];
     $scope.piedata = [325, 148, 56];
     $scope.bardata = [325, 148, 56];
   })
 
+  // OVERVIEW WEEKLY
+  .controller('OverviewWeeklyCtrl', function($scope, $location, $ionicNavBarDelegate) {
+    $scope.labels = ["Gordon", "Barney", "Lizzy"];
+    $scope.series = ['Series A', 'Series B'];
+    $scope.piedata = [120, 60, 256];
+    $scope.bardata = [120, 60, 256];
+
+    var path = $location.path();
+    if (path.indexOf('weekly') != -1)
+      $ionicNavBarDelegate.showBackButton(false);
+    else
+      $ionicNavBarDelegate.showBackButton(true);
+
+  })
+
+  // OVERVIEW MONTHLY
+  .controller('OverviewMonthlyCtrl', function($scope, $location, $ionicNavBarDelegate) {
+    $scope.labels = ["Gordon", "Barney", "Lizzy"];
+    $scope.series = ['Series A', 'Series B'];
+    $scope.piedata = [180, 24, 340];
+    $scope.bardata = [180, 24, 340];
+
+    var path = $location.path();
+    if (path.indexOf('monthly') != -1)
+      $ionicNavBarDelegate.showBackButton(false);
+    else
+      $ionicNavBarDelegate.showBackButton(true);
+
+  })
+
   // TOURS
   .controller('ToursCtrl', function($scope, $filter, $ionicFilterBar, $ionicLoading, TourService, UserService) {
     $scope.userId = localStorage.getItem("userId");
+
+    $scope.limit = 10;
 
     $scope.doRefresh = function() {
       $ionicLoading.show({
@@ -248,6 +280,20 @@ angular.module('cyfclient.controllers', [])
     };
 
     $scope.doRefresh();
+
+    $scope.moreDataCanBeLoaded = function(){
+      if ($scope.limit > localStorage.getItem("toursCounter")) {
+        return false;
+      } else {
+        return true;
+      }
+    };
+
+    $scope.loadMoreData = function() {
+      $scope.limit = $scope.limit+5;
+      $scope.$broadcast('scroll.infiniteScrollComplete');
+
+    };
 
   })
 
@@ -304,15 +350,31 @@ angular.module('cyfclient.controllers', [])
 
     $scope.$on("$stateChangeSuccess", function() {
 
+      var route_icons = {
+        default_icon: {},
+        start_icon: {
+          iconUrl: 'img/map-start.png',
+          iconSize:     [38, 38], // size of the icon
+          iconAnchor:   [19, 38], // point of the icon which will correspond to marker's location
+        },
+        end_icon: {
+          iconUrl: 'img/map-end.png',
+          iconSize:     [38, 38], // size of the icon
+          iconAnchor:   [19, 38], // point of the icon which will correspond to marker's location
+        }
+      };
+
       var startMarker = {
         lat: parseFloat($scope.tour.route.drivenRoute.gpsLatitude[0]),
         lng: parseFloat($scope.tour.route.drivenRoute.gpsLongitude[0]),
+        icon: route_icons.start_icon,
         focus: true,
         draggable: false};
 
       var endMarker = {
         lat: parseFloat($scope.tour.route.drivenRoute.gpsLatitude[$scope.tour.route.drivenRoute.gpsLatitude.length-1]),
         lng: parseFloat($scope.tour.route.drivenRoute.gpsLongitude[$scope.tour.route.drivenRoute.gpsLongitude.length-1]),
+        icon: route_icons.end_icon,
         focus: true,
         draggable: false};
 
@@ -412,6 +474,14 @@ angular.module('cyfclient.controllers', [])
   // ECO-SCORES
   .controller('ScoresCtrl', function($scope) {
 
+    $scope.labels = ["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"];
+    $scope.series = ['Gordon', 'Barney'];
+    $scope.data = [
+      [87, 85, 80, 81, 76, 88, 85],
+      [76, 77, 86, 84, 83, 80, 77]
+    ];
+
+    /*
     $scope.chartData = {
       labels: ['November', 'Dezember', 'Januar'],
       series: ['Tobias', 'Felix'],
@@ -437,6 +507,41 @@ angular.module('cyfclient.controllers', [])
         }
       ]
     };
+    */
+
+  })
+
+  // ECO-SCORES WEEKLY
+  .controller('ScoresWeeklyCtrl', function($scope, $location, $ionicNavBarDelegate) {
+    var path = $location.path();
+    if (path.indexOf('weekly') != -1)
+      $ionicNavBarDelegate.showBackButton(false);
+    else
+      $ionicNavBarDelegate.showBackButton(true);
+
+    $scope.labels = ["KW 1", "KW 2", "KW 3", "KW 4", "KW 5"];
+    $scope.series = ['Gordon', 'Barney'];
+    $scope.data = [
+      [85, 86, 84, 81, 82],
+      [76, 77, 86, 84, 80]
+    ];
+
+  })
+
+  // ECO-SCORES MONTHLY
+  .controller('ScoresMonthlyCtrl', function($scope, $location, $ionicNavBarDelegate) {
+    var path = $location.path();
+    if (path.indexOf('monthly') != -1)
+      $ionicNavBarDelegate.showBackButton(false);
+    else
+      $ionicNavBarDelegate.showBackButton(true);
+
+    $scope.labels = ["Aug", "Sep", "Okt", "Nov", "Dec", "Jan", "Feb"];
+    $scope.series = ['Gordon', 'Barney'];
+    $scope.data = [
+      [86, 85, 83, 82, 76, 83, 85],
+      [80, 78, 84, 84, 83, 80, 77]
+    ];
 
   })
 
@@ -587,6 +692,13 @@ angular.module('cyfclient.controllers', [])
       });
     };
 
+    $scope.deleteMember = function() {
+      var alertPopup = $ionicPopup.alert({
+        title: 'Sorry!',
+        template: 'Not implemented yet.'
+      });
+    };
+
     $ionicModal.fromTemplateUrl('modals/app/newFamilyMember.html', {
       scope: $scope
     }).then(function(modal) {
@@ -711,9 +823,19 @@ angular.module('cyfclient.controllers', [])
 
     $scope.$on("$stateChangeSuccess", function() {
 
+      var map_icons = {
+        default_icon: {},
+        location_icon: {
+          iconUrl: 'img/map-location.png',
+          iconSize:     [38, 38], // size of the icon
+          iconAnchor:   [19, 38], // point of the icon which will correspond to marker's location
+        }
+      };
+
       var mainMarker = {
         lat: parseFloat($scope.geofence.latitude),
         lng: parseFloat($scope.geofence.longitude),
+        icon: map_icons.location_icon,
         focus: true,
         draggable: true};
 
@@ -811,10 +933,17 @@ angular.module('cyfclient.controllers', [])
   })
 
   // INFO
-  .controller('InfoCtrl', function($scope, API_ENDPOINT) {
+  .controller('InfoCtrl', function($scope, $ionicModal, API_ENDPOINT) {
     $scope.toursCounter = localStorage.getItem("toursCounter");
     $scope.familyCounter = localStorage.getItem("familyCounter");
     $scope.serverUrl = API_ENDPOINT.url;
+
+    $ionicModal.fromTemplateUrl('modals/info/terms.html', {
+      scope: $scope
+    }).then(function(modal) {
+      $scope.modalTerms = modal;
+    });
+
   })
 
 ;

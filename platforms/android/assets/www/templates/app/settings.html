@@ -7,21 +7,28 @@
   </ion-nav-title>
   <ion-content>
     <ul class="list">
-      <div class="item item-divider">Default</div>
+      <div class="item item-divider item-button-right">General</div>
+      <ion-toggle ng-model="settinga" toggle-class="toggle-positive">Push Notifications</ion-toggle>
+      <div class="padding">
+        <button class="button button-block button-light" ng-click="registerDevice()">
+          Re-register device
+        </button>
+      </div>
 
-      <ion-toggle ng-model="settinga" toggle-class="toggle-positive">Setting A</ion-toggle>
-      <ion-toggle ng-model="settingb" toggle-class="toggle-positive">Setting B</ion-toggle>
-      <ion-toggle ng-model="settingc" toggle-class="toggle-positive">Setting C</ion-toggle>
-      <ion-toggle ng-model="settingd" toggle-class="toggle-positive">Setting D</ion-toggle>
-
-      <div class="item item-divider">Custom</div>
-
-      <ion-checkbox ng-model="checkOpt1">Option 1</ion-checkbox>
-      <ion-checkbox ng-model="checkOpt2">Option 2</ion-checkbox>
-      <ion-checkbox ng-model="checkOpt3">Option 3</ion-checkbox>
+      <div class="item item-divider">App Data</div>
+      <div class="padding">
+        <button class="button button-block button-light" ng-click="clearCache()">
+          Clean cache
+        </button>
+        <button class="button button-block button-light" ng-click="clearCache()">
+          Clean local storage
+        </button>
+        <button class="button button-block button-light" ng-click="clearCache()">
+          Reload all data
+        </button>
+      </div>
 
       <div class="item item-divider">Logout</div>
-
       <div class="padding">
         <button class="button button-block button-assertive" ng-click="logout()">
           Logout
