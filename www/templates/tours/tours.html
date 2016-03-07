@@ -17,7 +17,7 @@
            ng-repeat-start="(date, tours) in dates">
         {{date | date:"dd.MM.yyyy"}} <span class="badge badge-dark">{{tours.length}}</span>
       </div>-->
-      <a class="item item-avatar" ng-repeat="tour in tours | orderBy:'-route.timestampStart'" ui-sref="app.tour({tourId: tour._id})">
+      <a class="item item-avatar" ng-repeat="tour in tours | orderBy:'-route.timestampStart' | limitTo:limit" ui-sref="app.tour({tourId: tour._id})">
         <ionic-letter-avatar data="{{tour.userId}}" shape="round"></ionic-letter-avatar>
         <h2>{{tour.route.timestampStart | date:"dd.MM.yyyy"}} <i>{{tour.route.timestampStart | date:"HH:mm"}} – {{tour.route.timestampStop | date:"HH:mm"}}</i></h2>
           <div class="row">
@@ -27,6 +27,11 @@
           </div>
       </a>
       <div ng-repeat-end></div>
+      <ion-infinite-scroll
+        ng-if="moreDataCanBeLoaded()"
+        on-infinite="loadMoreData()"
+        distance="1%">
+      </ion-infinite-scroll>
     </div>
   </ion-content>
 </ion-view>
