@@ -9,8 +9,8 @@
     <div class="list card">
       <div class="item item-avatar">
         <ionic-letter-avatar data="{{tour.userId}}" shape="round"></ionic-letter-avatar>
-        <h2>{{tour.route.timestampStart | date:"dd.MM.yyyy"}} <i>{{tour.route.timestampStart | date:"HH:mm"}} – {{tour.route.timestampStop | date:"HH:mm"}}</i></h2>
-        <p>{{tour.userId}}</p>
+        <h2>{{tour.route.timestampStart | date:"dd.MM.yyyy"}} <i>{{tour.route.timestampStart | date:"HH:mm"}} – {{tour.route.timestampStop | date:"HH:mm"}} Uhr</i></h2>
+        <p><span class="icon ion-ios-person" style="width: 80px"> {{tour.userId}}</span> <span class="icon ion-ios-location" style="width: 80px"> {{tour.route.mileageStart}} – {{tour.route.mileageStop}} km</span></p>
       </div>
       <div class="item item-body">
         <div class="item item-icon-left">
@@ -32,6 +32,13 @@
           EcoScore
           <span class="badge badge-light">
             {{tour.ecoScoreTotal}} %
+          </span>
+        </div>
+        <div class="item item-icon-left">
+          <i class="icon ion-paintbucket"></i>
+          Fuel Average/Total
+          <span class="badge badge-light">
+            {{tour.fuelAverage}} l / {{tour.fuelTotal}} l
           </span>
         </div>
         <div class="item item-icon-left">
