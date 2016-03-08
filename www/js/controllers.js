@@ -139,17 +139,12 @@ angular.module('cyfclient.controllers', [])
       $scope.vehicle = {
         vin: $scope.user.vin,
         userId: $scope.user._id
-      }
+      };
 
       VehicleService.checkVin($scope.vehicle.vin).then(function(msg){
 
-        var alertPopup = $ionicPopup.alert({
-          title: 'VIN valid!',
-          template: msg
-        });
-
         VehicleService.createVehicle($scope.vehicle).then(function(msg) {
-          console.log(msg);
+
         }, function(errMsg) {
           // error handling
         });
@@ -160,12 +155,18 @@ angular.module('cyfclient.controllers', [])
           // error handling
         });
 
+        var alertPopup = $ionicPopup.alert({
+          title: 'VIN valid!',
+          template: msg
+        });
+
       }, function(errMsg) {
         var alertPopup = $ionicPopup.alert({
           title: 'VIN invalid!',
           template: errMsg
         });
       });
+
     };
 
     $ionicModal.fromTemplateUrl('modals/auth/enrollVehicle.html', {
