@@ -23,11 +23,17 @@ angular.module('cyfclient.controllers', [])
     $scope.userId = localStorage.getItem("userId");
     $scope.avatar = localStorage.getItem("firstName");
 
-    UserService.userInfo($scope.userId).then(function(user) {
-      $scope.profile = user;
-    }, function(errMsg) {
+    $scope.doRefresh = function() {
+      UserService.userInfo($scope.userId).then(function (user) {
+        $scope.profile = user;
+      }, function (errMsg) {
 
-    });
+      }).then(function(){
+        $scope.$broadcast('scroll.refreshComplete');
+      });
+    };
+
+    $scope.doRefresh();
 
   })
 
@@ -654,22 +660,30 @@ angular.module('cyfclient.controllers', [])
 
     $scope.members = [];
 
-    UserService.userInfo($scope.userId).then(function(user) {
-      $scope.vin = user.vin;
+    $scope.doRefresh = function() {
 
-      MemberService.getMembers($scope.vin).then(function(data) {
-        $scope.members = data;
+      UserService.userInfo($scope.userId).then(function (user) {
+        $scope.vin = user.vin;
 
-        // Save number of family members to local storage
-        localStorage.setItem("familyCounter", data.length);
+        MemberService.getMembers($scope.vin).then(function (data) {
+          $scope.members = data;
 
-      }, function(errMsg) {
-        // error handling
+          // Save number of family members to local storage
+          localStorage.setItem("familyCounter", data.length);
+
+        }, function (errMsg) {
+          // error handling
+        });
+
+      }, function (errMsg) {
+
+      }).then(function(){
+        $scope.$broadcast('scroll.refreshComplete');
       });
 
-    }, function(errMsg) {
+    };
 
-    });
+    $scope.doRefresh();
 
 
     $scope.doCreateMember = function() {
