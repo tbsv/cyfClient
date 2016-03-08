@@ -229,15 +229,12 @@ angular.module('cyfclient.controllers', [])
   })
 
   // TOURS
-  .controller('ToursCtrl', function($scope, $filter, $ionicFilterBar, $ionicLoading, TourService, UserService) {
+  .controller('ToursCtrl', function($scope, $filter, $ionicFilterBar, $ionicHistory, TourService, UserService) {
     $scope.userId = localStorage.getItem("userId");
 
     $scope.limit = 10;
 
     $scope.doRefresh = function() {
-      $ionicLoading.show({
-        template: 'Loading tours...'
-      });
 
       UserService.userInfo($scope.userId).then(function(user) {
         TourService.getTours(user.vin)
@@ -279,8 +276,7 @@ angular.module('cyfclient.controllers', [])
             };
 
           })
-          .then(function(data){
-            $ionicLoading.hide();
+          .then(function(){
             $scope.$broadcast('scroll.refreshComplete');
         });
       }, function(errMsg) {
@@ -305,17 +301,20 @@ angular.module('cyfclient.controllers', [])
 
     };
 
+    $scope.$on('$ionicView.enter', function() {
+      $scope.doRefresh();
+    });
+
   })
 
   // TOUR
-  .controller('TourCtrl', function($scope, tour_data, MemberService, TourService, UserService, $ionicLoading, $ionicModal, $ionicPopover) {
+  .controller('TourCtrl', function($scope, tour_data, MemberService, TourService, UserService, $ionicModal, $ionicPopover) {
     $scope.userId = localStorage.getItem("userId");
     $scope.assignee = '';
 
     $scope.geofenceAlerts = '';
 
     $scope.tour = tour_data;
-    $ionicLoading.hide();
 
     $scope.route = [];
 
@@ -702,6 +701,7 @@ angular.module('cyfclient.controllers', [])
           template: msg
         });
         $scope.modalMember.hide();
+        $scope.doRefresh();
       }, function(errMsg) {
         var alertPopup = $ionicPopup.alert({
           title: 'Signup failed!',
@@ -721,6 +721,10 @@ angular.module('cyfclient.controllers', [])
       scope: $scope
     }).then(function(modal) {
       $scope.modalMember = modal;
+    });
+
+    $scope.$on('$ionicView.enter', function() {
+      $scope.doRefresh();
     });
 
   })

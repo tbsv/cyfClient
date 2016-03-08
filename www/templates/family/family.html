@@ -12,7 +12,6 @@
     <ion-refresher
       on-refresh="doRefresh()">
     </ion-refresher>
-    <h4 class="padding">Members</h4>
     <ion-list>
       <ion-item class="item item-avatar" ng-repeat="member in members" ui-sref="app.familyMember({memberId: member._id})">
         <ionic-letter-avatar data="{{member.name.first}}" shape="round"></ionic-letter-avatar>
