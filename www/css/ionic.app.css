@@ -9280,6 +9280,12 @@ ion-spinner.spinner-on-load {
   .check-view .bottom-content .sign-up.button {
     background-color: rgba(255, 76, 76, 0.8); }
 
+.check-view .logo img {
+  width: 340px; }
+
+.check-view .icon img {
+  width: 240px; }
+
 .login-view [ng\:cloak], .login-view [ng-cloak], .login-view [data-ng-cloak], .login-view [x-ng-cloak], .login-view .ng-cloak, .login-view .x-ng-cloak {
   display: none !important; }
 
