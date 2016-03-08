@@ -31,7 +31,7 @@ angular.module('cyfclient', [
   });
 })
 
-.config(function($stateProvider, $urlRouterProvider) {
+.config(function($stateProvider, $urlRouterProvider, $ionicFilterBarConfigProvider) {
 
   // Ionic uses AngularUI Router which uses the concept of states
   // Learn more here: https://github.com/angular-ui/ui-router
@@ -252,6 +252,9 @@ angular.module('cyfclient', [
 
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/auth/check');
+
+  // set placeholder for filter bar
+  $ionicFilterBarConfigProvider.placeholder('Search (username/date, eg. 2016-03-08)');
 
 })
 
