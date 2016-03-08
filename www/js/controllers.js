@@ -264,13 +264,17 @@ angular.module('cyfclient.controllers', [])
             }
             */
 
+            //$ionicFilterBarConfigProvider.placeholder = "test";
+
             $scope.showFilterBar = function () {
               filterBarInstance = $ionicFilterBar.show({
                 items: $scope.tours,
                 update: function (filteredItems) {
                   $scope.tours = filteredItems;
                 },
-                filterProperties: ['userId']
+                expression: function (filterText, value) {
+                  return value.userId.indexOf(filterText) !== -1 || value.route.timestampStart.indexOf(filterText) !== -1
+                }
               });
             };
 
