@@ -12,7 +12,7 @@
         <h2>{{tour.route.timestampStart | date:"dd.MM.yyyy"}} &nbsp;<i>{{tour.route.timestampStart | date:"HH:mm"}} – {{tour.route.timestampStop | date:"HH:mm"}}</i></h2>
         <div class="row">
           <span class="icon ion-person" style="width: 85px"> {{tour.userId}}</span>
-          <span class="icon ion-ios-location" style="width: 80px"> {{tour.route.mileageStart}} – {{tour.route.mileageStop}} km</span>
+          <span class="icon ion-flag" style="width: 80px"> {{tour.route.mileageStart}} – {{tour.route.mileageStop}} km</span>
         </div>
       </div>
       <div class="item item-body">
@@ -83,7 +83,7 @@
           <i class="icon ion-ios-speedometer-outline"></i>
           Speed
         </a>
-        <a class="tab-item" ng-click="modalAssign.show(); getFamilyMembers()">
+        <a class="tab-item" ng-click="modalAssign.show(); getFamilyMembers()" ng-hide="tour.userId == 'guest' ? false : true">
           <i class="icon ion-person"></i>
           Assign
         </a>
@@ -100,7 +100,7 @@
       <ion-content class="padding">
         <div class="list">
           <div class="item" data-tap-disabled="true">
-            <leaflet resizeable defaults="map.defaults" markers="map.markers" paths="paths" center="map.center" height="500px" width="100%"></leaflet>
+            <leaflet resizeable defaults="map.defaults" markers="map.markers" paths="paths" center="map.center" bounds="bounds" height="500px" width="100%"></leaflet>
           </div>
         </div>
       </ion-content>
@@ -120,7 +120,6 @@
               id="line" class="chart chart-line" chart-data="chartData.data" chart-labels="chartData.labels" chart-series="chartData.series" chart-options="chartData.options" chart-colours="chartData.colours" chart-legend="true">
             </canvas>
           </div>
-
         </div>
       </ion-content>
     </ion-modal-view>

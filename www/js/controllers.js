@@ -19,13 +19,14 @@ angular.module('cyfclient.controllers', [])
   })
 
   // APP
-  .controller('MenuCtrl', function($rootScope, $scope, UserService) {
+  .controller('MenuCtrl', function($rootScope, $scope, UserService, $ionicSideMenuDelegate) {
     $scope.userId = localStorage.getItem("userId");
     $scope.avatar = localStorage.getItem("firstName");
 
     $scope.doRefresh = function() {
       UserService.userInfo($scope.userId).then(function (user) {
         $scope.profile = user;
+        $scope.alertsNotifier = localStorage.getItem("alertsCounter");
       }, function (errMsg) {
 
       }).then(function(){
@@ -34,6 +35,16 @@ angular.module('cyfclient.controllers', [])
     };
 
     $scope.doRefresh();
+
+    // Reload side menu when it's opened
+    $scope.$watch(function () {
+        return $ionicSideMenuDelegate.getOpenRatio();
+      },
+      function (ratio) {
+        if (ratio == 1){
+          $scope.doRefresh();
+        }
+      });
 
   })
 
@@ -57,6 +68,8 @@ angular.module('cyfclient.controllers', [])
           if (!user.vin) {
             $state.go('auth.enroll');
           } else {
+            localStorage.setItem("role", user.role);
+            localStorage.setItem("vehicleId", user.vin);
             $state.go('app.overview');
           }
 
@@ -309,7 +322,7 @@ angular.module('cyfclient.controllers', [])
   })
 
   // TOUR
-  .controller('TourCtrl', function($scope, tour_data, MemberService, TourService, UserService, $ionicModal, $ionicPopover) {
+  .controller('TourCtrl', function($scope, tour_data, MemberService, TourService, UserService, $ionicModal, $ionicPopover, $window) {
     $scope.userId = localStorage.getItem("userId");
     $scope.assignee = '';
 
@@ -352,6 +365,7 @@ angular.module('cyfclient.controllers', [])
       TourService.updateTour($scope.tour).then(function(tour) {
         $scope.tour = tour;
         $scope.modalAssign.hide();
+        $window.location.reload(true);
       }, function(errMsg) {
         // error handling
       });
@@ -371,6 +385,11 @@ angular.module('cyfclient.controllers', [])
           iconUrl: 'img/map-end.png',
           iconSize:     [38, 38], // size of the icon
           iconAnchor:   [19, 38], // point of the icon which will correspond to marker's location
+        },
+        location_icon: {
+          iconUrl: 'img/map-location.png',
+          iconSize:     [38, 38], // size of the icon
+          iconAnchor:   [19, 38], // point of the icon which will correspond to marker's location
         }
       };
 
@@ -378,24 +397,32 @@ angular.module('cyfclient.controllers', [])
         lat: parseFloat($scope.tour.route.drivenRoute.gpsLatitude[0]),
         lng: parseFloat($scope.tour.route.drivenRoute.gpsLongitude[0]),
         icon: route_icons.start_icon,
-        focus: true,
+        focus: false,
         draggable: false};
 
       var endMarker = {
         lat: parseFloat($scope.tour.route.drivenRoute.gpsLatitude[$scope.tour.route.drivenRoute.gpsLatitude.length-1]),
         lng: parseFloat($scope.tour.route.drivenRoute.gpsLongitude[$scope.tour.route.drivenRoute.gpsLongitude.length-1]),
         icon: route_icons.end_icon,
-        focus: true,
+        focus: false,
+        draggable: false};
+
+      var geofenceMarker = {
+        lat: parseFloat($scope.tour.geofenceValue.latitude),
+        lng: parseFloat($scope.tour.geofenceValue.longitude),
+        icon: route_icons.location_icon,
+        focus: false,
         draggable: false};
 
       $scope.map = {
         center: {
           lat : parseFloat($scope.tour.route.drivenRoute.gpsLatitude[0]),
           lng : parseFloat($scope.tour.route.drivenRoute.gpsLongitude[0]),
-          zoom : 14},
+          zoom : 13},
         markers: {
           startMarker: angular.copy(startMarker),
-          endMarker: angular.copy(endMarker)}
+          endMarker: angular.copy(endMarker),
+          geofenceMarker: angular.copy(geofenceMarker)}
       };
 
       $scope.paths = {
@@ -403,6 +430,17 @@ angular.module('cyfclient.controllers', [])
           latlngs: [],
           color: '#0c60ee',
           weight: 10,
+          clickable: false,
+          focus: true
+        },
+        circle: {
+          type: 'circle',
+          radius: parseFloat($scope.tour.geofenceValue.radius),
+          latlngs: $scope.map.markers.geofenceMarker,
+          color: '#0c60ee',
+          weight: 4,
+          fillColor: '#387ef5',
+          fillOpacity: 0.3,
           clickable: false
         }
       };
@@ -422,18 +460,18 @@ angular.module('cyfclient.controllers', [])
     $ionicModal.fromTemplateUrl('modals/tour/showSpeed.html', {
       scope: $scope
     }).then(function(modal) {
-      var speedShoot;
       $scope.modalSpeed = modal;
 
       var speedData = new Array();
       var speedLabel = new Array();
       var speedFence = new Array();
+      var speedShoot;
       var speedMax = 0;
 
       for (var i = 0; i < $scope.tour.route.speed.length; i++) {
         speedShoot = parseInt($scope.tour.route.speed[i]);
         speedData.push(speedShoot);
-        speedFence.push(parseInt(0));
+        speedFence.push(parseInt($scope.tour.speedfenceValue));
         speedLabel.push('');
         if (speedShoot > speedMax) {
           speedMax = speedShoot;
@@ -443,7 +481,7 @@ angular.module('cyfclient.controllers', [])
 
       $scope.chartData = {
         labels: speedLabel,
-        series: ['Speedfence: ' + speedFence[0] + ' km/h', 'Speed (Max. of tour: ' + speedMax + ' km/h)'],
+        series: ['Speedfence: ' + speedFence[0] + ' km/h', 'Speed (Max: ' + speedMax + ' km/h)'],
         data: [
           speedFence,
           speedData
@@ -566,8 +604,23 @@ angular.module('cyfclient.controllers', [])
   .controller('AlertsCtrl', function($scope, AlertService) {
 
     $scope.doRefresh = function() {
-      AlertService.getAlerts().then(function (data) {
+      AlertService.getAlerts(localStorage.getItem("vehicleId")).then(function (data) {
         $scope.alerts = data;
+        $scope.alertCounter = 0;
+        localStorage.setItem("alertsCounter", $scope.alertCounter);
+
+        for (var i = 0; i < data.length; i++) {
+
+          if (localStorage.getItem("role") == 'master' && data[i].readStatusMaster == false) {
+            $scope.alertCounter++;
+            localStorage.setItem("alertsCounter", $scope.alertCounter);
+          } else if (localStorage.getItem("role") == 'child' && $scope.alerts[i].readStatusMaster == false) {
+            $scope.alertCounter++;
+          }
+
+        };
+
+
       }, function (errMsg) {
         // error handling
       }).then(function(){
@@ -576,6 +629,41 @@ angular.module('cyfclient.controllers', [])
     };
 
     $scope.doRefresh();
+
+    $scope.updateReadStatus = function(alertId) {
+
+      $scope.updatedAlert = {
+        _id: alertId,
+        readStatusMaster: '',
+        readStatusChild: ''
+      };
+
+      if (localStorage.getItem("role") == 'master') {
+        $scope.updatedAlert.readStatusMaster = true;
+
+        AlertService.updateAlert($scope.updatedAlert).then(function() {
+        }, function(errMsg) {
+          // error handling
+        })
+
+      } else if (localStorage.getItem("role") == 'child') {
+        $scope.updatedAlert.readStatusChild = true;
+
+        AlertService.updateAlert($scope.updatedAlert).then(function() {
+        }, function(errMsg) {
+          // error handling
+        })
+      }
+
+    };
+
+    $scope.reloadSideMenu = function() {
+      $scope.doRefresh();
+    };
+
+    $scope.$on('$ionicView.enter', function() {
+      $scope.doRefresh();
+    });
 
   })
 
@@ -715,6 +803,7 @@ angular.module('cyfclient.controllers', [])
         });
         $scope.modalMember.hide();
         $scope.doRefresh();
+        $scope.user = {};
       }, function(errMsg) {
         var alertPopup = $ionicPopup.alert({
           title: 'Signup failed!',
@@ -946,7 +1035,7 @@ angular.module('cyfclient.controllers', [])
   })
 
   // SETTINGS
-  .controller('SettingsCtrl', function($scope, AuthService, $ionicPopup, $ionicHistory, $state) {
+  .controller('SettingsCtrl', function($scope, AuthService, $ionicPopup, $ionicHistory, $state, $window) {
     $scope.logout = function() {
 
         var confirmPopup = $ionicPopup.confirm({
@@ -957,6 +1046,8 @@ angular.module('cyfclient.controllers', [])
         confirmPopup.then(function(res) {
           if(res) {
             AuthService.logout();
+            $window.localStorage.clear();
+            $ionicHistory.clearHistory();
             $ionicHistory.clearCache().then(function(){
               $state.go('auth.check');
             })

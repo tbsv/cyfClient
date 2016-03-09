@@ -40,7 +40,7 @@
         <ion-item class="item-icon-left" nav-clear menu-close ui-sref="app.alerts">
           <i class="icon ion-android-notifications-none"></i>
           <h2 class="menu-text">Alerts</h2>
-          <span class="badge badge-assertive">2</span>
+          <span ng-class="alertsNotifier >= 1 ? 'badge badge-assertive' : 'badge badge-light'">{{alertsNotifier}}</span>
         </ion-item>
         <!--<ion-item class="item-icon-left" nav-clear menu-close ui-sref="app.profile">
           <i class="icon ion-person"></i>

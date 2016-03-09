@@ -414,6 +414,35 @@ angular.module('cyfclient.services', [])
   // ALERT SERVICE
   .service('AlertService', function($rootScope, $http, $q, API_ENDPOINT) {
 
+    this.getAlerts = function(vehicleId) {
+      var deferred = $q.defer();
+
+      $http.get(API_ENDPOINT.url + '/alerts/family/' + vehicleId)
+        .success(function(data) {
+          deferred.resolve(data);
+        })
+        .error(function(data) {
+          deferred.reject(data);
+        });
+
+      return deferred.promise;
+    };
+
+    this.updateAlert = function(alert) {
+      var deferred = $q.defer();
+
+      $http.put(API_ENDPOINT.url + '/alerts/update/' + alert._id, alert)
+        .success(function(data) {
+          deferred.resolve(data);
+        })
+        .error(function(data) {
+          deferred.reject(data);
+        });
+
+      return deferred.promise;
+    };
+
+    /*
     this.getAlerts = function() {
 
       var data = [
@@ -450,6 +479,7 @@ angular.module('cyfclient.services', [])
       return deferred.promise;
 
     };
+    */
 
   })
 

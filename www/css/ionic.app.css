@@ -9355,15 +9355,8 @@ ion-side-menu .heading-item .greeting {
 ion-side-menu .heading-item .message {
   color: #999999; }
 
-.member-view .ion-popover-view.fit {
-  height: 100px; }
+.alerts-view .button-custom .icon:before {
+  font-size: 20px; }
 
-.member-view .ion-popover-view.fit ion-content {
-  position: relative; }
-
-.member-view .platform-android ion-popover-view.fit {
-  margin-top: 10px; }
-
-.member-view .platform-ios ion-popover-view.fit {
-  padding-top: 10px;
-  padding-bottom: 10px; }
+.alerts-view .button-custom small {
+  font-size: 10px; }

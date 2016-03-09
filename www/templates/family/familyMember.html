@@ -2,16 +2,13 @@
   <ion-nav-buttons side="left">
     <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
   </ion-nav-buttons>
-  <ion-nav-buttons side="right">
-    <button class="button button-icon icon ion-more" ng-click="popover.show($event)"></button>
-  </ion-nav-buttons>
   <ion-nav-title>
     <span>Member</span>
   </ion-nav-title>
   <ion-content>
     <div class="list card">
       <div class="item item-avatar">
-        <ionic-letter-avatar data="{{avatar}}" shape="round"></ionic-letter-avatar>
+        <ionic-letter-avatar data="{{profile.name.first}}" shape="round"></ionic-letter-avatar>
         <h2>{{profile.name.first}} {{profile.name.last}}</h2>
         <p>{{profile.role}}</p>
       </div>
@@ -70,24 +67,6 @@
       </div>
     </div>
   </ion-content>
-
-  <script id="popovers/family/memberMenu.html" type="text/ng-template">
-    <ion-popover-view style="height: 160px; width: 160px">
-      <ion-content>
-        <div class="list">
-          <a class="item" ng-click="modalMember.show(); popover.hide()">
-            Edit member
-          </a>
-          <a class="item" ng-click="modalGeofence.show(); popover.hide()" ng-hide="profile.role == 'master'">
-            Set Geofence
-          </a>
-          <a class="item" ng-click="modalSpeedfence.show(); popover.hide()" ng-hide="profile.role == 'master'">
-            Set Speedfence
-          </a>
-        </div>
-      </ion-content>
-    </ion-popover-view>
-  </script>
 
   <script id="modals/family/editMember.html" type="text/ng-template">
     <ion-modal-view>
