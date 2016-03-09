@@ -558,12 +558,17 @@ angular.module('cyfclient.controllers', [])
   // ALERTS
   .controller('AlertsCtrl', function($scope, AlertService) {
 
-    AlertService.getAlerts().then(function(data){
+    $scope.doRefresh = function() {
+      AlertService.getAlerts().then(function (data) {
         $scope.alerts = data;
+      }, function (errMsg) {
+        // error handling
+      }).then(function(){
+        $scope.$broadcast('scroll.refreshComplete');
+      });
+    };
 
-    }, function(errMsg) {
-      // error handling
-    });
+    $scope.doRefresh();
 
   })
 

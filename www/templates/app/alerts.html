@@ -6,6 +6,9 @@
     <span>Alerts</span>
   </ion-nav-title>
   <ion-content>
+    <ion-refresher
+      on-refresh="doRefresh()">
+    </ion-refresher>
     <div class="list">
       <a class="item item-avatar" ng-repeat="alert in alerts" ui-sref="app.tour({tourId: alert.tourId})">
         <ionic-letter-avatar data="{{alert.type}}" shape="round"></ionic-letter-avatar>
