@@ -422,21 +422,28 @@ angular.module('cyfclient.controllers', [])
     $ionicModal.fromTemplateUrl('modals/tour/showSpeed.html', {
       scope: $scope
     }).then(function(modal) {
+      var speedShoot;
       $scope.modalSpeed = modal;
 
       var speedData = new Array();
       var speedLabel = new Array();
       var speedFence = new Array();
+      var speedMax = 0;
 
       for (var i = 0; i < $scope.tour.route.speed.length; i++) {
-        speedData.push(parseInt($scope.tour.route.speed[i]));
-        speedFence.push(parseInt(50));
+        speedShoot = parseInt($scope.tour.route.speed[i]);
+        speedData.push(speedShoot);
+        speedFence.push(parseInt(0));
         speedLabel.push('');
+        if (speedShoot > speedMax) {
+          speedMax = speedShoot;
+        }
+
       }
 
       $scope.chartData = {
         labels: speedLabel,
-        series: ['Speedfence', 'Speed'],
+        series: ['Speedfence: ' + speedFence[0] + ' km/h', 'Speed (Max. of tour: ' + speedMax + ' km/h)'],
         data: [
           speedFence,
           speedData

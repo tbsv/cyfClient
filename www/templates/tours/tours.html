@@ -19,11 +19,11 @@
       </div>-->
       <a class="item item-avatar" ng-repeat="tour in tours | orderBy:'-route.timestampStart' | limitTo:limit" ui-sref="app.tour({tourId: tour._id})">
         <ionic-letter-avatar data="{{tour.userId}}" shape="round"></ionic-letter-avatar>
-        <h2>{{tour.route.timestampStart | date:"dd.MM.yyyy"}} <i>{{tour.route.timestampStart | date:"HH:mm"}} – {{tour.route.timestampStop | date:"HH:mm"}}</i></h2>
+        <h2>{{tour.route.timestampStart | date:"dd.MM.yyyy"}} &nbsp;<i>{{tour.route.timestampStart | date:"HH:mm"}} – {{tour.route.timestampStop | date:"HH:mm"}}</i></h2>
           <div class="row">
-          <span class="icon ion-person" style="width: 80px"> {{tour.userId}}</span>
-          <span class="icon ion-ios-location" style="width: 80px"> {{tour.route.routeDistance}} km</span>
-          <span class="icon ion-ios-clock" style="width: 80px"> {{tour.route.routeDuration | secondsToHHmmss}}</span>
+            <span class="icon ion-person" style="width: 85px"> {{tour.userId}}</span>
+            <span class="icon ion-ios-location" style="width: 80px"> {{tour.route.routeDistance}} km</span>
+            <span class="icon ion-ios-clock" style="width: 80px"> {{tour.route.routeDuration | secondsToHHmmss}}</span>
           </div>
       </a>
       <div ng-repeat-end></div>

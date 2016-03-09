@@ -9,8 +9,11 @@
     <div class="list card">
       <div class="item item-avatar">
         <ionic-letter-avatar data="{{tour.userId}}" shape="round"></ionic-letter-avatar>
-        <h2>{{tour.route.timestampStart | date:"dd.MM.yyyy"}} <i>{{tour.route.timestampStart | date:"HH:mm"}} – {{tour.route.timestampStop | date:"HH:mm"}} Uhr</i></h2>
-        <p><span class="icon ion-ios-person" style="width: 80px"> {{tour.userId}}</span> <span class="icon ion-ios-location" style="width: 80px"> {{tour.route.mileageStart}} – {{tour.route.mileageStop}} km</span></p>
+        <h2>{{tour.route.timestampStart | date:"dd.MM.yyyy"}} &nbsp;<i>{{tour.route.timestampStart | date:"HH:mm"}} – {{tour.route.timestampStop | date:"HH:mm"}}</i></h2>
+        <div class="row">
+          <span class="icon ion-person" style="width: 85px"> {{tour.userId}}</span>
+          <span class="icon ion-ios-location" style="width: 80px"> {{tour.route.mileageStart}} – {{tour.route.mileageStop}} km</span>
+        </div>
       </div>
       <div class="item item-body">
         <div class="item item-icon-left">
@@ -63,7 +66,7 @@
         <div class="item item-icon-left">
           <i class="icon ion-map"></i>
           Geofence Alerts
-          <span ng-class="tour.geofenceAlerts == true ? 'badge badge-assertive' : 'badge badge-stable'">{{tour.geofenceAlerts == true ? '1' : '0'}}</span>
+          <span ng-class="tour.geofenceAlerts == true ? 'badge badge-assertive' : 'badge badge-stable'">{{tour.geofenceAlerts == true ? 'yes' : 'no'}}</span>
         </div>
         <div class="item item-icon-left">
           <i class="icon ion-speedometer"></i>
@@ -112,7 +115,6 @@
       </ion-header-bar>
       <ion-content class="padding">
         <div class="card">
-
           <div class="item item-text-wrap">
             <canvas
               id="line" class="chart chart-line" chart-data="chartData.data" chart-labels="chartData.labels" chart-series="chartData.series" chart-options="chartData.options" chart-colours="chartData.colours" chart-legend="true">
