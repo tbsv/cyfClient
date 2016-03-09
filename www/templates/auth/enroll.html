@@ -8,9 +8,12 @@
               <label class="item item-input">
                 <input type="text" placeholder="VIN (e.g. WDD2231234N567890)" name="user_vin" ng-model="user.vin" required>
               </label>
+              <label class="item item-input">
+                <input type="text" placeholder="Licence number (e.g. HH-Z-2016)" name="vehicle_licenceNumber" ng-model="user.licenceNumber" required >
+              </label>
             </div>
             <div class="item item-body bottom-content">
-              <button type="submit" class="button button-positive button-block" ng-click="doEnroll()">
+              <button type="submit" class="button button-positive button-block" ng-click="doEnroll()" ng-disabled="enroll_form.$invalid">
                 Enroll
               </button>
             </div>
@@ -33,7 +36,8 @@
       </ion-header-bar>
       <ion-content class="padding">
         <div class="list">
-          <ion-radio ng-repeat="vehicle in vehicles" ng-change="updateVehicle(vehicle.vin)" ng-model="user.vin" ng-click="updateVehicle(vehicle.vin)">{{vehicle.vin}}</ion-radio>
+          <!-- <ion-radio ng-repeat="vehicle in vehicles" ng-change="updateVehicle(vehicle.vin)" ng-model="user.vin" ng-click="updateVehicle(vehicle.vin)">{{vehicle.vin}}</ion-radio> -->
+          <ion-radio ng-repeat="vehicle in vehicles" ng-change="updateVehicle(vehicle)" ng-model="user.vin" ng-click="updateVehicle(vehicle)">{{vehicle}}</ion-radio>
         </div>
       </ion-content>
     </ion-modal-view>

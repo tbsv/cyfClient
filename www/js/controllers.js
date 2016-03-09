@@ -131,41 +131,57 @@ angular.module('cyfclient.controllers', [])
 
     $scope.user = {
       _id: $scope.userId,
-      vin: ''
+      vin: '',
+      licenceNumber: ''
     };
 
     $scope.doEnroll = function() {
 
       $scope.vehicle = {
         vin: $scope.user.vin,
-        userId: $scope.user._id
+        userId: $scope.user._id,
+        licenceNumber: $scope.user.licenceNumber
       };
 
       VehicleService.checkVin($scope.vehicle.vin).then(function(msg){
 
-        VehicleService.createVehicle($scope.vehicle).then(function(msg) {
+        var regexpGermanLicenseNumber = new RegExp('^[A-Z]{1,3}-[A-Z]{1,2} [0-9]{1,4}$');
+        console.log("blub");
 
-        }, function(errMsg) {
-          // error handling
-        });
+        if(!$scope.user.licenceNumber.toString().match(regexpGermanLicenseNumber)) {
+          console.log("NO MATCH FOR LICENSE NUMBER!");
+          var alertPopup = $ionicPopup.alert({
+            title: 'Licence number invalid! ',
+            template: 'License number must match with e.g. HH-Z 2016'
+          });
+        } else {
 
-        UserService.updateUser($scope.user).then(function(user) {
-          $state.go('app.overview');
-        }, function(errMsg) {
-          // error handling
-        });
+          VehicleService.createVehicle($scope.vehicle).then(function(msg) {
 
-        var alertPopup = $ionicPopup.alert({
-          title: 'VIN valid!',
-          template: msg
-        });
+          }, function(errMsg) {
+            // error handling
+          });
 
+          UserService.updateUser($scope.user).then(function(user) {
+            $state.go('app.overview');
+          }, function(errMsg) {
+            // error handling
+          });
+
+          var alertPopup = $ionicPopup.alert({
+            title: 'VIN connected to you!',
+            template: msg
+          });
+        }
       }, function(errMsg) {
+        console.log("XXX");
         var alertPopup = $ionicPopup.alert({
           title: 'VIN invalid!',
-          template: errMsg
+          template: errMsg+" Or VIN does not match with the typical VIN structure. "
         });
       });
+
+
 
     };
 
@@ -177,7 +193,11 @@ angular.module('cyfclient.controllers', [])
       $scope.vehicles = [];
 
       VehicleService.getVehiclesOfReadiConnect().then(function(data){
-        $scope.vehicles = data;
+        //HIER WERDEN ALLE VERFUEGBAREN FAHRZEUGE AUS READI-CONNECT GEHOLT.
+        //LEIDER SIND NICHT ALLE MIT connect your family kompatibel.
+        //$scope.vehicles = data;
+        //MANUELLES FÜLLEN DER FAHRZEUGE, DIE connect your family KOMPATIBEL SIND.
+        $scope.vehicles = ['WDD1179421N250123', 'WDD1179121N355937', 'WDD2122061B140828', 'WDD2074361F331979' ];
       }, function(errMsg) {
         // error handling
       });
