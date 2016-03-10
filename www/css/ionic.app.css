@@ -9360,6 +9360,21 @@ ion-side-menu .heading-item .user-image-container {
   position: absolute;
   top: 20px;
   left: 12px; }
+  ion-side-menu .heading-item .user-image-container .avatar .icon:before {
+    background-color: #3E454C;
+    color: #262626;
+    border-radius: 50%;
+    font-size: 56px;
+    width: 56px;
+    height: 56px;
+    line-height: 56px;
+    text-align: center; }
+  ion-side-menu .heading-item .user-image-container .avatar small {
+    color: #999999;
+    font-size: 12px;
+    margin-left: -1.4em;
+    margin-top: 1.3em;
+    position: absolute; }
   ion-side-menu .heading-item .user-image-container .user-image {
     border-radius: 50%;
     padding: 6px;
@@ -9389,3 +9404,23 @@ ion-side-menu .heading-item .message {
 
 .alerts-view .button-custom small {
   font-size: 10px; }
+
+.member-view .fences .active .icon:before {
+  background-color: #FF4C4C;
+  color: #FFFFFF;
+  border-radius: 50%;
+  font-size: 12px;
+  width: 20px;
+  height: 20px;
+  line-height: 20px;
+  text-align: center; }
+
+.member-view .fences .inactive .icon:before {
+  background-color: #3E454C;
+  color: gray;
+  border-radius: 50%;
+  font-size: 12px;
+  width: 20px;
+  height: 20px;
+  line-height: 20px;
+  text-align: center; }

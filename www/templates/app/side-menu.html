@@ -19,9 +19,10 @@
       <ion-list>
         <ion-item class="heading-item item item-avatar" nav-clear menu-close ui-sref="app.profile">
           <div class="user-image-container">
-            <ionic-letter-avatar class="user-image" data="{{avatar}}" shape="round"></ionic-letter-avatar>
+            <!--<ionic-letter-avatar class="user-image" data="{{avatar}}" shape="round"></ionic-letter-avatar>-->
+            <span class="avatar"><i class="icon ion-ios-person"><small>{{role}}</small></i></span>
           </div>
-          <h2 class="greeting">Hallo {{greeting}} &nbsp;<span class="role"><i class="icon ion-ios-person"><small>{{role}}</small></i></span></h2>
+          <h2 class="greeting">Hallo {{greeting}} <!--&nbsp;<span class="role"><i class="icon ion-ios-person"><small>{{role}}</small></i></span>--></h2>
           <p class="message">{{licenceNumber}}</p>
           <div class="fences">
             <span ng-class="geofenceActive == 'true' ? 'active' : 'inactive'"><i class="icon ion-map"></i></span>

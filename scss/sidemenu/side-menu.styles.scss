@@ -98,6 +98,27 @@ ion-side-menu
 		  top: 20px;
 		  left: 12px;
 
+      .avatar .icon:before
+      {
+        background-color: $main-menu-bg;
+        color: darken($main-menu-color, 85);
+        border-radius: 50%;
+        font-size: 56px;
+        width: 56px;
+        height: 56px;
+        line-height: 56px;
+        text-align: center;
+      }
+
+      .avatar small
+      {
+        color: darken($main-menu-color, 40);
+        font-size: 12px;
+        margin-left: -1.4em;
+        margin-top: 1.3em;
+        position: absolute;
+      }
+
 			.user-image
 			{
 				border-radius: 50%;
