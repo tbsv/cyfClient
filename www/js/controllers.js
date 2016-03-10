@@ -210,7 +210,7 @@ angular.module('cyfclient.controllers', [])
         //LEIDER SIND NICHT ALLE MIT connect your family kompatibel.
         //$scope.vehicles = data;
         //MANUELLES FÜLLEN DER FAHRZEUGE, DIE connect your family KOMPATIBEL SIND.
-        $scope.vehicles = ['WDD1179421N250123', 'WDD1179121N355937', 'WDD2122061B140828', 'WDD2074361F331979' ];
+        $scope.vehicles = ['WDD1179421N250123', 'WDD1179121N355937', 'WDD2122061B140828' ];
       }, function(errMsg) {
         // error handling
       });
