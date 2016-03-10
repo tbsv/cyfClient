@@ -167,6 +167,20 @@ angular.module('cyfclient.services', [])
       return deferred.promise;
     };
 
+    this.getVehicle = function(vehicleId) {
+      var deferred = $q.defer();
+
+      $http.get(API_ENDPOINT.url + '/vehicles/' + vehicleId)
+        .success(function(data) {
+          deferred.resolve(data);
+        })
+        .error(function(data) {
+          deferred.reject(data);
+        });
+
+      return deferred.promise;
+    };
+
     this.getVehiclesOfReadiConnect = function() {
       var deferred = $q.defer();
 
@@ -441,45 +455,6 @@ angular.module('cyfclient.services', [])
 
       return deferred.promise;
     };
-
-    /*
-    this.getAlerts = function() {
-
-      var data = [
-        {
-          "type" : "Geofence",
-          "userId" : "tvetter",
-          "timestamp" : "2015-12-17-131526",
-          "tourId" : "56c34404eec21c8736871ab4"
-        },
-        {
-          "type" : "Geofence",
-          "userId" : "tvetter",
-          "timestamp" : "2015-12-17-131526",
-          "tourId" : "56c34404eec21c8736871ab4"
-        },
-        {
-          "type" : "Speedfence",
-          "userId" : "tvetter",
-          "timestamp" : "2015-12-17-131526",
-          "tourId" : "56c34404eec21c8736871ab4"
-        },
-        {
-          "type" : "Geofence",
-          "userId" : "tvetter",
-          "timestamp" : "2015-12-17-131526",
-          "tourId" : "56c34404eec21c8736871ab4"
-        }
-      ];
-
-      var deferred = $q.defer();
-      deferred.resolve(data);
-
-
-      return deferred.promise;
-
-    };
-    */
 
   })
 

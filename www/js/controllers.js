@@ -26,6 +26,10 @@ angular.module('cyfclient.controllers', [])
       $scope.userId = localStorage.getItem("userId");
       $scope.avatar = localStorage.getItem("firstName");
       $scope.greeting = localStorage.getItem("firstName");
+      $scope.licenceNumber = localStorage.getItem("licenceNumber");
+      $scope.role = localStorage.getItem("role").charAt(0).toUpperCase();
+      $scope.geofenceActive = localStorage.getItem("geofenceActive");
+      $scope.speedfenceActive = localStorage.getItem("speedfenceActive");
 
       UserService.userInfo($scope.userId).then(function (user) {
         $scope.profile = user;
@@ -52,7 +56,7 @@ angular.module('cyfclient.controllers', [])
   })
 
   // LOGIN
-  .controller('LoginCtrl', function($scope, AuthService, UserService, $ionicPopup, $state, API_ENDPOINT) {
+  .controller('LoginCtrl', function($scope, AuthService, UserService, VehicleService, $ionicPopup, $state, API_ENDPOINT) {
 
     $scope.user = {
       name: '',
@@ -63,16 +67,25 @@ angular.module('cyfclient.controllers', [])
 
     $scope.doLogin = function() {
       AuthService.login($scope.user).then(function(msg) {
-        // Save userId and firstName to local storage
-        localStorage.setItem("userId", $scope.user.name);
 
         UserService.userInfo($scope.user.name).then(function(user) {
           localStorage.setItem("firstName", user.name.first);
           if (!user.vin) {
             $state.go('auth.enroll');
           } else {
+            // Save userId, role, vehicleId and fences to local storage
+            localStorage.setItem("userId", $scope.user.name);
             localStorage.setItem("role", user.role);
             localStorage.setItem("vehicleId", user.vin);
+            localStorage.setItem("geofenceActive", user.geofenceActive);
+            localStorage.setItem("speedfenceActive", user.speedfenceActive);
+
+            VehicleService.getVehicle(user.vin).then(function(vehicle) {
+              localStorage.setItem("licenceNumber", vehicle.licenceNumber);
+            }, function(errMsg) {
+              // error handling
+            })
+
             $state.go('app.overview');
           }
 
@@ -162,10 +175,8 @@ angular.module('cyfclient.controllers', [])
       VehicleService.checkVin($scope.vehicle.vin).then(function(msg){
 
         var regexpGermanLicenseNumber = new RegExp('^[A-Z]{1,3}-[A-Z]{1,2} [0-9]{1,4}$');
-        console.log("blub");
 
         if(!$scope.user.licenceNumber.toString().match(regexpGermanLicenseNumber)) {
-          console.log("NO MATCH FOR LICENSE NUMBER!");
           var alertPopup = $ionicPopup.alert({
             title: 'Licence number invalid! ',
             template: 'License number must match with e.g. HH-Z 2016'
@@ -190,7 +201,6 @@ angular.module('cyfclient.controllers', [])
           });
         }
       }, function(errMsg) {
-        console.log("XXX");
         var alertPopup = $ionicPopup.alert({
           title: 'VIN invalid!',
           template: errMsg+" Or VIN does not match with the typical VIN structure. "
@@ -297,8 +307,6 @@ angular.module('cyfclient.controllers', [])
 
             }
             */
-
-            //$ionicFilterBarConfigProvider.placeholder = "test";
 
             $scope.showFilterBar = function () {
               filterBarInstance = $ionicFilterBar.show({
@@ -637,8 +645,9 @@ angular.module('cyfclient.controllers', [])
           if (localStorage.getItem("role") == 'master' && data[i].readStatusMaster == false) {
             $scope.alertCounter++;
             localStorage.setItem("alertsCounter", $scope.alertCounter);
-          } else if (localStorage.getItem("role") == 'child' && $scope.alerts[i].readStatusMaster == false) {
+          } else if (localStorage.getItem("role") == 'child' && $scope.alerts[i].readStatusChild == false) {
             $scope.alertCounter++;
+            localStorage.setItem("alertsCounter", $scope.alertCounter);
           }
 
         };
