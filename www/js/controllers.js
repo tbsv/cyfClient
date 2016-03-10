@@ -20,10 +20,13 @@ angular.module('cyfclient.controllers', [])
 
   // APP
   .controller('MenuCtrl', function($rootScope, $scope, UserService, $ionicSideMenuDelegate) {
-    $scope.userId = localStorage.getItem("userId");
-    $scope.avatar = localStorage.getItem("firstName");
 
     $scope.doRefresh = function() {
+
+      $scope.userId = localStorage.getItem("userId");
+      $scope.avatar = localStorage.getItem("firstName");
+      $scope.greeting = localStorage.getItem("firstName");
+
       UserService.userInfo($scope.userId).then(function (user) {
         $scope.profile = user;
         $scope.alertsNotifier = localStorage.getItem("alertsCounter");
@@ -652,13 +655,13 @@ angular.module('cyfclient.controllers', [])
 
     $scope.updateReadStatus = function(alertId) {
 
+      $scope.role = localStorage.getItem("role");
+
       $scope.updatedAlert = {
-        _id: alertId,
-        readStatusMaster: '',
-        readStatusChild: ''
+        _id: alertId
       };
 
-      if (localStorage.getItem("role") == 'master') {
+      if ($scope.role == 'master') {
         $scope.updatedAlert.readStatusMaster = true;
 
         AlertService.updateAlert($scope.updatedAlert).then(function() {
@@ -666,7 +669,7 @@ angular.module('cyfclient.controllers', [])
           // error handling
         })
 
-      } else if (localStorage.getItem("role") == 'child') {
+      } else {
         $scope.updatedAlert.readStatusChild = true;
 
         AlertService.updateAlert($scope.updatedAlert).then(function() {
@@ -675,10 +678,6 @@ angular.module('cyfclient.controllers', [])
         })
       }
 
-    };
-
-    $scope.reloadSideMenu = function() {
-      $scope.doRefresh();
     };
 
     $scope.$on('$ionicView.enter', function() {
