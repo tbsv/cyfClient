@@ -14,7 +14,7 @@
         <ionic-letter-avatar data="{{alert.type}}" shape="round"></ionic-letter-avatar>
         <h2>{{alert.userId}} violated the {{alert.type}}</h2>
         <div class="row">
-          <span class="icon ion-ios-calendar-outline" style="width: 80px"> {{alert.route.timestampStart | date:"dd.MM.yyyy HH:mm"}} – {{alert.route.timestampStop | date:"HH:mm"}}</span>
+          <i>{{alert.route.timestampStart | date:"dd.MM.yyyy"}} &nbsp;{{alert.route.timestampStart | date:"HH:mm"}} – {{alert.route.timestampStop | date:"HH:mm"}}</i>
         </div>
         <div class="buttons">
           <button class="button button-small button-icon button-custom icon">
