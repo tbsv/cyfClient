@@ -21,10 +21,12 @@
           <div class="user-image-container">
             <ionic-letter-avatar class="user-image" data="{{avatar}}" shape="round"></ionic-letter-avatar>
           </div>
-          <h2 class="greeting">Hallo {{greeting}}</h2>
-          <!--<p class="message">{{profile.vin}}</p>-->
-          <p class="message">{{profile.licenceNumber}}HH-ZZ 99</p>
-          <p class="message">"{{profile.role}}" &nbsp;&nbsp;<i class="icon ion-map" style="text-align: center; vertical-align: middle"></i><i class="icon ion-speedometer" style="margin-left: 5px; text-align: center; vertical-align: middle"></i></p>
+          <h2 class="greeting">Hallo {{greeting}} &nbsp;<span class="role"><i class="icon ion-ios-person"><small>{{role}}</small></i></span></h2>
+          <p class="message">{{licenceNumber}}</p>
+          <div class="fences">
+            <span ng-class="geofenceActive == 'true' ? 'active' : 'inactive'"><i class="icon ion-map"></i></span>
+            <span ng-class="speedfenceActive == 'true' ? 'active' : 'inactive'"><i class="icon ion-speedometer"></i></span>
+          </div>
         </ion-item>
         <ion-item class="item-icon-left" nav-clear menu-close ui-sref="app.overview">
           <i class="icon ion-home"></i>
@@ -43,10 +45,6 @@
           <h2 class="menu-text">Alerts</h2>
           <span ng-class="alertsNotifier >= 1 ? 'badge badge-assertive' : 'badge badge-light'">{{alertsNotifier}}</span>
         </ion-item>
-        <!--<ion-item class="item-icon-left" nav-clear menu-close ui-sref="app.profile">
-          <i class="icon ion-person"></i>
-          <h2 class="menu-text">Profile</h2>
-        </ion-item>-->
         <ion-item class="item-icon-left" nav-clear menu-close ui-sref="app.family">
           <i class="icon ion-ios-people"></i>
           <h2 class="menu-text">Family</h2>
