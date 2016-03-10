@@ -19,7 +19,7 @@ angular.module('cyfclient.controllers', [])
   })
 
   // APP
-  .controller('MenuCtrl', function($rootScope, $scope, UserService, $ionicSideMenuDelegate) {
+  .controller('MenuCtrl', function($rootScope, $scope, UserService, $ionicHistory, $ionicSideMenuDelegate) {
 
     $scope.doRefresh = function() {
 
@@ -651,8 +651,6 @@ angular.module('cyfclient.controllers', [])
           }
 
         };
-
-
       }, function (errMsg) {
         // error handling
       }).then(function(){
@@ -860,23 +858,15 @@ angular.module('cyfclient.controllers', [])
   })
 
   // FAMILY MEMBER
-  .controller('FamilyMemberCtrl', function($rootScope, $scope, $state, $stateParams, geofence_data, UserService, GeoLocationService, GeofenceService, $ionicLoading, $ionicModal, $ionicPopover) {
+  .controller('FamilyMemberCtrl', function($rootScope, $scope, $state, $stateParams, geofence_data, UserService, GeoLocationService, GeofenceService, $ionicLoading, $ionicModal) {
+    $scope.role = localStorage.getItem("role");
     $scope.memberId = $stateParams.memberId;
 
     $scope.user = {
       _id: $scope.memberId
     };
 
-    $scope.geofence = {};
-
-    // set default geofence if empty
-    if (geofence_data.geofence === null) {
-      $scope.geofence.latitude = 48.764409799999996;
-      $scope.geofence.longitude = 9.164410499999999;
-      $scope.geofence.radius = 1000;
-    } else {
-      $scope.geofence = geofence_data.geofence;
-    }
+    $scope.geofence = geofence_data.geofence;
 
     UserService.userInfo($scope.memberId).then(function(user) {
       $scope.profile = user;
@@ -970,7 +960,6 @@ angular.module('cyfclient.controllers', [])
       }, function(errMsg) {
         // error handling
       });
-
     };
 
     $scope.$on("$stateChangeSuccess", function() {
@@ -991,6 +980,11 @@ angular.module('cyfclient.controllers', [])
         focus: true,
         draggable: true};
 
+      // disable dragging if not allowed
+      if ($scope.role == 'child') {
+        mainMarker.draggable = false;
+      }
+
       $scope.map = {
         center: {
           lat : parseFloat($scope.geofence.latitude),
@@ -1003,7 +997,7 @@ angular.module('cyfclient.controllers', [])
       $scope.paths = {
         circle: {
           type: 'circle',
-          radius: parseInt($scope.geofence.latitude),
+          radius: parseInt($scope.geofence.radius),
           latlngs: mainMarker,
           color: '#0c60ee',
           weight: 4,
@@ -1031,12 +1025,6 @@ angular.module('cyfclient.controllers', [])
       };
     });
 
-    $ionicPopover.fromTemplateUrl('popovers/family/memberMenu.html', {
-      scope: $scope,
-    }).then(function(popover) {
-      $scope.popover = popover;
-    });
-
     $ionicModal.fromTemplateUrl('modals/family/editMember.html', {
       scope: $scope
     }).then(function(modal) {
@@ -1047,6 +1035,12 @@ angular.module('cyfclient.controllers', [])
       scope: $scope
     }).then(function(modal) {
       $scope.modalGeofence = modal;
+
+      $scope.activeGeofence = function(value) {
+        $scope.user.geofenceActive = value;
+      };
+
+
     });
 
     $ionicModal.fromTemplateUrl('modals/family/setSpeedfence.html', {
@@ -1056,6 +1050,10 @@ angular.module('cyfclient.controllers', [])
 
       $scope.updateSpeedfence = function(sf) {
         $scope.user.speedfence = sf;
+      };
+
+      $scope.activeSpeedfence = function(value) {
+        $scope.user.speedfenceActive = value;
       };
 
     });

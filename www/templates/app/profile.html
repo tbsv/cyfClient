@@ -2,9 +2,6 @@
   <ion-nav-buttons side="left">
     <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
   </ion-nav-buttons>
-  <ion-nav-buttons side="right">
-    <button class="button button-icon icon ion-more" ng-click="popover.show($event)"></button>
-  </ion-nav-buttons>
   <ion-nav-title>
     <span>Profile</span>
   </ion-nav-title>
@@ -40,36 +37,30 @@
             {{profile.vin}}
           </span>
         </div>
-        <div class="item" ng-hide="profile.role == 'master'">
+        <div class="item">
           Geofence
+          <i ng-class="profile.geofenceActive == true ? 'ion-ios-checkmark-outline' : 'icon ion-ios-close-outline'"></i>
           <span class="badge badge-light">
-            {{profile.geofence}}
+            <div><i class="icon ion-ios-location"> {{profile.geofence.latitude | limitTo:4}} lat / {{profile.geofence.longitude | limitTo:4}} lng </i><br /></div>
+            <div><i class="icon ion-ios-circle-filled"> {{profile.geofence.radius}}m</i></div>
           </span>
         </div>
-        <div class="item" ng-hide="profile.role == 'master'">
+        <div class="item">
           Speedfence
+          <i ng-class="profile.speedfenceActive == true ? 'ion-ios-checkmark-outline' : 'icon ion-ios-close-outline'"></i>
           <span class="badge badge-light">
             {{profile.speedfence}}
           </span>
         </div>
       </div>
+      <div class="item tabs tabs-secondary tabs-icon-left">
+        <a class="tab-item" ng-click="modalProfile.show()">
+          <i class="icon ion-person"></i>
+          Edit Profile
+        </a>
+      </div>
     </div>
   </ion-content>
-
-  <script id="popovers/app/profileMenu.html" type="text/ng-template">
-    <ion-popover-view style="height: 110px; width: 160px">
-      <ion-content>
-        <div class="list">
-          <a class="item" ng-click="modalProfile.show(); popover.hide()">
-            Edit profile
-          </a>
-          <!--<a class="item" ng-click="modalVehicle.show(); popover.hide()">
-            Change Vehicle
-          </a>-->
-        </div>
-      </ion-content>
-    </ion-popover-view>
-  </script>
 
   <script id="modals/app/editProfile.html" type="text/ng-template">
     <ion-modal-view>

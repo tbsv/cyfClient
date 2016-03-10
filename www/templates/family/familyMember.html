@@ -37,15 +37,17 @@
             {{profile.vin}}
           </span>
         </div>
-        <div class="item" ng-hide="profile.role == 'master'">
+        <div class="item">
           Geofence
+          <i ng-class="profile.geofenceActive == true ? 'ion-ios-checkmark-outline' : 'icon ion-ios-close-outline'"></i>
           <span class="badge badge-light">
-            <div><i class="icon ion-ios-location"> {{profile.geofence.latitude | limitTo:5}} lat / {{profile.geofence.longitude | limitTo:5}} lng </i><br /></div>
+            <div><i class="icon ion-ios-location"> {{profile.geofence.latitude | limitTo:4}} lat / {{profile.geofence.longitude | limitTo:4}} lng </i><br /></div>
             <div><i class="icon ion-ios-circle-filled"> {{profile.geofence.radius}}m</i></div>
           </span>
         </div>
-        <div class="item" ng-hide="profile.role == 'master'">
+        <div class="item tem-icon-left">
           Speedfence
+          <i ng-class="profile.speedfenceActive == true ? 'ion-ios-checkmark-outline' : 'icon ion-ios-close-outline'"></i>
           <span class="badge badge-light">
             {{profile.speedfence}} km/h
           </span>
@@ -54,13 +56,13 @@
       <div class="item tabs tabs-secondary tabs-icon-left">
         <a class="tab-item" ng-click="modalGeofence.show()">
           <i class="icon ion-map"></i>
-          Set Geofence
+          Geofence
         </a>
         <a class="tab-item" ng-click="modalSpeedfence.show()">
           <i class="icon ion-ios-speedometer-outline"></i>
-          Set Speedfence
+          Speedfence
         </a>
-        <a class="tab-item" ng-click="modalMember.show()">
+        <a class="tab-item" ng-click="modalMember.show()" ng-hide="role == 'child'">
           <i class="icon ion-person"></i>
           Edit Member
         </a>
@@ -72,7 +74,7 @@
     <ion-modal-view>
       <ion-header-bar class="bar bar-header bar-positive">
         <h1 class="title">Edit member</h1>
-        <button class="button button-clear button-primary" ng-click="modalMember.hide()">Cancel</button>
+        <button class="button button-clear button-primary" ng-click="modalMember.hide()">Back</button>
       </ion-header-bar>
       <ion-content class="padding">
         <div class="list">
@@ -93,34 +95,26 @@
   <script id="modals/family/setGeofence.html" type="text/ng-template">
     <ion-modal-view>
       <ion-header-bar class="bar bar-header bar-positive">
-        <h1 class="title">Set Geofence</h1>
+        <h1 class="title">Geofence</h1>
         <button class="button button-icon icon ion-pinpoint" ng-click="getLocation()"></button>
-        <button class="button button-clear button-primary" ng-click="modalGeofence.hide()">Cancel</button>
+        <button class="button button-clear button-primary" ng-click="modalGeofence.hide()">Back</button>
       </ion-header-bar>
       <ion-content class="padding">
         <div class="list">
-          <!--<div class="item item-toggle">
-            Positive/Negative
-            <label class="toggle toggle-positive">
-              <input type="checkbox">
-              <div class="track">
-                <div class="handle"></div>
-              </div>
-            </label>
-          </div>-->
           <div class="item">
             Radius
             <span class="badge badge-light">{{paths.circle.radius}} m</span>
           </div>
-          <div class="item range range-positive">
+          <div class="item range range-positive" ng-hide="role == 'child'">
             <i class="icon ion-ios-circle-outline"></i>
             <input type="range" name="volume" min="30" max="5000" ng-model="paths.circle.radius" ng-change="updateRadius(paths.circle.radius)">
             <i class="icon ion-ios-circle-filled"></i>
           </div>
+          <ion-toggle ng-model="user.geofenceActive" ng-change="activeGeofence(user.geofenceActive)" ng-hide="role == 'child'" toggle-class="toggle-positive">Geofence Activation</ion-toggle>
           <div class="item" data-tap-disabled="true">
             <leaflet resizeable defaults="map.defaults" markers="map.markers" paths="paths" center="map.center" height="500px" width="100%"></leaflet>
           </div>
-          <button class="button button-block button-positive" ng-click="doSetGeofence()">Save</button>
+          <button class="button button-block button-positive" ng-click="doSetGeofence()" ng-hide="role == 'child'">Save</button>
         </div>
       </ion-content>
     </ion-modal-view>
@@ -129,8 +123,8 @@
   <script id="modals/family/setSpeedfence.html" type="text/ng-template">
     <ion-modal-view>
       <ion-header-bar class="bar bar-header bar-positive">
-        <h1 class="title">Set Speedfence</h1>
-        <button class="button button-clear button-primary" ng-click="modalSpeedfence.hide()">Cancel</button>
+        <h1 class="title">Speedfence</h1>
+        <button class="button button-clear button-primary" ng-click="modalSpeedfence.hide()">Back</button>
       </ion-header-bar>
       <ion-content class="padding">
         <div class="list">
@@ -138,16 +132,17 @@
             Current Speedfence
             <span class="badge badge-light">{{profile.speedfence}} km/h</span>
           </div>
-          <div class="item">
+          <div class="item" ng-hide="role == 'child'">
             New Speedfence
             <span class="badge badge-light">{{newSpeedfence}} km/h</span>
           </div>
-          <div class="item range range-positive">
+          <div class="item range range-positive" ng-hide="role == 'child'">
             <i class="icon ion-ios-speedometer-outline"></i>
             <input type="range" name="speedfence" min="50" max="320" ng-model="newSpeedfence" ng-change="updateSpeedfence(newSpeedfence)">
             <i class="icon ion-ios-speedometer"></i>
           </div>
-          <button class="button button-block button-positive" ng-click="doSetSpeedfence()">Save</button>
+          <ion-toggle ng-model="user.speedfenceActive" ng-change="activeSpeedfence(user.speedfenceActive)" ng-hide="role == 'child'" toggle-class="toggle-positive">Speedfence Activation</ion-toggle>
+          <button class="button button-block button-positive" ng-click="doSetSpeedfence()" ng-hide="role == 'child'">Save</button>
         </div>
       </ion-content>
     </ion-modal-view>
