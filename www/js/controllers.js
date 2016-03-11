@@ -19,7 +19,7 @@ angular.module('cyfclient.controllers', [])
   })
 
   // APP
-  .controller('MenuCtrl', function($rootScope, $scope, UserService, $ionicHistory, $ionicSideMenuDelegate) {
+  .controller('MenuCtrl', function($rootScope, $scope, AlertService, UserService, $ionicHistory, $ionicSideMenuDelegate) {
 
     $scope.doRefresh = function() {
 
@@ -33,12 +33,35 @@ angular.module('cyfclient.controllers', [])
 
       UserService.userInfo($scope.userId).then(function (user) {
         $scope.profile = user;
-        $scope.alertsNotifier = localStorage.getItem("alertsCounter");
+        localStorage.setItem("geofenceActive", user.geofenceActive);
+        localStorage.setItem("speedfenceActive", user.speedfenceActive);
       }, function (errMsg) {
 
+      });
+
+      AlertService.getAlerts(localStorage.getItem("vehicleId")).then(function (data) {
+        $scope.alerts = data;
+        $scope.alertCounter = 0;
+        localStorage.setItem("alertsCounter", $scope.alertCounter);
+
+        for (var i = 0; i < data.length; i++) {
+
+          if (localStorage.getItem("role") == 'master' && data[i].readStatusMaster == false) {
+            $scope.alertCounter++;
+            localStorage.setItem("alertsCounter", $scope.alertCounter);
+          } else if (localStorage.getItem("role") == 'child' && $scope.alerts[i].userId == localStorage.getItem("userId") && $scope.alerts[i].readStatusChild == false) {
+            $scope.alertCounter++;
+            localStorage.setItem("alertsCounter", $scope.alertCounter);
+          }
+
+        };
+      }, function (errMsg) {
+        // error handling
       }).then(function(){
+        $scope.alertsNotifier = localStorage.getItem("alertsCounter");
         $scope.$broadcast('scroll.refreshComplete');
       });
+
     };
 
     $scope.doRefresh();
