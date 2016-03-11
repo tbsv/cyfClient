@@ -69,17 +69,17 @@ angular.module('cyfclient.controllers', [])
       AuthService.login($scope.user).then(function(msg) {
 
         UserService.userInfo($scope.user.name).then(function(user) {
+          // Save userId, firstName, rol and fences to local storage
+          localStorage.setItem("userId", $scope.user.name);
           localStorage.setItem("firstName", user.name.first);
+          localStorage.setItem("role", user.role);
+          localStorage.setItem("geofenceActive", user.geofenceActive);
+          localStorage.setItem("speedfenceActive", user.speedfenceActive);
           if (!user.vin) {
             $state.go('auth.enroll');
           } else {
-            // Save userId, role, vehicleId and fences to local storage
-            localStorage.setItem("userId", $scope.user.name);
-            localStorage.setItem("role", user.role);
+            // Save rvehicleId and licence number
             localStorage.setItem("vehicleId", user.vin);
-            localStorage.setItem("geofenceActive", user.geofenceActive);
-            localStorage.setItem("speedfenceActive", user.speedfenceActive);
-
             VehicleService.getVehicle(user.vin).then(function(vehicle) {
               localStorage.setItem("licenceNumber", vehicle.licenceNumber);
             }, function(errMsg) {
@@ -182,7 +182,8 @@ angular.module('cyfclient.controllers', [])
             template: 'License number must match with e.g. HH-Z 2016'
           });
         } else {
-
+          localStorage.setItem("licenceNumber", $scope.vehicle.licenceNumber);
+          localStorage.setItem("vehicleId", $scope.vehicle.vin);
           VehicleService.createVehicle($scope.vehicle).then(function(msg) {
 
           }, function(errMsg) {
@@ -190,6 +191,7 @@ angular.module('cyfclient.controllers', [])
           });
 
           UserService.updateUser($scope.user).then(function(user) {
+
             $state.go('app.overview');
           }, function(errMsg) {
             // error handling
