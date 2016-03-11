@@ -84,7 +84,7 @@ angular.module('cyfclient.controllers', [])
               localStorage.setItem("licenceNumber", vehicle.licenceNumber);
             }, function(errMsg) {
               // error handling
-            })
+            });
 
             $state.go('app.overview');
           }
@@ -633,6 +633,8 @@ angular.module('cyfclient.controllers', [])
 
   // ALERTS
   .controller('AlertsCtrl', function($scope, AlertService) {
+    $scope.role = localStorage.getItem("role");
+    $scope.ownAlerts = localStorage.getItem("userId");
 
     $scope.doRefresh = function() {
       AlertService.getAlerts(localStorage.getItem("vehicleId")).then(function (data) {
@@ -645,7 +647,7 @@ angular.module('cyfclient.controllers', [])
           if (localStorage.getItem("role") == 'master' && data[i].readStatusMaster == false) {
             $scope.alertCounter++;
             localStorage.setItem("alertsCounter", $scope.alertCounter);
-          } else if (localStorage.getItem("role") == 'child' && $scope.alerts[i].readStatusChild == false) {
+          } else if (localStorage.getItem("role") == 'child' && $scope.alerts[i].userId == localStorage.getItem("userId") && $scope.alerts[i].readStatusChild == false) {
             $scope.alertCounter++;
             localStorage.setItem("alertsCounter", $scope.alertCounter);
           }

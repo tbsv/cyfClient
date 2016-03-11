@@ -10,7 +10,7 @@
       on-refresh="doRefresh()">
     </ion-refresher>
     <div class="list">
-      <a class="item item-avatar item-button-right" ng-repeat="alert in alerts | orderBy:'-route.timestampStart'" ui-sref="app.tour({tourId: alert.tourId})" ng-click="updateReadStatus(alert._id)">
+      <a class="item item-avatar item-button-right" ng-repeat="alert in alerts | orderBy:'-route.timestampStart'" ng-hide="role == 'child' && ownAlerts != alert.userId" ui-sref="app.tour({tourId: alert.tourId})" ng-click="updateReadStatus(alert._id)">
         <ionic-letter-avatar data="{{alert.type}}" shape="round"></ionic-letter-avatar>
         <h2>{{alert.userId}} violated the {{alert.type}}</h2>
         <div class="row">
