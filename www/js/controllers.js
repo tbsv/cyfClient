@@ -933,7 +933,12 @@ angular.module('cyfclient.controllers', [])
 
       UserService.updateUser($scope.user).then(function(user) {
         $scope.profile = user;
-        localStorage.setItem("geofenceActive", user.geofenceActive);
+
+        // Set do local storage (for side menu)
+        if (user._id == localStorage.getItem("userId")) {
+          localStorage.setItem("geofenceActive", user.geofenceActive);
+        }
+
         $scope.modalGeofence.hide();
       }, function(errMsg) {
         // error handling
@@ -944,7 +949,12 @@ angular.module('cyfclient.controllers', [])
     $scope.doSetSpeedfence = function() {
       UserService.updateUser($scope.user).then(function(user) {
         $scope.profile = user;
-        localStorage.setItem("speedfenceActive", user.speedfenceActive);
+
+        // Set do local storage (for side menu)
+        if (user._id == localStorage.getItem("userId")) {
+          localStorage.setItem("speedfenceActive", user.geofenceActive);
+        }
+
         $scope.modalSpeedfence.hide();
       }, function(errMsg) {
         // error handling
