@@ -13,17 +13,21 @@
 
   <ion-side-menu side="left" class="main-menu" expose-aside-when="large">
     <ion-content>
+      <ion-refresher
+        on-refresh="doRefresh()">
+      </ion-refresher>
       <ion-list>
         <ion-item class="heading-item item item-avatar" nav-clear menu-close ui-sref="app.profile">
           <div class="user-image-container">
-            <!--<pre-img ratio="_1_1" helper-class="rounded-image">
-              <img class="user-image" ng-src="img/tobi-square.jpg" spinner-on-load>
-            </pre-img>-->
-            <ionic-letter-avatar class="user-image" data="{{avatar}}" shape="round"></ionic-letter-avatar>
+            <!--<ionic-letter-avatar class="user-image" data="{{avatar}}" shape="round"></ionic-letter-avatar>-->
+            <span class="avatar"><i class="icon ion-ios-person"><small>{{role}}</small></i></span>
           </div>
-          <h2 class="greeting">Hallo {{profile.name.first}}</h2>
-          <p class="message">{{profile.vin}}</p>
-          <p class="message">{{profile.role}}</p>
+          <h2 class="greeting">Hallo {{greeting}} <!--&nbsp;<span class="role"><i class="icon ion-ios-person"><small>{{role}}</small></i></span>--></h2>
+          <p class="message">{{licenceNumber}}</p>
+          <div class="fences">
+            <span ng-class="geofenceActive == 'true' ? 'active' : 'inactive'"><i class="icon ion-map"></i></span>
+            <span ng-class="speedfenceActive == 'true' ? 'active' : 'inactive'"><i class="icon ion-speedometer"></i></span>
+          </div>
         </ion-item>
         <ion-item class="item-icon-left" nav-clear menu-close ui-sref="app.overview">
           <i class="icon ion-home"></i>
@@ -40,12 +44,8 @@
         <ion-item class="item-icon-left" nav-clear menu-close ui-sref="app.alerts">
           <i class="icon ion-android-notifications-none"></i>
           <h2 class="menu-text">Alerts</h2>
-          <span class="badge badge-assertive">2</span>
+          <span ng-class="alertsNotifier >= 1 ? 'badge badge-assertive' : 'badge badge-light'">{{alertsNotifier}}</span>
         </ion-item>
-        <!--<ion-item class="item-icon-left" nav-clear menu-close ui-sref="app.profile">
-          <i class="icon ion-person"></i>
-          <h2 class="menu-text">Profile</h2>
-        </ion-item>-->
         <ion-item class="item-icon-left" nav-clear menu-close ui-sref="app.family">
           <i class="icon ion-ios-people"></i>
           <h2 class="menu-text">Family</h2>

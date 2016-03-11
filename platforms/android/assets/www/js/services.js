@@ -2,7 +2,7 @@ angular.module('cyfclient.services', [])
 
   // AUTH SERVICE
   .service('AuthService', function($q, $http, API_ENDPOINT) {
-    var LOCAL_TOKEN_KEY = 'yourTokenKey';
+    var LOCAL_TOKEN_KEY = 'authToken';
     var isAuthenticated = false;
     var authToken;
 
@@ -157,6 +157,20 @@ angular.module('cyfclient.services', [])
       var deferred = $q.defer();
 
       $http.get(API_ENDPOINT.url + '/vehicles')
+        .success(function(data) {
+          deferred.resolve(data);
+        })
+        .error(function(data) {
+          deferred.reject(data);
+        });
+
+      return deferred.promise;
+    };
+
+    this.getVehicle = function(vehicleId) {
+      var deferred = $q.defer();
+
+      $http.get(API_ENDPOINT.url + '/vehicles/' + vehicleId)
         .success(function(data) {
           deferred.resolve(data);
         })
@@ -414,41 +428,32 @@ angular.module('cyfclient.services', [])
   // ALERT SERVICE
   .service('AlertService', function($rootScope, $http, $q, API_ENDPOINT) {
 
-    this.getAlerts = function() {
-
-      var data = [
-        {
-          "type" : "Geofence",
-          "userId" : "tvetter",
-          "timestamp" : "2015-12-17-131526",
-          "tourId" : "56c34404eec21c8736871ab4"
-        },
-        {
-          "type" : "Geofence",
-          "userId" : "tvetter",
-          "timestamp" : "2015-12-17-131526",
-          "tourId" : "56c34404eec21c8736871ab4"
-        },
-        {
-          "type" : "Speedfence",
-          "userId" : "tvetter",
-          "timestamp" : "2015-12-17-131526",
-          "tourId" : "56c34404eec21c8736871ab4"
-        },
-        {
-          "type" : "Geofence",
-          "userId" : "tvetter",
-          "timestamp" : "2015-12-17-131526",
-          "tourId" : "56c34404eec21c8736871ab4"
-        }
-      ];
-
+    this.getAlerts = function(vehicleId) {
       var deferred = $q.defer();
-      deferred.resolve(data);
 
+      $http.get(API_ENDPOINT.url + '/alerts/family/' + vehicleId)
+        .success(function(data) {
+          deferred.resolve(data);
+        })
+        .error(function(data) {
+          deferred.reject(data);
+        });
 
       return deferred.promise;
+    };
 
+    this.updateAlert = function(alert) {
+      var deferred = $q.defer();
+
+      $http.put(API_ENDPOINT.url + '/alerts/update/' + alert._id, alert)
+        .success(function(data) {
+          deferred.resolve(data);
+        })
+        .error(function(data) {
+          deferred.reject(data);
+        });
+
+      return deferred.promise;
     };
 
   })

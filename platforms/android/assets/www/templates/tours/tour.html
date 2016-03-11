@@ -9,8 +9,11 @@
     <div class="list card">
       <div class="item item-avatar">
         <ionic-letter-avatar data="{{tour.userId}}" shape="round"></ionic-letter-avatar>
-        <h2>{{tour.route.timestampStart | date:"dd.MM.yyyy"}} <i>{{tour.route.timestampStart | date:"HH:mm"}} – {{tour.route.timestampStop | date:"HH:mm"}}</i></h2>
-        <p>{{tour.userId}}</p>
+        <h2>{{tour.route.timestampStart | date:"dd.MM.yyyy"}} &nbsp;<i>{{tour.route.timestampStart | date:"HH:mm"}} – {{tour.route.timestampStop | date:"HH:mm"}}</i></h2>
+        <div class="row">
+          <span class="icon ion-person" style="width: 85px"> {{tour.userId}}</span>
+          <span class="icon ion-flag" style="width: 80px"> {{tour.route.mileageStart}} – {{tour.route.mileageStop}} km</span>
+        </div>
       </div>
       <div class="item item-body">
         <div class="item item-icon-left">
@@ -35,6 +38,13 @@
           </span>
         </div>
         <div class="item item-icon-left">
+          <i class="icon ion-paintbucket"></i>
+          Fuel Average/Total
+          <span class="badge badge-light">
+            {{tour.fuelAverage}} l / {{tour.fuelTotal}} l
+          </span>
+        </div>
+        <div class="item item-icon-left">
           <i class="icon ion-flash-off"></i>
           Kickdowns
           <span class="badge badge-light">
@@ -56,7 +66,7 @@
         <div class="item item-icon-left">
           <i class="icon ion-map"></i>
           Geofence Alerts
-          <span ng-class="tour.geofenceAlerts == true ? 'badge badge-assertive' : 'badge badge-stable'">{{tour.geofenceAlerts == true ? '1' : '0'}}</span>
+          <span ng-class="tour.geofenceAlerts == true ? 'badge badge-assertive' : 'badge badge-stable'">{{tour.geofenceAlerts == true ? 'yes' : 'no'}}</span>
         </div>
         <div class="item item-icon-left">
           <i class="icon ion-speedometer"></i>
@@ -73,7 +83,7 @@
           <i class="icon ion-ios-speedometer-outline"></i>
           Speed
         </a>
-        <a class="tab-item" ng-click="modalAssign.show(); getFamilyMembers()">
+        <a class="tab-item" ng-click="modalAssign.show(); getFamilyMembers()" ng-hide="tour.userId == 'guest' ? false : true">
           <i class="icon ion-person"></i>
           Assign
         </a>
@@ -90,7 +100,7 @@
       <ion-content class="padding">
         <div class="list">
           <div class="item" data-tap-disabled="true">
-            <leaflet resizeable defaults="map.defaults" markers="map.markers" paths="paths" center="map.center" height="500px" width="100%"></leaflet>
+            <leaflet resizeable defaults="map.defaults" markers="map.markers" paths="paths" center="map.center" bounds="bounds" height="500px" width="100%"></leaflet>
           </div>
         </div>
       </ion-content>
@@ -105,13 +115,11 @@
       </ion-header-bar>
       <ion-content class="padding">
         <div class="card">
-
           <div class="item item-text-wrap">
             <canvas
               id="line" class="chart chart-line" chart-data="chartData.data" chart-labels="chartData.labels" chart-series="chartData.series" chart-options="chartData.options" chart-colours="chartData.colours" chart-legend="true">
             </canvas>
           </div>
-
         </div>
       </ion-content>
     </ion-modal-view>
@@ -140,13 +148,13 @@
             <span class="badge badge-light">{{tour.ecoScoreTotal}} %</span>
           </div>
           <div class="item">Free wheeling
-            <span class="badge badge-light">{{tour.ecoScoreDetails.freeWheeling}}</span>
+            <span class="badge badge-light">{{tour.ecoScoreDetails.freeWheeling}} %</span>
           </div>
           <div class="item">Constancy
-            <span class="badge badge-light">{{tour.ecoScoreDetails.constancy}}</span>
+            <span class="badge badge-light">{{tour.ecoScoreDetails.constancy}} %</span>
           </div>
           <div class="item">Acceleration
-            <span class="badge badge-light">{{tour.ecoScoreDetails.acceleration}}</span>
+            <span class="badge badge-light">{{tour.ecoScoreDetails.acceleration}} %</span>
           </div>
         </div>
       </ion-content>

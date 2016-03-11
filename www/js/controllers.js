@@ -109,6 +109,9 @@ angular.module('cyfclient.controllers', [])
               // error handling
             });
 
+            // Send required tags to push service
+            //window.plugins.OneSignal.sendTags({role: user.role, userId: user._id});
+
             $state.go('app.overview');
           }
 

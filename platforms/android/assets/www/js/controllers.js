@@ -19,20 +19,67 @@ angular.module('cyfclient.controllers', [])
   })
 
   // APP
-  .controller('MenuCtrl', function($rootScope, $scope, UserService) {
-    $scope.userId = localStorage.getItem("userId");
-    $scope.avatar = localStorage.getItem("firstName");
+  .controller('MenuCtrl', function($rootScope, $scope, AlertService, UserService, $ionicHistory, $ionicSideMenuDelegate) {
 
-    UserService.userInfo($scope.userId).then(function(user) {
-      $scope.profile = user;
-    }, function(errMsg) {
+    $scope.doRefresh = function() {
 
-    });
+      $scope.userId = localStorage.getItem("userId");
+      $scope.avatar = localStorage.getItem("firstName");
+      $scope.greeting = localStorage.getItem("firstName");
+      $scope.licenceNumber = localStorage.getItem("licenceNumber");
+      $scope.role = localStorage.getItem("role").charAt(0).toUpperCase();
+      $scope.geofenceActive = localStorage.getItem("geofenceActive");
+      $scope.speedfenceActive = localStorage.getItem("speedfenceActive");
+
+      UserService.userInfo($scope.userId).then(function (user) {
+        $scope.profile = user;
+        localStorage.setItem("geofenceActive", user.geofenceActive);
+        localStorage.setItem("speedfenceActive", user.speedfenceActive);
+      }, function (errMsg) {
+
+      });
+
+      AlertService.getAlerts(localStorage.getItem("vehicleId")).then(function (data) {
+        $scope.alerts = data;
+        $scope.alertCounter = 0;
+        localStorage.setItem("alertsCounter", $scope.alertCounter);
+
+        for (var i = 0; i < data.length; i++) {
+
+          if (localStorage.getItem("role") == 'master' && data[i].readStatusMaster == false) {
+            $scope.alertCounter++;
+            localStorage.setItem("alertsCounter", $scope.alertCounter);
+          } else if (localStorage.getItem("role") == 'child' && $scope.alerts[i].userId == localStorage.getItem("userId") && $scope.alerts[i].readStatusChild == false) {
+            $scope.alertCounter++;
+            localStorage.setItem("alertsCounter", $scope.alertCounter);
+          }
+
+        };
+      }, function (errMsg) {
+        // error handling
+      }).then(function(){
+        $scope.alertsNotifier = localStorage.getItem("alertsCounter");
+        $scope.$broadcast('scroll.refreshComplete');
+      });
+
+    };
+
+    $scope.doRefresh();
+
+    // Reload side menu when it's opened
+    $scope.$watch(function () {
+        return $ionicSideMenuDelegate.getOpenRatio();
+      },
+      function (ratio) {
+        if (ratio == 1){
+          $scope.doRefresh();
+        }
+      });
 
   })
 
   // LOGIN
-  .controller('LoginCtrl', function($scope, AuthService, UserService, $ionicPopup, $state, API_ENDPOINT) {
+  .controller('LoginCtrl', function($scope, AuthService, UserService, VehicleService, $ionicPopup, $state, API_ENDPOINT) {
 
     $scope.user = {
       name: '',
@@ -43,14 +90,28 @@ angular.module('cyfclient.controllers', [])
 
     $scope.doLogin = function() {
       AuthService.login($scope.user).then(function(msg) {
-        // Save userId and firstName to local storage
-        localStorage.setItem("userId", $scope.user.name);
 
         UserService.userInfo($scope.user.name).then(function(user) {
+          // Save userId, firstName, rol and fences to local storage
+          localStorage.setItem("userId", $scope.user.name);
           localStorage.setItem("firstName", user.name.first);
+          localStorage.setItem("role", user.role);
+          localStorage.setItem("geofenceActive", user.geofenceActive);
+          localStorage.setItem("speedfenceActive", user.speedfenceActive);
           if (!user.vin) {
             $state.go('auth.enroll');
           } else {
+            // Save rvehicleId and licence number
+            localStorage.setItem("vehicleId", user.vin);
+            VehicleService.getVehicle(user.vin).then(function(vehicle) {
+              localStorage.setItem("licenceNumber", vehicle.licenceNumber);
+            }, function(errMsg) {
+              // error handling
+            });
+
+            // Send required tags to push service
+            //window.plugins.OneSignal.sendTags({role: user.role, userId: user._id});
+
             $state.go('app.overview');
           }
 
@@ -125,41 +186,57 @@ angular.module('cyfclient.controllers', [])
 
     $scope.user = {
       _id: $scope.userId,
-      vin: ''
+      vin: '',
+      licenceNumber: ''
     };
 
     $scope.doEnroll = function() {
 
       $scope.vehicle = {
         vin: $scope.user.vin,
-        userId: $scope.user._id
-      }
+        userId: $scope.user._id,
+        licenceNumber: $scope.user.licenceNumber
+      };
 
       VehicleService.checkVin($scope.vehicle.vin).then(function(msg){
 
-        var alertPopup = $ionicPopup.alert({
-          title: 'VIN valid!',
-          template: msg
-        });
+        var regexpGermanLicenseNumber = new RegExp('^[A-Z]{1,3}-[A-Z]{1,2} [0-9]{1,4}$');
 
-        VehicleService.createVehicle($scope.vehicle).then(function(msg) {
-          console.log(msg);
-        }, function(errMsg) {
-          // error handling
-        });
+        if(!$scope.user.licenceNumber.toString().match(regexpGermanLicenseNumber)) {
+          var alertPopup = $ionicPopup.alert({
+            title: 'Licence number invalid! ',
+            template: 'License number must match with e.g. HH-Z 2016'
+          });
+        } else {
+          localStorage.setItem("licenceNumber", $scope.vehicle.licenceNumber);
+          localStorage.setItem("vehicleId", $scope.vehicle.vin);
+          VehicleService.createVehicle($scope.vehicle).then(function(msg) {
 
-        UserService.updateUser($scope.user).then(function(user) {
-          $state.go('app.overview');
-        }, function(errMsg) {
-          // error handling
-        });
+          }, function(errMsg) {
+            // error handling
+          });
 
+          UserService.updateUser($scope.user).then(function(user) {
+
+            $state.go('app.overview');
+          }, function(errMsg) {
+            // error handling
+          });
+
+          var alertPopup = $ionicPopup.alert({
+            title: 'VIN connected to you!',
+            template: msg
+          });
+        }
       }, function(errMsg) {
         var alertPopup = $ionicPopup.alert({
           title: 'VIN invalid!',
-          template: errMsg
+          template: errMsg+" Or VIN does not match with the typical VIN structure. "
         });
       });
+
+
+
     };
 
     $ionicModal.fromTemplateUrl('modals/auth/enrollVehicle.html', {
@@ -170,7 +247,11 @@ angular.module('cyfclient.controllers', [])
       $scope.vehicles = [];
 
       VehicleService.getVehiclesOfReadiConnect().then(function(data){
-        $scope.vehicles = data;
+        //HIER WERDEN ALLE VERFUEGBAREN FAHRZEUGE AUS READI-CONNECT GEHOLT.
+        //LEIDER SIND NICHT ALLE MIT connect your family kompatibel.
+        //$scope.vehicles = data;
+        //MANUELLES FÜLLEN DER FAHRZEUGE, DIE connect your family KOMPATIBEL SIND.
+        $scope.vehicles = ['WDD1179421N250123', 'WDD1179121N355937', 'WDD2122061B140828' ];
       }, function(errMsg) {
         // error handling
       });
@@ -223,15 +304,12 @@ angular.module('cyfclient.controllers', [])
   })
 
   // TOURS
-  .controller('ToursCtrl', function($scope, $filter, $ionicFilterBar, $ionicLoading, TourService, UserService) {
+  .controller('ToursCtrl', function($scope, $filter, $ionicFilterBar, $ionicHistory, TourService, UserService) {
     $scope.userId = localStorage.getItem("userId");
 
     $scope.limit = 10;
 
     $scope.doRefresh = function() {
-      $ionicLoading.show({
-        template: 'Loading tours...'
-      });
 
       UserService.userInfo($scope.userId).then(function(user) {
         TourService.getTours(user.vin)
@@ -241,36 +319,20 @@ angular.module('cyfclient.controllers', [])
             // Save number of total tours to local storage
             localStorage.setItem("toursCounter", data.length);
 
-            /*
-
-            $scope.dates = {};
-            var date;
-
-            for(var i = 0; i < $scope.tours.length; i++) {
-              date = $filter('date')($scope.tours[i].route.timestampStart, "dd.MM.yyyy");
-
-              if(!$scope.dates[date]) {
-                $scope.dates[date] = [];
-              }
-
-              $scope.dates[date].push($scope.tours[i]);
-
-            }
-            */
-
             $scope.showFilterBar = function () {
               filterBarInstance = $ionicFilterBar.show({
                 items: $scope.tours,
                 update: function (filteredItems) {
                   $scope.tours = filteredItems;
                 },
-                filterProperties: ['userId']
+                expression: function (filterText, value) {
+                  return value.userId.indexOf(filterText) !== -1 || value.route.timestampStart.indexOf(filterText) !== -1
+                }
               });
             };
 
           })
-          .then(function(data){
-            $ionicLoading.hide();
+          .then(function(){
             $scope.$broadcast('scroll.refreshComplete');
         });
       }, function(errMsg) {
@@ -295,17 +357,20 @@ angular.module('cyfclient.controllers', [])
 
     };
 
+    $scope.$on('$ionicView.enter', function() {
+      $scope.doRefresh();
+    });
+
   })
 
   // TOUR
-  .controller('TourCtrl', function($scope, tour_data, MemberService, TourService, UserService, $ionicLoading, $ionicModal, $ionicPopover) {
+  .controller('TourCtrl', function($scope, tour_data, MemberService, TourService, UserService, $ionicModal, $ionicPopover, $window) {
     $scope.userId = localStorage.getItem("userId");
     $scope.assignee = '';
 
     $scope.geofenceAlerts = '';
 
     $scope.tour = tour_data;
-    $ionicLoading.hide();
 
     $scope.route = [];
 
@@ -342,6 +407,7 @@ angular.module('cyfclient.controllers', [])
       TourService.updateTour($scope.tour).then(function(tour) {
         $scope.tour = tour;
         $scope.modalAssign.hide();
+        $window.location.reload(true);
       }, function(errMsg) {
         // error handling
       });
@@ -361,6 +427,11 @@ angular.module('cyfclient.controllers', [])
           iconUrl: 'img/map-end.png',
           iconSize:     [38, 38], // size of the icon
           iconAnchor:   [19, 38], // point of the icon which will correspond to marker's location
+        },
+        location_icon: {
+          iconUrl: 'img/map-location.png',
+          iconSize:     [38, 38], // size of the icon
+          iconAnchor:   [19, 38], // point of the icon which will correspond to marker's location
         }
       };
 
@@ -368,24 +439,32 @@ angular.module('cyfclient.controllers', [])
         lat: parseFloat($scope.tour.route.drivenRoute.gpsLatitude[0]),
         lng: parseFloat($scope.tour.route.drivenRoute.gpsLongitude[0]),
         icon: route_icons.start_icon,
-        focus: true,
+        focus: false,
         draggable: false};
 
       var endMarker = {
         lat: parseFloat($scope.tour.route.drivenRoute.gpsLatitude[$scope.tour.route.drivenRoute.gpsLatitude.length-1]),
         lng: parseFloat($scope.tour.route.drivenRoute.gpsLongitude[$scope.tour.route.drivenRoute.gpsLongitude.length-1]),
         icon: route_icons.end_icon,
-        focus: true,
+        focus: false,
+        draggable: false};
+
+      var geofenceMarker = {
+        lat: parseFloat($scope.tour.geofenceValue.latitude),
+        lng: parseFloat($scope.tour.geofenceValue.longitude),
+        icon: route_icons.location_icon,
+        focus: false,
         draggable: false};
 
       $scope.map = {
         center: {
           lat : parseFloat($scope.tour.route.drivenRoute.gpsLatitude[0]),
           lng : parseFloat($scope.tour.route.drivenRoute.gpsLongitude[0]),
-          zoom : 14},
+          zoom : 13},
         markers: {
           startMarker: angular.copy(startMarker),
-          endMarker: angular.copy(endMarker)}
+          endMarker: angular.copy(endMarker),
+          geofenceMarker: angular.copy(geofenceMarker)}
       };
 
       $scope.paths = {
@@ -393,6 +472,17 @@ angular.module('cyfclient.controllers', [])
           latlngs: [],
           color: '#0c60ee',
           weight: 10,
+          clickable: false,
+          focus: true
+        },
+        circle: {
+          type: 'circle',
+          radius: parseFloat($scope.tour.geofenceValue.radius),
+          latlngs: $scope.map.markers.geofenceMarker,
+          color: '#0c60ee',
+          weight: 4,
+          fillColor: '#387ef5',
+          fillOpacity: 0.3,
           clickable: false
         }
       };
@@ -417,16 +507,23 @@ angular.module('cyfclient.controllers', [])
       var speedData = new Array();
       var speedLabel = new Array();
       var speedFence = new Array();
+      var speedShoot;
+      var speedMax = 0;
 
       for (var i = 0; i < $scope.tour.route.speed.length; i++) {
-        speedData.push(parseInt($scope.tour.route.speed[i]));
-        speedFence.push(parseInt(50));
+        speedShoot = parseInt($scope.tour.route.speed[i]);
+        speedData.push(speedShoot);
+        speedFence.push(parseInt($scope.tour.speedfenceValue));
         speedLabel.push('');
+        if (speedShoot > speedMax) {
+          speedMax = speedShoot;
+        }
+
       }
 
       $scope.chartData = {
         labels: speedLabel,
-        series: ['Speedfence', 'Speed'],
+        series: ['Speedfence: ' + speedFence[0] + ' km/h', 'Speed (Max: ' + speedMax + ' km/h)'],
         data: [
           speedFence,
           speedData
@@ -547,12 +644,64 @@ angular.module('cyfclient.controllers', [])
 
   // ALERTS
   .controller('AlertsCtrl', function($scope, AlertService) {
+    $scope.role = localStorage.getItem("role");
+    $scope.ownAlerts = localStorage.getItem("userId");
 
-    AlertService.getAlerts().then(function(data){
+    $scope.doRefresh = function() {
+      AlertService.getAlerts(localStorage.getItem("vehicleId")).then(function (data) {
         $scope.alerts = data;
+        $scope.alertCounter = 0;
+        localStorage.setItem("alertsCounter", $scope.alertCounter);
 
-    }, function(errMsg) {
-      // error handling
+        for (var i = 0; i < data.length; i++) {
+
+          if (localStorage.getItem("role") == 'master' && data[i].readStatusMaster == false) {
+            $scope.alertCounter++;
+            localStorage.setItem("alertsCounter", $scope.alertCounter);
+          } else if (localStorage.getItem("role") == 'child' && $scope.alerts[i].userId == localStorage.getItem("userId") && $scope.alerts[i].readStatusChild == false) {
+            $scope.alertCounter++;
+            localStorage.setItem("alertsCounter", $scope.alertCounter);
+          }
+
+        };
+      }, function (errMsg) {
+        // error handling
+      }).then(function(){
+        $scope.$broadcast('scroll.refreshComplete');
+      });
+    };
+
+    $scope.doRefresh();
+
+    $scope.updateReadStatus = function(alertId) {
+
+      $scope.role = localStorage.getItem("role");
+
+      $scope.updatedAlert = {
+        _id: alertId
+      };
+
+      if ($scope.role == 'master') {
+        $scope.updatedAlert.readStatusMaster = true;
+
+        AlertService.updateAlert($scope.updatedAlert).then(function() {
+        }, function(errMsg) {
+          // error handling
+        })
+
+      } else {
+        $scope.updatedAlert.readStatusChild = true;
+
+        AlertService.updateAlert($scope.updatedAlert).then(function() {
+        }, function(errMsg) {
+          // error handling
+        })
+      }
+
+    };
+
+    $scope.$on('$ionicView.enter', function() {
+      $scope.doRefresh();
     });
 
   })
@@ -654,22 +803,30 @@ angular.module('cyfclient.controllers', [])
 
     $scope.members = [];
 
-    UserService.userInfo($scope.userId).then(function(user) {
-      $scope.vin = user.vin;
+    $scope.doRefresh = function() {
 
-      MemberService.getMembers($scope.vin).then(function(data) {
-        $scope.members = data;
+      UserService.userInfo($scope.userId).then(function (user) {
+        $scope.vin = user.vin;
 
-        // Save number of family members to local storage
-        localStorage.setItem("familyCounter", data.length);
+        MemberService.getMembers($scope.vin).then(function (data) {
+          $scope.members = data;
 
-      }, function(errMsg) {
-        // error handling
+          // Save number of family members to local storage
+          localStorage.setItem("familyCounter", data.length);
+
+        }, function (errMsg) {
+          // error handling
+        });
+
+      }, function (errMsg) {
+
+      }).then(function(){
+        $scope.$broadcast('scroll.refreshComplete');
       });
 
-    }, function(errMsg) {
+    };
 
-    });
+    $scope.doRefresh();
 
 
     $scope.doCreateMember = function() {
@@ -684,6 +841,8 @@ angular.module('cyfclient.controllers', [])
           template: msg
         });
         $scope.modalMember.hide();
+        $scope.doRefresh();
+        $scope.user = {};
       }, function(errMsg) {
         var alertPopup = $ionicPopup.alert({
           title: 'Signup failed!',
@@ -705,26 +864,22 @@ angular.module('cyfclient.controllers', [])
       $scope.modalMember = modal;
     });
 
+    $scope.$on('$ionicView.enter', function() {
+      $scope.doRefresh();
+    });
+
   })
 
   // FAMILY MEMBER
-  .controller('FamilyMemberCtrl', function($rootScope, $scope, $state, $stateParams, geofence_data, UserService, GeoLocationService, GeofenceService, $ionicLoading, $ionicModal, $ionicPopover) {
+  .controller('FamilyMemberCtrl', function($rootScope, $scope, $state, $stateParams, geofence_data, UserService, GeoLocationService, GeofenceService, $ionicLoading, $ionicModal) {
+    $scope.role = localStorage.getItem("role");
     $scope.memberId = $stateParams.memberId;
 
     $scope.user = {
       _id: $scope.memberId
     };
 
-    $scope.geofence = {};
-
-    // set default geofence if empty
-    if (geofence_data.geofence === null) {
-      $scope.geofence.latitude = 48.764409799999996;
-      $scope.geofence.longitude = 9.164410499999999;
-      $scope.geofence.radius = 1000;
-    } else {
-      $scope.geofence = geofence_data.geofence;
-    }
+    $scope.geofence = geofence_data.geofence;
 
     UserService.userInfo($scope.memberId).then(function(user) {
       $scope.profile = user;
@@ -804,6 +959,12 @@ angular.module('cyfclient.controllers', [])
 
       UserService.updateUser($scope.user).then(function(user) {
         $scope.profile = user;
+
+        // Set do local storage (for side menu)
+        if (user._id == localStorage.getItem("userId")) {
+          localStorage.setItem("geofenceActive", user.geofenceActive);
+        }
+
         $scope.modalGeofence.hide();
       }, function(errMsg) {
         // error handling
@@ -814,11 +975,16 @@ angular.module('cyfclient.controllers', [])
     $scope.doSetSpeedfence = function() {
       UserService.updateUser($scope.user).then(function(user) {
         $scope.profile = user;
+
+        // Set do local storage (for side menu)
+        if (user._id == localStorage.getItem("userId")) {
+          localStorage.setItem("speedfenceActive", user.geofenceActive);
+        }
+
         $scope.modalSpeedfence.hide();
       }, function(errMsg) {
         // error handling
       });
-
     };
 
     $scope.$on("$stateChangeSuccess", function() {
@@ -839,6 +1005,11 @@ angular.module('cyfclient.controllers', [])
         focus: true,
         draggable: true};
 
+      // disable dragging if not allowed
+      if ($scope.role == 'child') {
+        mainMarker.draggable = false;
+      }
+
       $scope.map = {
         center: {
           lat : parseFloat($scope.geofence.latitude),
@@ -851,7 +1022,7 @@ angular.module('cyfclient.controllers', [])
       $scope.paths = {
         circle: {
           type: 'circle',
-          radius: parseInt($scope.geofence.latitude),
+          radius: parseInt($scope.geofence.radius),
           latlngs: mainMarker,
           color: '#0c60ee',
           weight: 4,
@@ -879,12 +1050,6 @@ angular.module('cyfclient.controllers', [])
       };
     });
 
-    $ionicPopover.fromTemplateUrl('popovers/family/memberMenu.html', {
-      scope: $scope,
-    }).then(function(popover) {
-      $scope.popover = popover;
-    });
-
     $ionicModal.fromTemplateUrl('modals/family/editMember.html', {
       scope: $scope
     }).then(function(modal) {
@@ -895,6 +1060,14 @@ angular.module('cyfclient.controllers', [])
       scope: $scope
     }).then(function(modal) {
       $scope.modalGeofence = modal;
+
+      $scope.activeGeofence = localStorage.getItem("geofenceActive");
+
+      $scope.activeGeofence = function(value) {
+        $scope.user.geofenceActive = value;
+      };
+
+
     });
 
     $ionicModal.fromTemplateUrl('modals/family/setSpeedfence.html', {
@@ -906,12 +1079,56 @@ angular.module('cyfclient.controllers', [])
         $scope.user.speedfence = sf;
       };
 
+      $scope.activeSpeedfence = function(value) {
+        $scope.user.speedfenceActive = value;
+      };
+
     });
 
   })
 
   // SETTINGS
-  .controller('SettingsCtrl', function($scope, AuthService, $ionicPopup, $ionicHistory, $state) {
+  .controller('SettingsCtrl', function($scope, AuthService, $ionicPopup, $ionicHistory, $state, $window) {
+
+    $scope.registerDevice = function() {
+
+    };
+
+    $scope.cleanCache = function() {
+      /*
+      var confirmPopup = $ionicPopup.confirm({
+        title: 'Clean cache',
+        template: 'Are you sure you want to clean cache?'
+      });
+
+      confirmPopup.then(function(res) {
+        if(res) {
+          $ionicHistory.clearHistory();
+          $ionicHistory.clearCache();
+        }
+      });
+      */
+    };
+
+    $scope.cleanLocalStorage = function() {
+      /*
+      var confirmPopup = $ionicPopup.confirm({
+        title: 'Clean local storage',
+        template: 'Are you sure you want to clean local storage?'
+      });
+
+      confirmPopup.then(function(res) {
+        if(res) {
+          $window.localStorage.clear();
+        }
+      });
+      */
+    };
+
+    $scope.reloadData = function() {
+
+    };
+
     $scope.logout = function() {
 
         var confirmPopup = $ionicPopup.confirm({
@@ -922,6 +1139,8 @@ angular.module('cyfclient.controllers', [])
         confirmPopup.then(function(res) {
           if(res) {
             AuthService.logout();
+            $window.localStorage.clear();
+            $ionicHistory.clearHistory();
             $ionicHistory.clearCache().then(function(){
               $state.go('auth.check');
             })

@@ -31,7 +31,7 @@ angular.module('cyfclient', [
   });
 })
 
-.config(function($stateProvider, $urlRouterProvider) {
+.config(function($stateProvider, $urlRouterProvider, $ionicFilterBarConfigProvider) {
 
   // Ionic uses AngularUI Router which uses the concept of states
   // Learn more here: https://github.com/angular-ui/ui-router
@@ -253,6 +253,9 @@ angular.module('cyfclient', [
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/auth/check');
 
+  // set placeholder for filter bar
+  $ionicFilterBarConfigProvider.placeholder('Search (username/date, eg. 2016-03-08)');
+
 })
 
   .filter('secondsToHHmmss', function($filter) {
@@ -261,30 +264,33 @@ angular.module('cyfclient', [
     };
   })
 
-  /*
   // Check Authentication Status
   .run(function ($rootScope, $state, AuthService, AUTH_EVENTS) {
     $rootScope.$on('$stateChangeStart', function (event,next, nextParams, fromState) {
       if (!AuthService.isAuthenticated()) {
-        console.log(next.name);
-        if (next.name !== 'auth.login' && next.name !== 'auth.register') {
+        if (next.name !== 'auth.login' && next.name !== 'auth.signup') {
           event.preventDefault();
-          $state.go('auth.check');
+          $state.go('auth.login');
         }
       }
     });
   })
-  */
 
   // Register device for Push Notifications
-  .run(function($ionicPlatform) {
+  .run(function($ionicPlatform, $state, $ionicPopup) {
     $ionicPlatform.ready(function() {
       // Enable to debug issues.
       // window.plugins.OneSignal.setLogLevel({logLevel: 4, visualLevel: 4});
 
       var notificationOpenedCallback = function(jsonData) {
-        alert("Notification received:\n" + JSON.stringify(jsonData));
-        console.log('didReceiveRemoteNotificationCallBack: ' + JSON.stringify(jsonData));
+        var alert = jsonData;
+        $state.go('app.alerts');
+        var alertPopup = $ionicPopup.alert({
+          title: 'Notification!',
+          template: alert.message + "."
+        });
+
+        //console.log('didReceiveRemoteNotificationCallBack: ' + JSON.stringify(jsonData));
       };
 
       // Update with your OneSignal AppId and googleProjectNumber before running.

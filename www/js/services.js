@@ -2,7 +2,7 @@ angular.module('cyfclient.services', [])
 
   // AUTH SERVICE
   .service('AuthService', function($q, $http, API_ENDPOINT) {
-    var LOCAL_TOKEN_KEY = 'yourTokenKey';
+    var LOCAL_TOKEN_KEY = 'authToken';
     var isAuthenticated = false;
     var authToken;
 

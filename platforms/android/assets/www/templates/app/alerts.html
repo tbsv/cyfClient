@@ -6,12 +6,21 @@
     <span>Alerts</span>
   </ion-nav-title>
   <ion-content>
+    <ion-refresher
+      on-refresh="doRefresh()">
+    </ion-refresher>
     <div class="list">
-      <a class="item item-avatar" ng-repeat="alert in alerts" ui-sref="app.tour({tourId: alert.tourId})">
+      <a class="item item-avatar item-button-right" ng-repeat="alert in alerts | orderBy:'-route.timestampStart'" ng-hide="role == 'child' && ownAlerts != alert.userId" ui-sref="app.tour({tourId: alert.tourId})" ng-click="updateReadStatus(alert._id)">
         <ionic-letter-avatar data="{{alert.type}}" shape="round"></ionic-letter-avatar>
         <h2>{{alert.userId}} violated the {{alert.type}}</h2>
         <div class="row">
-          <span class="icon ion-ios-calendar-outline" style="width: 80px"> {{alert.timestamp | date:"dd.MM.yyyy HH:mm"}}</span>
+          <i>{{alert.route.timestampStart | date:"dd.MM.yyyy"}} &nbsp;{{alert.route.timestampStart | date:"HH:mm"}} – {{alert.route.timestampStop | date:"HH:mm"}}</i>
+        </div>
+        <div class="buttons">
+          <button class="button button-small button-icon button-custom icon">
+            <i ng-class="alert.readStatusMaster == true ? 'icon ion-ios-person' : 'icon ion-ios-person-outline'"><small>M</small></i>
+            <i ng-class="alert.readStatusChild == true ? 'icon ion-ios-person' : 'icon ion-ios-person-outline'"><small>C</small></i>
+          </button>
         </div>
       </a>
       <div ng-repeat-end></div>
