@@ -293,23 +293,6 @@ angular.module('cyfclient.controllers', [])
             // Save number of total tours to local storage
             localStorage.setItem("toursCounter", data.length);
 
-            /*
-
-            $scope.dates = {};
-            var date;
-
-            for(var i = 0; i < $scope.tours.length; i++) {
-              date = $filter('date')($scope.tours[i].route.timestampStart, "dd.MM.yyyy");
-
-              if(!$scope.dates[date]) {
-                $scope.dates[date] = [];
-              }
-
-              $scope.dates[date].push($scope.tours[i]);
-
-            }
-            */
-
             $scope.showFilterBar = function () {
               filterBarInstance = $ionicFilterBar.show({
                 items: $scope.tours,
@@ -950,6 +933,7 @@ angular.module('cyfclient.controllers', [])
 
       UserService.updateUser($scope.user).then(function(user) {
         $scope.profile = user;
+        localStorage.setItem("geofenceActive", user.geofenceActive);
         $scope.modalGeofence.hide();
       }, function(errMsg) {
         // error handling
@@ -960,6 +944,7 @@ angular.module('cyfclient.controllers', [])
     $scope.doSetSpeedfence = function() {
       UserService.updateUser($scope.user).then(function(user) {
         $scope.profile = user;
+        localStorage.setItem("speedfenceActive", user.speedfenceActive);
         $scope.modalSpeedfence.hide();
       }, function(errMsg) {
         // error handling
@@ -1040,6 +1025,8 @@ angular.module('cyfclient.controllers', [])
     }).then(function(modal) {
       $scope.modalGeofence = modal;
 
+      $scope.activeGeofence = localStorage.getItem("geofenceActive");
+
       $scope.activeGeofence = function(value) {
         $scope.user.geofenceActive = value;
       };
@@ -1066,6 +1053,46 @@ angular.module('cyfclient.controllers', [])
 
   // SETTINGS
   .controller('SettingsCtrl', function($scope, AuthService, $ionicPopup, $ionicHistory, $state, $window) {
+
+    $scope.registerDevice = function() {
+
+    };
+
+    $scope.cleanCache = function() {
+      /*
+      var confirmPopup = $ionicPopup.confirm({
+        title: 'Clean cache',
+        template: 'Are you sure you want to clean cache?'
+      });
+
+      confirmPopup.then(function(res) {
+        if(res) {
+          $ionicHistory.clearHistory();
+          $ionicHistory.clearCache();
+        }
+      });
+      */
+    };
+
+    $scope.cleanLocalStorage = function() {
+      /*
+      var confirmPopup = $ionicPopup.confirm({
+        title: 'Clean local storage',
+        template: 'Are you sure you want to clean local storage?'
+      });
+
+      confirmPopup.then(function(res) {
+        if(res) {
+          $window.localStorage.clear();
+        }
+      });
+      */
+    };
+
+    $scope.reloadData = function() {
+
+    };
+
     $scope.logout = function() {
 
         var confirmPopup = $ionicPopup.confirm({

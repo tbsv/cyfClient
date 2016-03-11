@@ -110,7 +110,7 @@
             <input type="range" name="volume" min="30" max="5000" ng-model="paths.circle.radius" ng-change="updateRadius(paths.circle.radius)">
             <i class="icon ion-ios-circle-filled"></i>
           </div>
-          <ion-toggle ng-model="user.geofenceActive" ng-change="activeGeofence(user.geofenceActive)" ng-hide="role == 'child'" toggle-class="toggle-positive">Geofence Activation</ion-toggle>
+          <ion-toggle ng-model="profile.geofenceActive" ng-change="activeGeofence(profile.geofenceActive)" ng-hide="role == 'child'" toggle-class="toggle-positive">Geofence Activation</ion-toggle>
           <div class="item" data-tap-disabled="true">
             <leaflet resizeable defaults="map.defaults" markers="map.markers" paths="paths" center="map.center" height="500px" width="100%"></leaflet>
           </div>
@@ -141,7 +141,7 @@
             <input type="range" name="speedfence" min="50" max="320" ng-model="newSpeedfence" ng-change="updateSpeedfence(newSpeedfence)">
             <i class="icon ion-ios-speedometer"></i>
           </div>
-          <ion-toggle ng-model="user.speedfenceActive" ng-change="activeSpeedfence(user.speedfenceActive)" ng-hide="role == 'child'" toggle-class="toggle-positive">Speedfence Activation</ion-toggle>
+          <ion-toggle ng-model="profile.speedfenceActive" ng-change="activeSpeedfence(profile.speedfenceActive)" ng-hide="role == 'child'" toggle-class="toggle-positive">Speedfence Activation</ion-toggle>
           <button class="button button-block button-positive" ng-click="doSetSpeedfence()" ng-hide="role == 'child'">Save</button>
         </div>
       </ion-content>
