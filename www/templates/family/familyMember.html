@@ -41,7 +41,7 @@
           Geofence
           <i ng-class="profile.geofenceActive == true ? 'ion-ios-checkmark-outline' : 'icon ion-ios-close-outline'"></i>
           <span class="badge badge-light">
-            <div><i class="icon ion-ios-location"> {{profile.geofence.latitude | limitTo:4}} lat / {{profile.geofence.longitude | limitTo:4}} lng </i><br /></div>
+            <div><i class="icon ion-ios-location"> {{profile.geofence.latitude | limitTo:4}} / {{profile.geofence.longitude | limitTo:4}} </i><br /></div>
             <div><i class="icon ion-ios-circle-filled"> {{profile.geofence.radius}}m</i></div>
           </span>
         </div>

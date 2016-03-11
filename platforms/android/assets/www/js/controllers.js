@@ -1090,6 +1090,15 @@ angular.module('cyfclient.controllers', [])
   // SETTINGS
   .controller('SettingsCtrl', function($scope, AuthService, $ionicPopup, $ionicHistory, $state, $window) {
 
+    $scope.activeSpeedfence = function(value) {
+      $scope.user.speedfenceActive = value;
+    };
+
+    $scope.setPushSubscription = function(value) {
+      window.plugins.OneSignal.setSubscription(value);
+      console.log(value);
+    };
+
     $scope.registerDevice = function() {
 
     };
