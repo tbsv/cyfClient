@@ -70,6 +70,12 @@ angular.module('cyfclient', [
       controller: 'ForgotPasswordCtrl'
     })
 
+    .state('auth.termsOfUse', {
+      url: '/termsOfUse',
+      templateUrl: "templates/auth/termsOfUse.html",
+      controller: 'TermsOfUseCtrl'
+    })
+
     .state('auth.enroll', {
       url: '/enroll',
       templateUrl: "templates/auth/enroll.html",
@@ -94,7 +100,7 @@ angular.module('cyfclient', [
       }
     })
 
-    // OVERVIEW WEEKLY
+/*    // OVERVIEW WEEKLY
     .state('app.overview-weekly', {
       url: "/overview-weekly",
       views: {
@@ -115,7 +121,7 @@ angular.module('cyfclient', [
         }
       }
     })
-
+*/
     // TOURS
     .state('app.tours', {
       url: "/tours",
@@ -144,6 +150,17 @@ angular.module('cyfclient', [
       }
     })
 
+    // STATISTICS
+    .state('app.statistics', {
+      url: "/statistics",
+      views: {
+        'menuContent': {
+          templateUrl: "templates/app/overview.html",
+          controller: 'StatisticsCtrl'
+        }
+      }
+    })
+
     // ECO-SCORES
     .state('app.scores', {
       url: "/scores",
@@ -155,7 +172,7 @@ angular.module('cyfclient', [
       }
     })
 
-    // ECO-SCORES WEEKLY
+/*    // ECO-SCORES WEEKLY
     .state('app.scores-weekly', {
       url: "/scores-weekly",
       views: {
@@ -176,7 +193,7 @@ angular.module('cyfclient', [
         }
       }
     })
-
+*/
     // ALERTS
     .state('app.alerts', {
       url: "/alerts",
