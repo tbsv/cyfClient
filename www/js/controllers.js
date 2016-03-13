@@ -94,9 +94,9 @@ angular.module('cyfclient.controllers', [])
         UserService.userInfo($scope.user.name).then(function(user) {
           // Save userId, vin, firstName, rol and fences to local storage
           localStorage.setItem("userId", $scope.user.name);
-          localStorage.setItem("vin", $scope.user.vin);
           localStorage.setItem("firstName", user.name.first);
           localStorage.setItem("role", user.role);
+          localStorage.setItem("vehicleId", user.vin);
           localStorage.setItem("geofenceActive", user.geofenceActive);
           localStorage.setItem("speedfenceActive", user.speedfenceActive);
           localStorage.setItem("termsOfUseAgreed", user.termsOfUseAgreed);
@@ -195,8 +195,9 @@ angular.module('cyfclient.controllers', [])
       localStorage.setItem("termsOfUseAgreed", true);
       UserService.updateUser($scope.user);
 
-      if (!localStorage.getItem("vin")){
+      if (localStorage.getItem("vehicleId")=="undefined"){
           $state.go('auth.enroll');
+
         } else {
           $state.go('app.overview');
         }
@@ -1335,9 +1336,9 @@ angular.module('cyfclient.controllers', [])
             //fill totalFuelConsumption-Array for pie-chart
             var sumFuelConsumptions = fuelConsumption.sum()
             $scope.totalFuelConsumption[i] = parseFloat(sumFuelConsumptions)
-            //fill totalDrivingTime-Array for pie-chart
+            //fill totalDrivingTime-Array for pie-chart. Divide /60 to get the minutes.
             var sumDrivingTime = drivingTime.sum()
-            $scope.totalDrivingTime[i] = parseInt(sumDrivingTime)
+            $scope.totalDrivingTime[i] = parseInt(sumDrivingTime)/60
 
           }
           //Call the method to fill the charts
