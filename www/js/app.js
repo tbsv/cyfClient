@@ -95,12 +95,13 @@ angular.module('cyfclient', [
       views: {
         'menuContent': {
           templateUrl: "templates/app/overview.html",
-          controller: 'OverviewCtrl'
+          controller: 'StatisticsCtrl'
         }
       }
     })
 
-/*    // OVERVIEW WEEKLY
+    /*
+    // OVERVIEW WEEKLY
     .state('app.overview-weekly', {
       url: "/overview-weekly",
       views: {
@@ -121,7 +122,8 @@ angular.module('cyfclient', [
         }
       }
     })
-*/
+    */
+
     // TOURS
     .state('app.tours', {
       url: "/tours",
@@ -150,17 +152,7 @@ angular.module('cyfclient', [
       }
     })
 
-    // STATISTICS
-    .state('app.statistics', {
-      url: "/statistics",
-      views: {
-        'menuContent': {
-          templateUrl: "templates/app/overview.html",
-          controller: 'StatisticsCtrl'
-        }
-      }
-    })
-
+    /*
     // ECO-SCORES
     .state('app.scores', {
       url: "/scores",
@@ -172,7 +164,7 @@ angular.module('cyfclient', [
       }
     })
 
-/*    // ECO-SCORES WEEKLY
+    // ECO-SCORES WEEKLY
     .state('app.scores-weekly', {
       url: "/scores-weekly",
       views: {
@@ -193,7 +185,8 @@ angular.module('cyfclient', [
         }
       }
     })
-*/
+    */
+
     // ALERTS
     .state('app.alerts', {
       url: "/alerts",
@@ -316,6 +309,5 @@ angular.module('cyfclient', [
         notificationOpenedCallback);
     });
   })
-
 
 ;

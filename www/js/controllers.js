@@ -151,14 +151,6 @@ angular.module('cyfclient.controllers', [])
 
     $scope.master = true;
 
-    /*
-    $scope.checked = function (userRole) {
-      if (userRole) {
-        $scope.master = true;
-      }
-    };
-    */
-
     $scope.doSignup = function() {
       if ($scope.master) {
         $scope.user.role = "master";
@@ -314,6 +306,7 @@ angular.module('cyfclient.controllers', [])
 
   })
 
+  /*
   // OVERVIEW
   .controller('OverviewCtrl', function($scope) {
     $scope.labels = ["Gordon", "Barney", "Lizzy"];
@@ -334,7 +327,6 @@ angular.module('cyfclient.controllers', [])
       $ionicNavBarDelegate.showBackButton(false);
     else
       $ionicNavBarDelegate.showBackButton(true);
-
   })
 
   // OVERVIEW MONTHLY
@@ -349,8 +341,8 @@ angular.module('cyfclient.controllers', [])
       $ionicNavBarDelegate.showBackButton(false);
     else
       $ionicNavBarDelegate.showBackButton(true);
-
   })
+  */
 
   // TOURS
   .controller('ToursCtrl', function($scope, $filter, $ionicFilterBar, $ionicHistory, TourService, UserService) {
@@ -617,6 +609,7 @@ angular.module('cyfclient.controllers', [])
 
   })
 
+  /*
   // ECO-SCORES
   .controller('ScoresCtrl', function($scope) {
 
@@ -627,7 +620,7 @@ angular.module('cyfclient.controllers', [])
       [76, 77, 86, 84, 83, 80, 77]
     ];
 
-    /*
+
     $scope.chartData = {
       labels: ['November', 'Dezember', 'Januar'],
       series: ['Tobias', 'Felix'],
@@ -653,7 +646,6 @@ angular.module('cyfclient.controllers', [])
         }
       ]
     };
-    */
 
   })
 
@@ -690,6 +682,7 @@ angular.module('cyfclient.controllers', [])
     ];
 
   })
+  */
 
   // ALERTS
   .controller('AlertsCtrl', function($scope, AlertService) {
@@ -876,7 +869,6 @@ angular.module('cyfclient.controllers', [])
     };
 
     $scope.doRefresh();
-
 
     $scope.doCreateMember = function() {
 
@@ -1214,7 +1206,6 @@ angular.module('cyfclient.controllers', [])
 
   })
 
-
   // STATISTICS
   .controller('StatisticsCtrl', function($scope, TourService, UserService) {
     $scope.userId = localStorage.getItem("userId");
@@ -1365,7 +1356,5 @@ angular.module('cyfclient.controllers', [])
     }
 
   })
-
-
 
 ;
