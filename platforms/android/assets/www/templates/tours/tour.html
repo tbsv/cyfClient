@@ -134,7 +134,7 @@
       <ion-content class="padding">
         <div class="list">
           <ion-radio ng-repeat="member in members" ng-model="assignee" ng-click="updateAssignee(member._id)">{{member.name.first}} {{member.name.last}}</ion-radio>
-          <button class="button button-block button-positive" ng-click="doAssign()">Assign</button>
+          <button class="button button-block button-positive" ng-click="doAssign()" ng-disabled="assignee==''">Assign</button>
         </div>
       </ion-content>
     </ion-modal-view>

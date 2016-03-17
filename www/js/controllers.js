@@ -1194,10 +1194,43 @@ angular.module('cyfclient.controllers', [])
   })
 
   // INFO
-  .controller('InfoCtrl', function($scope, $ionicModal, API_ENDPOINT) {
+  .controller('InfoCtrl', function($scope, $state, AuthService, UserService, $ionicHistory, $ionicModal, $ionicPopup, $window, API_ENDPOINT) {
+    $scope.userId = localStorage.getItem("userId");
     $scope.toursCounter = localStorage.getItem("toursCounter");
     $scope.familyCounter = localStorage.getItem("familyCounter");
     $scope.serverUrl = API_ENDPOINT.url;
+
+    $scope.user = {
+      _id: $scope.userId,
+      termsOfUseAgreed: ''
+    };
+
+    //User disagrees Terms Of Use
+    $scope.disagreeTermsOfUse= function() {
+      $scope.user.termsOfUseAgreed = false;
+
+      var confirmPopup = $ionicPopup.confirm({
+        title: 'Logout',
+        template: 'Are you sure you want to disagree to Terms of Use?'
+      });
+
+      confirmPopup.then(function(res) {
+        if(res) {
+          UserService.updateUser($scope.user);
+          $scope.modalTerms.hide();
+          AuthService.logout();
+          $window.localStorage.clear();
+          $ionicHistory.clearHistory();
+          $ionicHistory.clearCache().then(function(){
+            $state.go('auth.check');
+          })
+        } else {
+
+        }
+      });
+
+    };
+
 
     $ionicModal.fromTemplateUrl('modals/info/terms.html', {
       scope: $scope
