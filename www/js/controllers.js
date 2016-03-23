@@ -252,28 +252,33 @@ angular.module('cyfclient.controllers', [])
         } else {
           localStorage.setItem("licenceNumber", $scope.vehicle.licenceNumber);
           localStorage.setItem("vehicleId", $scope.vehicle.vin);
+
           VehicleService.createVehicle($scope.vehicle).then(function(msg) {
 
+            var alertPopup = $ionicPopup.alert({
+              title: 'VIN enrolled!',
+              template: msg
+            });
+
+            UserService.updateUser($scope.user).then(function(user) {
+              $state.go('app.overview');
+            }, function(errMsg) {
+              // error handling
+            });
+
           }, function(errMsg) {
             // error handling
+            var alertPopup = $ionicPopup.alert({
+              title: 'VIN in use!',
+              template: errMsg
+            });
           });
 
-          UserService.updateUser($scope.user).then(function(user) {
-
-            $state.go('app.overview');
-          }, function(errMsg) {
-            // error handling
-          });
-
-          var alertPopup = $ionicPopup.alert({
-            title: 'VIN connected to you!',
-            template: msg
-          });
         }
       }, function(errMsg) {
         var alertPopup = $ionicPopup.alert({
           title: 'VIN invalid!',
-          template: errMsg+" Or VIN does not match with the typical VIN structure. "
+          template: errMsg + ' Or VIN does not match the typical structure.'
         });
       });
 
@@ -287,13 +292,48 @@ angular.module('cyfclient.controllers', [])
       $scope.modalEnroll = modal;
 
       $scope.vehicles = [];
+      $scope.validVehicles = ["WDD1179421N250123", "WDD1179121N355937","WDD2122061B140828"];
 
       VehicleService.getVehiclesOfReadiConnect().then(function(data){
-        //HIER WERDEN ALLE VERFUEGBAREN FAHRZEUGE AUS READI-CONNECT GEHOLT.
-        //LEIDER SIND NICHT ALLE MIT connect your family kompatibel.
-        //$scope.vehicles = data;
-        //MANUELLES FUELLEN DER FAHRZEUGE, DIE connect your family KOMPATIBEL SIND.
-        $scope.vehicles = ['WDD1179421N250123', 'WDD1179121N355937', 'WDD2122061B140828' ];
+        $scope.vehicles = data;
+
+        VehicleService.getVehicles().then(function(enrolled){
+          $scope.enrolledVehicles = JSON.stringify(enrolled);
+
+          $scope.checkEnrolledVehicles = function (vin) {
+            if ($scope.enrolledVehicles.indexOf(vin) > -1) {
+              return true;
+            }
+            else {
+              return false;
+            }
+          };
+
+          $scope.checkVehicleStatus = function (vin) {
+            if ($scope.enrolledVehicles.indexOf(vin) > -1) {
+              return 'icon ion-ios-people';
+            }
+            else if ($scope.validVehicles.indexOf(vin) > -1) {
+              return 'icon ion-ios-checkmark-outline balanced';
+            }
+            else {
+              return 'icon ion-ios-close-outline assertive';
+            }
+          };
+
+        }, function(errMsg) {
+          // error handling
+        });
+
+        $scope.checkValidVehicles = function (vin) {
+          if ($scope.validVehicles.indexOf(vin) > -1) {
+            return true;
+          }
+          else {
+            return false;
+          }
+        };
+
       }, function(errMsg) {
         // error handling
       });
@@ -1244,150 +1284,161 @@ angular.module('cyfclient.controllers', [])
   .controller('StatisticsCtrl', function($scope, TourService, UserService) {
     $scope.userId = localStorage.getItem("userId");
 
-    //Method cleans double elements in an array
-    var unique = function(origArr) {
-      var newArr = [],
-        origLen = origArr.length,
-        found,
-        x, y;
+    $scope.doRefresh = function() {
 
-      for ( x = 0; x < origLen; x++ ) {
-        found = undefined;
-        for ( y = 0; y < newArr.length; y++ ) {
-          if ( origArr[x] === newArr[y] ) {
-            found = true;
-            break;
-          }
-        }
-        if ( !found) newArr.push( origArr[x] );
-      }
-      return newArr;
-    }
+      //Method cleans double elements in an array
+      var unique = function (origArr) {
+        var newArr = [],
+          origLen = origArr.length,
+          found,
+          x, y;
 
-    //Method sums
-    Array.prototype.sum = Array.prototype.sum || function() {
-        return this.reduce(function(sum, a) { return sum + Number(a) }, 0);
-      }
-
-    //Method averages
-    Array.prototype.average = Array.prototype.average || function() {
-        return this.sum() / (this.length || 1);
-      }
-
-    //Array for the total Average of All EcoScore
-    $scope.averageTotalEcoScore = new Array ();
-    //Array for the total Average of All FuelAverages
-    $scope.averageTotalFuelAverage = new Array ();
-    //Array for the total Distances for every user
-    $scope.totalDistance = new Array ();
-    //Array for the total Distances for every user
-    $scope.totalFuelConsumption = new Array ();
-    //Array for the total Driving Time for every user
-    $scope.totalDrivingTime = new Array ();
-
-    //Array for registered Users of a VIN
-    $scope.users = [];
-
-    // The following method:
-    // 1. gets all Users of a VIN an pushes in Array $scope.users
-    // 2. calculates the average of Total EcoScore for every user
-    // 3. calculates the average of Total Fuel Consumption for every user
-    // 4. sums the total distances for every user
-    // 5. sums the total fuel consumption for every user
-    // 6. fills the Array averageTotalEcoScore
-    // 7. fills the Array averageTotalFuelAverage
-    // 8. fills the Array totalDistance
-    UserService.userInfo($scope.userId).then(function(user) {
-      TourService.getTours(user.vin)
-        .then(function (allTours) {
-          $scope.tours = allTours;
-          // Get "ALL" the available users, which are assigned to tours
-          for (var i = 0; i < allTours.length; i++) {
-            //console.log(allTours[i].userId);
-            //console.log(allTours[i].ecoScoreTotal);
-            //console.log(allTours[i].route.timestampStart.toString());
-            $scope.users.push(allTours[i].userId);
-          }
-          //console.log("USERS " + $scope.users.length);
-          //for (var i = 0; i < $scope.users.length; i++) {
-            //console.log($scope.users[i]);
-          //}
-          //Delete double users
-          $scope.users = unique($scope.users);
-          //console.log("USERS " + $scope.users.length);
-          //for (var i = 0; i < $scope.users.length; i++) {
-            //console.log($scope.users[i]);
-          //}
-
-          //Get
-          // 1. the total EcoScores
-          // 2. the total fuelAverages,
-          // 3. the total distances and
-          // 4. the total fuel consumption
-          // 5. the total duration
-          // of the users
-          for (var i = 0; i < $scope.users.length; i++) {
-            ecoScores = new Array();
-            fuelAverages = new Array();
-            distances = new Array();
-            fuelConsumption = new Array();
-            drivingTime = new Array();
-
-            for (var j = 0; j < allTours.length; j++) {
-              if ($scope.users[i] == allTours[j].userId) {
-                if (allTours[j].ecoScoreTotal!=0) {
-                  ecoScores.push(allTours[j].ecoScoreTotal)
-                }
-                if (allTours[j].fuelAverage!=0) {
-                  fuelAverages.push(allTours[j].fuelAverage)
-                }
-                distances.push(allTours[j].route.routeDistance)
-                fuelConsumption.push(allTours[j].fuelTotal)
-                drivingTime.push(allTours[j].route.routeDuration)
-              }
+        for (x = 0; x < origLen; x++) {
+          found = undefined;
+          for (y = 0; y < newArr.length; y++) {
+            if (origArr[x] === newArr[y]) {
+              found = true;
+              break;
             }
-            //fill averageTotalEcoScore-Array for bar-chart
-            var ecoScoreAverage = ecoScores.average()
-            $scope.averageTotalEcoScore[i] = new Array (1)
-            $scope.averageTotalEcoScore[i][0] = ecoScoreAverage
-            //fill averageTotalFuelAverage-Array for bar-chart
-            var fuelAverage = fuelAverages.average()
-            $scope.averageTotalFuelAverage[i] = new Array (1)
-            $scope.averageTotalFuelAverage[i][0] = fuelAverage
-            //fill totalDistance-Array for pie-chart
-            var sumDistances = distances.sum()
-            $scope.totalDistance[i] = parseFloat(sumDistances)
-            //fill totalFuelConsumption-Array for pie-chart
-            var sumFuelConsumptions = fuelConsumption.sum()
-            $scope.totalFuelConsumption[i] = parseFloat(sumFuelConsumptions)
-            //fill totalDrivingTime-Array for pie-chart. Divide /60 to get the minutes.
-            var sumDrivingTime = drivingTime.sum()
-            $scope.totalDrivingTime[i] = parseInt(sumDrivingTime)/60
-
           }
-          //Call the method to fill the charts
-          fillCharts();
-        })
-    });
-
-    function fillCharts() {
-      for (var i = 0; i < $scope.averageTotalEcoScore.length; i++) {
-        console.log($scope.users[i] + " : TOTAL-EcoScore " + $scope.averageTotalEcoScore[i]
-                                    + ", TOTAL-FuelAverage " + $scope.averageTotalFuelAverage[i]
-                                    + ", TOTAL-Distance " + $scope.totalDistance[i]
-                                    + ", TOTAL-FuelConsumption " + $scope.totalFuelConsumption[i]
-                                    + ", TOTAL-DrivingTime " + $scope.totalDrivingTime[i])
+          if (!found) newArr.push(origArr[x]);
+        }
+        return newArr;
       }
 
-      $scope.labels = ["Driver"];
-      $scope.series = $scope.users;
-      $scope.ecoScoreData = $scope.averageTotalEcoScore;
-      $scope.consumptionFuelAverageData = $scope.averageTotalFuelAverage;
-      $scope.tourSharesDistanceData = $scope.totalDistance;
-      $scope.tourSharesFuelTotalData = $scope.totalFuelConsumption;
-      $scope.tourSharesDrivingTimeData = $scope.totalDrivingTime;
+      //Method sums
+      Array.prototype.sum = Array.prototype.sum || function () {
+          return this.reduce(function (sum, a) {
+            return sum + Number(a)
+          }, 0);
+        }
 
-    }
+      //Method averages
+      Array.prototype.average = Array.prototype.average || function () {
+          return this.sum() / (this.length || 1);
+        }
+
+      //Array for the total Average of All EcoScore
+      $scope.averageTotalEcoScore = new Array();
+      //Array for the total Average of All FuelAverages
+      $scope.averageTotalFuelAverage = new Array();
+      //Array for the total Distances for every user
+      $scope.totalDistance = new Array();
+      //Array for the total Distances for every user
+      $scope.totalFuelConsumption = new Array();
+      //Array for the total Driving Time for every user
+      $scope.totalDrivingTime = new Array();
+
+      //Array for registered Users of a VIN
+      $scope.users = [];
+
+      // The following method:
+      // 1. gets all Users of a VIN an pushes in Array $scope.users
+      // 2. calculates the average of Total EcoScore for every user
+      // 3. calculates the average of Total Fuel Consumption for every user
+      // 4. sums the total distances for every user
+      // 5. sums the total fuel consumption for every user
+      // 6. fills the Array averageTotalEcoScore
+      // 7. fills the Array averageTotalFuelAverage
+      // 8. fills the Array totalDistance
+      UserService.userInfo($scope.userId).then(function (user) {
+        TourService.getTours(user.vin)
+          .then(function (allTours) {
+            $scope.tours = allTours;
+            // Get "ALL" the available users, which are assigned to tours
+            for (var i = 0; i < allTours.length; i++) {
+              //console.log(allTours[i].userId);
+              //console.log(allTours[i].ecoScoreTotal);
+              //console.log(allTours[i].route.timestampStart.toString());
+              $scope.users.push(allTours[i].userId);
+            }
+            //console.log("USERS " + $scope.users.length);
+            //for (var i = 0; i < $scope.users.length; i++) {
+            //console.log($scope.users[i]);
+            //}
+            //Delete double users
+            $scope.users = unique($scope.users);
+            //console.log("USERS " + $scope.users.length);
+            //for (var i = 0; i < $scope.users.length; i++) {
+            //console.log($scope.users[i]);
+            //}
+
+            //Get
+            // 1. the total EcoScores
+            // 2. the total fuelAverages,
+            // 3. the total distances and
+            // 4. the total fuel consumption
+            // 5. the total duration
+            // of the users
+            for (var i = 0; i < $scope.users.length; i++) {
+              ecoScores = new Array();
+              fuelAverages = new Array();
+              distances = new Array();
+              fuelConsumption = new Array();
+              drivingTime = new Array();
+
+              for (var j = 0; j < allTours.length; j++) {
+                if ($scope.users[i] == allTours[j].userId) {
+                  if (allTours[j].ecoScoreTotal != 0) {
+                    ecoScores.push(allTours[j].ecoScoreTotal)
+                  }
+                  if (allTours[j].fuelAverage != 0) {
+                    fuelAverages.push(allTours[j].fuelAverage)
+                  }
+                  distances.push(allTours[j].route.routeDistance)
+                  fuelConsumption.push(allTours[j].fuelTotal)
+                  drivingTime.push(allTours[j].route.routeDuration)
+                }
+              }
+              //fill averageTotalEcoScore-Array for bar-chart
+              var ecoScoreAverage = ecoScores.average()
+              $scope.averageTotalEcoScore[i] = new Array(1)
+              $scope.averageTotalEcoScore[i][0] = ecoScoreAverage
+              //fill averageTotalFuelAverage-Array for bar-chart
+              var fuelAverage = fuelAverages.average()
+              $scope.averageTotalFuelAverage[i] = new Array(1)
+              $scope.averageTotalFuelAverage[i][0] = fuelAverage
+              //fill totalDistance-Array for pie-chart
+              var sumDistances = distances.sum()
+              $scope.totalDistance[i] = parseFloat(sumDistances)
+              //fill totalFuelConsumption-Array for pie-chart
+              var sumFuelConsumptions = fuelConsumption.sum()
+              $scope.totalFuelConsumption[i] = parseFloat(sumFuelConsumptions)
+              //fill totalDrivingTime-Array for pie-chart. Divide /60 to get the minutes.
+              var sumDrivingTime = drivingTime.sum()
+              $scope.totalDrivingTime[i] = parseInt(sumDrivingTime) / 60
+
+            }
+            //Call the method to fill the charts
+            fillCharts();
+          })
+          .then(function(){
+            $scope.$broadcast('scroll.refreshComplete');
+          });
+      });
+
+      function fillCharts() {
+        for (var i = 0; i < $scope.averageTotalEcoScore.length; i++) {
+          console.log($scope.users[i] + " : TOTAL-EcoScore " + $scope.averageTotalEcoScore[i]
+            + ", TOTAL-FuelAverage " + $scope.averageTotalFuelAverage[i]
+            + ", TOTAL-Distance " + $scope.totalDistance[i]
+            + ", TOTAL-FuelConsumption " + $scope.totalFuelConsumption[i]
+            + ", TOTAL-DrivingTime " + $scope.totalDrivingTime[i])
+        }
+
+        $scope.labels = ["Driver"];
+        $scope.series = $scope.users;
+        $scope.ecoScoreData = $scope.averageTotalEcoScore;
+        $scope.consumptionFuelAverageData = $scope.averageTotalFuelAverage;
+        $scope.tourSharesDistanceData = $scope.totalDistance;
+        $scope.tourSharesFuelTotalData = $scope.totalFuelConsumption;
+        $scope.tourSharesDrivingTimeData = $scope.totalDrivingTime;
+
+      }
+
+    };
+
+    $scope.doRefresh();
 
   })
 

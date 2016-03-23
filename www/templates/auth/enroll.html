@@ -9,7 +9,7 @@
                 <input type="text" placeholder="VIN (e.g. WDD2231234N567890)" name="user_vin" ng-model="user.vin" required>
               </label>
               <label class="item item-input">
-                <input type="text" placeholder="Licence number (e.g. HH-Z-2016)" name="vehicle_licenceNumber" ng-model="user.licenceNumber" required >
+                <input type="text" placeholder="Licence number (e.g. HH-Z 2016)" name="vehicle_licenceNumber" ng-model="user.licenceNumber" required >
               </label>
             </div>
             <div class="item item-body bottom-content">
@@ -36,9 +36,40 @@
       </ion-header-bar>
       <ion-content class="padding">
         <div class="list">
-          <!-- <ion-radio ng-repeat="vehicle in vehicles" ng-change="updateVehicle(vehicle.vin)" ng-model="user.vin" ng-click="updateVehicle(vehicle.vin)">{{vehicle.vin}}</ion-radio> -->
-          <ion-radio ng-repeat="vehicle in vehicles" ng-change="updateVehicle(vehicle)" ng-model="user.vin" ng-click="updateVehicle(vehicle)">{{vehicle}}</ion-radio>
+          <ion-radio class="item item-icon-right" ng-repeat="vehicle in vehicles" ng-change="updateVehicle(vehicle.vin)" ng-model="user.vin" ng-click="updateVehicle(vehicle.vin)" ng-hide="!checkValidVehicles(vehicle.vin)">
+            {{vehicle.vin}}
+            <i ng-class="checkVehicleStatus(vehicle.vin)"></i>
+          </ion-radio>
+          <!--<ion-radio ng-repeat="vehicle in vehicles" ng-change="updateVehicle(vehicle)" ng-model="user.vin" ng-click="updateVehicle(vehicle)">{{vehicle}}</ion-radio>-->
+          <div class="item item-divider">
+            <p>
+              <i class="icon ion-ios-checkmark-outline balanced"><span class="subdued"> Available</span></i>
+              &nbsp;
+              <i class="icon ion-ios-people"><span class="subdued"> Already enrolled</span></i>
+              &nbsp;
+              <i class="icon ion-ios-close-outline assertive"><span class="subdued"> Not usable</span></i>
+            </p>
+          </div>
         </div>
+        <!--
+        <div class="list">
+          <div class="item item-divider">
+            Legend
+          </div>
+          <ion-item class="item item-icon-right">
+            <span class="item-note">Already enrolled to cyf</span>
+            <i class="icon ion-ios-people"></i>
+          </ion-item>
+          <ion-item class="item item-icon-right">
+            <span class="item-note">Available for cyf</span>
+            <i class="icon ion-ios-checkmark-outline balanced"></i>
+          </ion-item>
+          <ion-item class="item item-icon-right">
+            <span class="item-note">Not usable for cyf</span>
+            <i class="icon ion-ios-close-outline assertive"></i>
+          </ion-item>
+        </div>
+        -->
       </ion-content>
     </ion-modal-view>
   </script>
