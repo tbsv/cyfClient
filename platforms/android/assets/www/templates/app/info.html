@@ -5,7 +5,7 @@
   <ion-nav-title>
     <span>Info</span>
   </ion-nav-title>
-  <ion-content ng-controller="TermsOfUseCtrl">
+  <ion-content>
     <div class="list">
       <div class="item item-divider">
         Statistics
@@ -23,7 +23,7 @@
       </div>
       <div class="item">
         App-Version
-        <span class="badge badge-light">0.9 beta</span>
+        <span class="badge badge-light">0.1.1 beta</span>
       </div>
       <div class="item">
         Server
@@ -40,11 +40,6 @@
     <div class="padding">
       <button class="button button-block button-light" ng-click="modalTerms.show()">
         Read terms of use
-      </button>
-    </div>
-    <div class="padding">
-      <button type="submit" class="button button-assertive button-block" style="vertical-align: bottom" ng-click="disagreeTermsOfUse()">
-        Disagree to Terms of Use and Logout
       </button>
     </div>
   </ion-content>
@@ -98,6 +93,9 @@
         <p>These Terms and Conditions of Use are governed by German law applicable to domestic transactions. The United Nations Convention on Contracts for the International Sale of Goods is excluded.</p>
         <p>Boeblingen, Germany is the place of performance and jurisdiction if the USER is a business, a legal entity under public law, or a publicly-owned corporation. This is without prejudice to mandatory statutory jurisdictional requirements.</p>
         <p><b>Last modified: 09th of March, 2016</b></p>
+        <button type="submit" class="button button-assertive button-block" style="vertical-align: bottom" ng-click="disagreeTermsOfUse()">
+          Disagree to Terms of Use and Logout
+        </button>
       </ion-content>
     </ion-modal-view>
   </script>
